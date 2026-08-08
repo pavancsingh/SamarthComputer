@@ -8,6 +8,7 @@ import Footer from '../components/layout/Footer';
 /**
  * MainLayout Component
  * Primary layout wrapper enforcing Module 1 global layout standards.
+ * When currentView is 'admin', bypasses public headers/footers to provide a full-screen, isolated Admin UI.
  */
 export default function MainLayout({ children, lang = 'mr', onLanguageChange, currentView, onNavigate }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,6 +16,15 @@ export default function MainLayout({ children, lang = 'mr', onLanguageChange, cu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
+
+  // Dedicated Admin layout — no public website header, navbar, emergency banner, footer or mobile nav
+  if (currentView === 'admin') {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 antialiased font-sans">
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-accent-gold selection:text-slate-950">

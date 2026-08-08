@@ -39,7 +39,7 @@ export default function AdminLoginPage({ lang = 'en', onSuccess, onNavigate }) {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center bg-[#F8FAFC] px-4 py-16 text-slate-800 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] px-4 py-16 text-slate-800 relative overflow-hidden">
       {/* Background Radial Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-100/60 rounded-full blur-3xl pointer-events-none" />
 
