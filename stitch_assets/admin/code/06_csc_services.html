@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Admin - CSC Services</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed": "#001b3d",
+                      "tertiary-container": "#036b6b",
+                      "secondary-fixed-dim": "#adcbda",
+                      "surface-container-highest": "#e1e2e5",
+                      "secondary": "#466270",
+                      "primary": "#00488d",
+                      "surface": "#f8f9fc",
+                      "secondary-fixed": "#c9e7f7",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#a0f0f0",
+                      "tertiary": "#005151",
+                      "secondary-container": "#c6e4f4",
+                      "on-secondary-container": "#4a6774",
+                      "surface-container": "#eceef0",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#d6e3ff",
+                      "outline-variant": "#c2c6d4",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "surface-dim": "#d8dadd",
+                      "inverse-surface": "#2e3133",
+                      "on-secondary-fixed-variant": "#2e4b57",
+                      "on-secondary-fixed": "#001f2a",
+                      "on-primary-container": "#cadcff",
+                      "on-primary-fixed-variant": "#00468b",
+                      "outline": "#727783",
+                      "on-surface-variant": "#424752",
+                      "background": "#f8f9fc",
+                      "inverse-primary": "#a8c8ff",
+                      "tertiary-fixed-dim": "#84d4d3",
+                      "on-surface": "#191c1e",
+                      "surface-variant": "#e1e2e5",
+                      "surface-container-low": "#f2f4f6",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-tint": "#005db5",
+                      "surface-bright": "#f8f9fc",
+                      "on-tertiary-container": "#98e9e8",
+                      "surface-container-high": "#e7e8eb",
+                      "on-tertiary-fixed-variant": "#004f4f",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#002020",
+                      "error-container": "#ffdad6",
+                      "on-background": "#191c1e",
+                      "primary-container": "#005fb8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "sm": "8px",
+                      "gutter": "24px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "margin-mobile": "16px",
+                      "xxl": "48px",
+                      "lg": "24px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "title-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "label-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .dark .glass-card {
+            background-color: rgba(46, 49, 51, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .floating-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 72, 141, 0.05), 0 10px 10px -5px rgba(0, 72, 141, 0.02);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-surface-container-low/80 dark:bg-inverse-surface/80 backdrop-blur-2xl docked left-0 h-full w-64 border-r border-white/20 flat no shadows fixed left-0 top-0 bottom-0 z-40 flex-col py-md shrink-0">
+<div class="px-gutter mb-xl flex items-center gap-sm">
+<img alt="Samarth Computers Logo" class="w-10 h-10 rounded-lg object-cover" data-alt="A small, modern, geometric logo for an enterprise software company called Samarth Computers. High contrast, crisp edges, blue and white color scheme. Minimalist and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD73QxhBdVBvcSy53KSy23XASKa6uFdDiC7e0wF6Bbb8Rkso9o-CmABUpMqMXq3mNt6Dl8UBzI8KgHWFDbHyj9VvHVChwC0q6QHkjmrRluSXIx1WdGGe8Sn9ZtGf9e2MnqfDFWvbsZQmlUdKEt5k7cuGV4kvATrfkuwx8FlopUtLNoYtUnEXcPq6uTAqjEYCID2Tvm-lKqTdxTR7rjRMHQ4QXTcmOuwryo2efmO68Pal3UO45EpPJp6"/>
+<div>
+<h1 class="font-title-lg text-title-lg font-black text-primary">Samarth Admin</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Portal</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto overflow-x-hidden">
+<ul class="flex flex-col gap-xs w-full px-sm">
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">dashboard</span>
+                        Dashboard
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">inbox</span>
+                        Inbox
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">school</span>
+                        Courses
+                    </a>
+</li>
+<li>
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 flex items-center px-4 py-3 font-semibold transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-md text-on-primary-container" style="font-variation-settings: 'FILL' 1;">business_center</span>
+                        CSC Services
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">account_balance</span>
+                        Gov Services
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">grid_view</span>
+                        Gallery
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">campaign</span>
+                        Branding
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-primary transition-colors">settings</span>
+                        Settings
+                    </a>
+</li>
+</ul>
+</div>
+<div class="mt-auto px-gutter pt-md border-t border-surface-container-highest">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-title-lg text-title-lg">A</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Admin User</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Log out</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 border-b border-white/20 dark:border-white/10 shadow-sm fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-gutter h-16 w-full">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:bg-primary-container/20 transition-colors rounded-full p-2">menu</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim">Samarth Computers</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-primary-container/20 transition-colors p-2 rounded-full cursor-pointer active:scale-95 duration-100">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-primary-container/20 transition-colors p-2 rounded-full cursor-pointer active:scale-95 duration-100">contrast</span>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-title-lg text-title-lg ml-sm cursor-pointer">A</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full md:pl-64 pt-16 md:pt-0 min-h-screen flex flex-col bg-[url('placeholder')] bg-cover bg-fixed" data-alt="A subtle, abstract background image for an enterprise dashboard. Very light gray and white gradients with soft, blurred geometric shapes floating in the background, creating a high-end glassmorphism aesthetic without being distracting. Light mode.">
+<div class="p-margin-mobile md:p-margin-desktop max-w-[1600px] mx-auto w-full flex-1 flex flex-col gap-lg md:gap-xl">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md glass-card rounded-[24px] p-lg">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-xs">CSC Services</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage and monitor Common Service Centre offerings.</p>
+</div>
+<div class="flex flex-wrap items-center gap-sm">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface border-outline-variant border rounded-lg font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all w-full md:w-64 shadow-sm" placeholder="Search services..." type="text"/>
+</div>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-outline-variant rounded-lg text-on-surface font-label-lg text-label-lg hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filter
+                    </button>
+<button class="flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full font-label-lg text-label-lg hover:shadow-md active:scale-95 transition-all floating-shadow">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Add Service
+                    </button>
+</div>
+</div>
+<!-- Dashboard Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+<div class="glass-card p-md rounded-[24px] flex items-start gap-md">
+<div class="p-3 bg-primary-container/30 text-primary rounded-xl shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">apps</span>
+</div>
+<div>
+<p class="font-label-md text-label-sm text-on-surface-variant uppercase tracking-wider">Total Services</p>
+<p class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">142</p>
+</div>
+</div>
+<div class="glass-card p-md rounded-[24px] flex items-start gap-md">
+<div class="p-3 bg-tertiary-container/30 text-tertiary rounded-xl shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-label-md text-label-sm text-on-surface-variant uppercase tracking-wider">Active Services</p>
+<p class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">128</p>
+</div>
+</div>
+<div class="glass-card p-md rounded-[24px] flex items-start gap-md">
+<div class="p-3 bg-error-container/30 text-error rounded-xl shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">build</span>
+</div>
+<div>
+<p class="font-label-md text-label-sm text-on-surface-variant uppercase tracking-wider">In Maintenance</p>
+<p class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">14</p>
+</div>
+</div>
+<div class="glass-card p-md rounded-[24px] flex items-start gap-md">
+<div class="p-3 bg-secondary-container/30 text-on-secondary-container rounded-xl shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<div>
+<p class="font-label-md text-label-sm text-on-surface-variant uppercase tracking-wider">Avg Processing</p>
+<p class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">2.4d</p>
+</div>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="glass-card rounded-[24px] overflow-hidden flex-1 flex flex-col">
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50 border-b border-outline-variant/30">
+<th class="p-md font-label-lg text-label-lg text-on-surface font-semibold">Service Name</th>
+<th class="p-md font-label-lg text-label-lg text-on-surface font-semibold">Type</th>
+<th class="p-md font-label-lg text-label-lg text-on-surface font-semibold">Status</th>
+<th class="p-md font-label-lg text-label-lg text-on-surface font-semibold">Processing Time</th>
+<th class="p-md font-label-lg text-label-lg text-on-surface font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/30 shrink-0">
+<span class="material-symbols-outlined text-primary">fingerprint</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">Aadhaar Update</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">UIDAI Services</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">G2C</span>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="p-md font-body-md text-body-md text-on-surface-variant">
+                                    3-5 Days
+                                </td>
+<td class="p-md text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/30 shrink-0">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">PAN Card Application</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Income Tax Dept.</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">G2C</span>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="p-md font-body-md text-body-md text-on-surface-variant">
+                                    10-15 Days
+                                </td>
+<td class="p-md text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/30 shrink-0">
+<span class="material-symbols-outlined text-primary">flight_takeoff</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">Passport Seva</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Ministry of External Affairs</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">G2C</span>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container/30 text-error font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                        Maintenance
+                                    </span>
+</td>
+<td class="p-md font-body-md text-body-md text-on-surface-variant">
+                                    N/A
+                                </td>
+<td class="p-md text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/30 shrink-0">
+<span class="material-symbols-outlined text-primary">health_and_safety</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">Life Insurance Premium</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Financial Services</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">B2C</span>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="p-md font-body-md text-body-md text-on-surface-variant">
+                                    Instant
+                                </td>
+<td class="p-md text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/30 shrink-0">
+<span class="material-symbols-outlined text-primary">train</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">IRCTC Ticket Booking</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Travel Services</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="px-2 py-1 bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">B2C</span>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="p-md font-body-md text-body-md text-on-surface-variant">
+                                    Instant
+                                </td>
+<td class="p-md text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-md border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/30">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 5 of 142 entries</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-lg text-label-lg">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface font-label-lg text-label-lg">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface font-label-lg text-label-lg">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

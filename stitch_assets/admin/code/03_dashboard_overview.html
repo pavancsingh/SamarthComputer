@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Admin - Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c2c6d4",
+                        "on-secondary-fixed-variant": "#2e4b57",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-primary-fixed": "#001b3d",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002020",
+                        "tertiary-container": "#036b6b",
+                        "surface-tint": "#005db5",
+                        "surface-container-high": "#e7e8eb",
+                        "inverse-primary": "#a8c8ff",
+                        "primary": "#00488d",
+                        "surface": "#f8f9fc",
+                        "primary-container": "#005fb8",
+                        "inverse-surface": "#2e3133",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#98e9e8",
+                        "on-surface-variant": "#424752",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#84d4d3",
+                        "on-secondary-container": "#4a6774",
+                        "surface-dim": "#d8dadd",
+                        "on-secondary-fixed": "#001f2a",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed": "#a0f0f0",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "secondary-container": "#c6e4f4",
+                        "on-primary-container": "#cadcff",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#005151",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#466270",
+                        "surface-variant": "#e1e2e5",
+                        "surface-bright": "#f8f9fc",
+                        "secondary-fixed": "#c9e7f7",
+                        "background": "#f8f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e2e5",
+                        "outline": "#727783",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#adcbda"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "xxl": "48px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+        .glass-elevation {
+            box-shadow: 0 8px 32px 0 rgba(0, 95, 184, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex w-72 h-screen fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant shadow-sm flex-col py-md z-50">
+<div class="px-lg mb-xl flex flex-col">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">Samarth Admin</span>
+<span class="text-on-surface-variant text-label-sm uppercase tracking-wider mt-1">Enterprise Suite</span>
+</div>
+<div class="flex-1 overflow-y-auto px-sm flex flex-col gap-1">
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inbox</span>
+                Inbox
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">school</span>
+                Courses
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">laptop_mac</span>
+                CSC Services
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                Gov Services
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+                Gallery
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">branding_watermark</span>
+                Branding
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</div>
+<div class="px-sm mt-auto border-t border-outline-variant pt-sm">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all font-label-lg text-label-lg hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 h-16 w-full md:w-[calc(100%-288px)] bg-surface/70 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-xl z-40">
+<div class="flex items-center gap-md focus-within:ring-2 focus-within:ring-primary rounded-full px-sm py-1 bg-surface-container-lowest border border-outline-variant">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="border-none bg-transparent focus:ring-0 text-on-surface text-body-md w-64 p-0" placeholder="Search..." type="text"/>
+</div>
+<div class="flex items-center gap-lg">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="flex items-center gap-sm cursor-pointer border-l border-outline-variant pl-lg ml-sm">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a corporate administrator in a bright, modern office setting. High-key lighting, soft shadows, reflecting a clean, sophisticated, and reliable enterprise aesthetic. The background is slightly blurred showing glass walls." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-nxvyqsGHpLbDw1-Pu32htOGwI-CCBe23qMB-WWzNgWd0cJZlQwvoeILc2eTX3CA4Tza_infE6FoL_WOZVMXZQ6uUv2SulI0O7lziUKCeXQLrR28MAoQ7TAjJGY3NeONy1Z3tmWsnfSnhBSXiYCzX_i-k0lPWgJF6z0inVSz_IOJzXpRDMLbn9GQUsUHpu40x4N7rh786850eR9MTHxpEYrVFYP-HYfJQckV0a0J-hF7pZ8ae6hg9"/>
+<span class="font-title-lg text-title-lg text-primary text-sm font-medium">Profile</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-24 pb-xxl px-margin-mobile md:px-margin-desktop md:ml-72 min-h-screen">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-1">Dashboard Overview</h1>
+<p class="text-on-surface-variant font-body-md">Here's what's happening at Samarth Computers today.</p>
+</div>
+<div class="flex gap-md">
+<button class="px-6 py-2.5 rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                    Add Student
+                </button>
+<button class="px-6 py-2.5 rounded-full bg-gradient-to-r from-primary to-surface-tint text-on-primary font-label-lg text-label-lg shadow-sm hover:shadow-md transition-shadow">
+                    New Inquiry
+                </button>
+</div>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter mb-xl">
+<!-- KPI 1 -->
+<div class="glass-card p-lg flex flex-col relative overflow-hidden group hover:glass-elevation transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container rounded-lg text-on-secondary-container">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="bg-tertiary-container/10 text-tertiary px-2 py-1 rounded text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12%
+                    </span>
+</div>
+<h3 class="text-on-surface-variant font-label-lg text-label-lg mb-1">Total Students</h3>
+<div class="font-display-lg text-display-lg text-on-surface">2,450</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-30">
+<canvas id="kpi1Chart"></canvas>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="glass-card p-lg flex flex-col relative overflow-hidden group hover:glass-elevation transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-container rounded-lg text-on-primary-container">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<span class="bg-tertiary-container/10 text-tertiary px-2 py-1 rounded text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 8.5%
+                    </span>
+</div>
+<h3 class="text-on-surface-variant font-label-lg text-label-lg mb-1">Monthly Inquiries</h3>
+<div class="font-display-lg text-display-lg text-on-surface">842</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-30">
+<canvas id="kpi2Chart"></canvas>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="glass-card p-lg flex flex-col relative overflow-hidden group hover:glass-elevation transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-error-container rounded-lg text-error">
+<span class="material-symbols-outlined">contact_support</span>
+</div>
+<span class="bg-error-container/30 text-error px-2 py-1 rounded text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span> 3%
+                    </span>
+</div>
+<h3 class="text-on-surface-variant font-label-lg text-label-lg mb-1">Pending Inquiries</h3>
+<div class="font-display-lg text-display-lg text-on-surface">42</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-30">
+<canvas id="kpi3Chart"></canvas>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="glass-card p-lg flex flex-col relative overflow-hidden group hover:glass-elevation transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-surface-container-highest rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<span class="text-on-surface-variant px-2 py-1 rounded text-label-sm font-medium">
+                        Stable
+                    </span>
+</div>
+<h3 class="text-on-surface-variant font-label-lg text-label-lg mb-1">Active Courses</h3>
+<div class="font-display-lg text-display-lg text-on-surface">18</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-30">
+<canvas id="kpi4Chart"></canvas>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Analytics Chart -->
+<div class="glass-card p-lg lg:col-span-2 flex flex-col">
+<div class="flex justify-between items-center mb-lg">
+<h2 class="font-title-lg text-title-lg text-on-surface">Enrollment Trends</h2>
+<select class="bg-surface-container-low border-none text-label-sm rounded-md py-1 px-3 text-on-surface-variant focus:ring-primary">
+<option>Last 6 Months</option>
+<option>This Year</option>
+</select>
+</div>
+<div class="flex-1 w-full min-h-[300px]">
+<canvas id="mainAnalyticsChart"></canvas>
+</div>
+</div>
+<!-- Recent Activity Timeline -->
+<div class="glass-card p-lg flex flex-col">
+<div class="flex justify-between items-center mb-lg">
+<h2 class="font-title-lg text-title-lg text-on-surface">Recent Activity</h2>
+<button class="text-primary text-label-sm hover:underline">View All</button>
+</div>
+<div class="relative border-l-2 border-surface-container-high ml-3 pl-lg space-y-6">
+<div class="relative">
+<div class="absolute -left-[37px] top-1 w-5 h-5 rounded-full bg-primary-container border-4 border-surface flex items-center justify-center"></div>
+<p class="font-label-lg text-label-lg text-on-surface mb-0.5">New Student Enrolled</p>
+<p class="text-body-sm text-on-surface-variant mb-1">Rahul Sharma joined Python Mastery.</p>
+<span class="text-xs text-outline">10 mins ago</span>
+</div>
+<div class="relative">
+<div class="absolute -left-[37px] top-1 w-5 h-5 rounded-full bg-secondary-container border-4 border-surface flex items-center justify-center"></div>
+<p class="font-label-lg text-label-lg text-on-surface mb-0.5">Payment Received</p>
+<p class="text-body-sm text-on-surface-variant mb-1">Payment received via UPI for Tally ERP.</p>
+<span class="text-xs text-outline">1 hour ago</span>
+</div>
+<div class="relative">
+<div class="absolute -left-[37px] top-1 w-5 h-5 rounded-full bg-error-container border-4 border-surface flex items-center justify-center"></div>
+<p class="font-label-lg text-label-lg text-on-surface mb-0.5">Inquiry Pending</p>
+<p class="text-body-sm text-on-surface-variant mb-1">New web inquiry needs follow-up.</p>
+<span class="text-xs text-outline">3 hours ago</span>
+</div>
+<div class="relative">
+<div class="absolute -left-[37px] top-1 w-5 h-5 rounded-full bg-surface-container-highest border-4 border-surface flex items-center justify-center"></div>
+<p class="font-label-lg text-label-lg text-on-surface mb-0.5">System Update</p>
+<p class="text-body-sm text-on-surface-variant mb-1">Monthly backup completed successfully.</p>
+<span class="text-xs text-outline">Yesterday</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Chart.js Configuration
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            elements: { point: { radius: 0 }, line: { tension: 0.4 } }
+        };
+
+        // Sparklines
+        new Chart(document.getElementById('kpi1Chart'), {
+            type: 'line',
+            data: { labels: ['1','2','3','4','5','6','7'], datasets: [{ data: [65, 59, 80, 81, 56, 55, 70], borderColor: '#036b6b', borderWidth: 2 }] },
+            options: commonOptions
+        });
+        new Chart(document.getElementById('kpi2Chart'), {
+            type: 'line',
+            data: { labels: ['1','2','3','4','5','6','7'], datasets: [{ data: [28, 48, 40, 19, 86, 27, 90], borderColor: '#005fb8', borderWidth: 2 }] },
+            options: commonOptions
+        });
+        new Chart(document.getElementById('kpi3Chart'), {
+            type: 'line',
+            data: { labels: ['1','2','3','4','5','6','7'], datasets: [{ data: [45, 25, 16, 36, 67, 18, 9], borderColor: '#ba1a1a', borderWidth: 2 }] },
+            options: commonOptions
+        });
+        new Chart(document.getElementById('kpi4Chart'), {
+            type: 'line',
+            data: { labels: ['1','2','3','4','5','6','7'], datasets: [{ data: [15, 15, 16, 15, 17, 18, 18], borderColor: '#727783', borderWidth: 2 }] },
+            options: commonOptions
+        });
+
+        // Main Analytics Chart
+        new Chart(document.getElementById('mainAnalyticsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'New Courses',
+                        data: [32, 35, 38, 36, 40, 42],
+                        backgroundColor: '#005fb8',
+                        borderRadius: 4,
+                        order: 2
+                    },
+                    {
+                        label: 'Students Enrolled',
+                        data: [120, 135, 150, 140, 165, 180],
+                        type: 'line',
+                        borderColor: '#036b6b',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#036b6b',
+                        pointRadius: 4,
+                        order: 1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8, font: { family: 'Inter', size: 12 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false, drawBorder: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body></html>

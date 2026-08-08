@@ -1,0 +1,26 @@
+{
+  "brand": {
+    "name": "Samarth Computers",
+    "location": "Khandala, Satara",
+    "tagline": "MKCL Authorized Computer Institute & CSC Government Online Services Center"
+  },
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "cscServices": "CSC Services",
+    "govtServices": "Govt Services",
+    "salesRepair": "Sales & Repair",
+    "gallery": "Gallery",
+    "blog": "News & Blog",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "verifyCertificate": "Verify Certificate"
+  },
+  "actions": {
+    "bookDemo": "Book Free Demo Class",
+    "applyService": "Apply for Govt Service",
+    "getEstimate": "Get Repair Estimate",
+    "whatsAppHelp": "WhatsApp Instant Help",
+    "callNow": "Call Now"
+  }
+}

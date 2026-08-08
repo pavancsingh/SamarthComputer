@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Computers - Gallery Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed": "#001b3d",
+                      "tertiary-container": "#036b6b",
+                      "secondary-fixed-dim": "#adcbda",
+                      "surface-container-highest": "#e1e2e5",
+                      "secondary": "#466270",
+                      "primary": "#00488d",
+                      "surface": "#f8f9fc",
+                      "secondary-fixed": "#c9e7f7",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#a0f0f0",
+                      "tertiary": "#005151",
+                      "secondary-container": "#c6e4f4",
+                      "on-secondary-container": "#4a6774",
+                      "surface-container": "#eceef0",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#d6e3ff",
+                      "outline-variant": "#c2c6d4",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "surface-dim": "#d8dadd",
+                      "inverse-surface": "#2e3133",
+                      "on-secondary-fixed-variant": "#2e4b57",
+                      "on-secondary-fixed": "#001f2a",
+                      "on-primary-container": "#cadcff",
+                      "on-primary-fixed-variant": "#00468b",
+                      "outline": "#727783",
+                      "on-surface-variant": "#424752",
+                      "background": "#f8f9fc",
+                      "inverse-primary": "#a8c8ff",
+                      "tertiary-fixed-dim": "#84d4d3",
+                      "on-surface": "#191c1e",
+                      "surface-variant": "#e1e2e5",
+                      "surface-container-low": "#f2f4f6",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-tint": "#005db5",
+                      "surface-bright": "#f8f9fc",
+                      "on-tertiary-container": "#98e9e8",
+                      "surface-container-high": "#e7e8eb",
+                      "on-tertiary-fixed-variant": "#004f4f",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#002020",
+                      "error-container": "#ffdad6",
+                      "on-background": "#191c1e",
+                      "primary-container": "#005fb8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "card": "24px",
+                      "input": "12px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "sm": "8px",
+                      "gutter": "24px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "margin-mobile": "16px",
+                      "xxl": "48px",
+                      "lg": "24px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "title-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "label-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+        }
+        .dark .glass-card {
+            background-color: rgba(46, 49, 51, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00488d 0%, #001b3d 100%);
+            color: #ffffff;
+            border-radius: 9999px;
+            padding: 8px 24px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #00488d;
+            border: 1px solid #00488d;
+            border-radius: 9999px;
+            padding: 8px 24px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 72, 141, 0.05);
+        }
+        .chip-active {
+            background-color: #005fb8;
+            color: #cadcff;
+        }
+        .chip-inactive {
+            background-color: #f2f4f6;
+            color: #424752;
+            border: 1px solid #c2c6d4;
+        }
+        .hover-elevate:hover {
+            box-shadow: 0 10px 40px -10px rgba(0, 95, 184, 0.15);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col md:flex-row antialiased">
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-gutter h-16 bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-sm">
+<div class="flex items-center gap-sm">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim">Samarth Computers</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-sm text-on-surface-variant hover:bg-primary-container/20 rounded-full transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-primary-container/20 rounded-full transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full object-cover" data-alt="Administrator Profile avatar, professional headshot in an enterprise setting, sharp focus, neutral background, bright and welcoming lighting, modern corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6luEplFb0al1EqrdP5Nv9jSe7UIhVYiLqtZjvcEuYo_4KVsw2kx5Lqiyf6gvU1t8uPBVW2S64K9nHPxMJDEtgLa1W-r1bmnjhRXHI7UJpbictYtOXuR_pZsWwqcTASb917t_EYKBYHXyNh523VXimg02e1op77fCcc0v0X1qkvIXU6QIQ60Xu09iiQUHJb4DBtiHT-Z88gt2t1y1Sq_AavbzSNIreX6zRIDXMZ1HDcPdSntYMsrl4"/>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex fixed left-0 top-0 bottom-0 z-40 flex-col py-md bg-surface-container-low/80 dark:bg-inverse-surface/80 backdrop-blur-2xl h-full w-64 border-r border-white/20">
+<div class="px-xl mb-xl">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-title-lg text-title-lg font-black text-primary">Samarth Admin</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Portal</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-sm">
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                        Dashboard
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">inbox</span>
+                        Inbox
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">school</span>
+                        Courses
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">business_center</span>
+                        CSC Services
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">account_balance</span>
+                        Gov Services
+                    </a>
+</li>
+<li>
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 flex items-center px-4 py-3 font-semibold transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                        Gallery
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">campaign</span>
+                        Branding
+                    </a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined mr-sm" style="font-variation-settings: 'FILL' 0;">settings</span>
+                        Settings
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full md:pl-64 pt-16 md:pt-0 min-h-screen flex flex-col">
+<!-- Page Header -->
+<div class="px-margin-mobile md:px-margin-desktop py-lg flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Media Gallery</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Manage photos and videos from center activities and events.</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="btn-secondary font-label-lg text-label-lg">
+<span class="material-symbols-outlined mr-xs">upload</span> Upload Media
+                </button>
+<button class="btn-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined mr-xs">create_new_folder</span> Create Album
+                </button>
+</div>
+</div>
+<!-- Filters and Actions Bar -->
+<div class="px-margin-mobile md:px-margin-desktop pb-lg flex flex-col sm:flex-row items-center justify-between gap-md">
+<!-- Tags/Filters -->
+<div class="flex flex-wrap items-center gap-sm w-full sm:w-auto">
+<button class="px-4 py-2 rounded-full font-label-lg text-label-lg chip-active transition-colors">All Media</button>
+<button class="px-4 py-2 rounded-full font-label-lg text-label-lg chip-inactive hover:bg-surface-container-high transition-colors">Events</button>
+<button class="px-4 py-2 rounded-full font-label-lg text-label-lg chip-inactive hover:bg-surface-container-high transition-colors">Classroom</button>
+<button class="px-4 py-2 rounded-full font-label-lg text-label-lg chip-inactive hover:bg-surface-container-high transition-colors">Certifications</button>
+</div>
+<!-- Bulk Actions & Search -->
+<div class="flex items-center gap-md w-full sm:w-auto">
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-input py-2 pl-10 pr-4 text-body-md font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Search gallery..." type="text"/>
+</div>
+<div class="hidden sm:flex items-center gap-sm">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors" title="Grid View">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors" title="List View">
+<span class="material-symbols-outlined">view_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Gallery Grid (Bento Style) -->
+<div class="px-margin-mobile md:px-margin-desktop pb-xxl flex-1">
+<div class="mb-sm flex items-center justify-between">
+<h2 class="font-title-lg text-title-lg text-on-surface">Recent Albums</h2>
+<a class="font-label-lg text-label-lg text-primary hover:underline" href="#">View all</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl">
+<!-- Album Card 1 -->
+<div class="glass-card p-4 hover-elevate transition-all cursor-pointer group">
+<div class="relative aspect-video rounded-lg overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern computer lab classroom with students learning programming, bright natural light, enterprise training environment, modern tech setup, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-H_E3ReS8KTY2mm-pe-DFTM1z36jFRYanhVt1xeqIWxMzzCSfYUT3kE38mvCMdyK85wW4VPBJhi3UY_PCTPK4cFPzCJbUAH5JQ79T6pmSwwXNJ9zau_prXd6YFpOBwWV2WdVZjNbQULsyV_UCtFyKGpYOzXY7ZUrWvsXMk1yWqIn1aKNbE1Ih1-LHoYPqjLX5OBnTVn05F8RKnWuU65r_rO0hqPB9gGHAycK930DfZgEh8Z69oJFT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 text-white">
+<span class="material-symbols-outlined text-sm align-middle">photo_library</span>
+<span class="font-label-sm text-label-sm ml-1 align-middle">24 items</span>
+</div>
+</div>
+<h3 class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Summer Tech Bootcamp 2023</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Classroom • Updated 2 days ago</p>
+</div>
+<!-- Album Card 2 -->
+<div class="glass-card p-4 hover-elevate transition-all cursor-pointer group">
+<div class="relative aspect-video rounded-lg overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A formal certification ceremony in an auditorium, students holding certificates, professional corporate event, stage lighting, celebratory mood, high quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbeVXF3whwKE2dNT6gJL2G426Ptcr6XRgQx8iuAs2ApMkbEzw5QT_SCAEM-tGGoXboXPAJwpgYD2DBiTjBKN01msLRCRVc5_u-2pEGmDEoRRrB9IWDVms04Chjaba2rgG7cdGSgW5YPraaGLTHn93W6--czL01oxQVh4mVZyCkW-3-Wz81FUGRPx8MQuChTXJwxzAEmjUrWcsj_wprjgXvBoYo0Hn0Hho6OP1Mh059zYEbKSQXES7-"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 text-white">
+<span class="material-symbols-outlined text-sm align-middle">photo_library</span>
+<span class="font-label-sm text-label-sm ml-1 align-middle">156 items</span>
+</div>
+</div>
+<h3 class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Annual Certification Ceremony</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Events • Updated 1 week ago</p>
+</div>
+<!-- Album Card 3 -->
+<div class="glass-card p-4 hover-elevate transition-all cursor-pointer group">
+<div class="relative aspect-video rounded-lg overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A close up of hands typing on a modern laptop keyboard, colorful code on screen, coding workshop setting, shallow depth of field, tech focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_5UDHaniiDi3l51QQjMsoMyXE3rfK6dOmN2dtEOCM4_qt8GKphPUoupfqYKrrUA947xpe6E9a7R2uNA9nQEwzgJvLex1FZzlmJt-vCqWDeWgU2Drfhy3fJVofJKrnSg5Khwkd13YBSsa1molXD84Vrdlqq7W1nBrJHFehmgfunJM2h7fZ1SCYTOCBPwcR183CWk4trT_ooKSSyyWn6obK2K2K_7nXpDO3vTFHKM65bsO7L9g55_0N"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 text-white">
+<span class="material-symbols-outlined text-sm align-middle">video_library</span>
+<span class="font-label-sm text-label-sm ml-1 align-middle">5 videos</span>
+</div>
+</div>
+<h3 class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Web Dev Workshop Recordings</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Classroom • Updated 2 weeks ago</p>
+</div>
+<!-- Add New Album Card -->
+<div class="glass-card p-4 hover-elevate transition-all cursor-pointer flex flex-col items-center justify-center border-dashed border-2 border-outline-variant hover:border-primary group bg-surface-container-lowest/50">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</div>
+<h3 class="font-label-lg text-label-lg text-primary font-semibold">Create New Album</h3>
+</div>
+</div>
+<div class="mb-sm flex items-center justify-between mt-xl">
+<h2 class="font-title-lg text-title-lg text-on-surface">All Uploads</h2>
+<div class="flex items-center gap-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sort by:</span>
+<button class="font-label-sm text-label-sm text-primary flex items-center hover:bg-surface-container px-2 py-1 rounded transition-colors">
+                        Newest First <span class="material-symbols-outlined text-[16px] ml-xs">arrow_drop_down</span>
+</button>
+</div>
+</div>
+<!-- Masonry-like Grid for loose items -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+<!-- Media Item -->
+<div class="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-high cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" data-alt="A diverse group of students collaborating around a computer screen, enterprise office setting, modern, bright, professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD83xv8zxnqKRjXYusEP0gRghZrU5bVuZmiaDlB4y6RewOEPUDAKQOcYRvUAb-mQUdmzWzWGh1bBDuKMCVS-MyNO3_e5QzVUBwVqALc_PcMcwLU3XJASnYiz3RPPoqhfZ55WTwnJvSgFNSM-9B-RXdnwR510cQcjtzjr6k_wSAS0BVdMnWGzy1woAjyn5Ta3qyTJwtgLiiv7tYshms7fRRa7StqJ-eWzoNJ1aEpmCYkRhJ7vzCkSUW6"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex flex-col justify-between p-3 opacity-0 group-hover:opacity-100">
+<div class="flex justify-between items-start">
+<input class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary focus:ring-offset-0 bg-white/50 backdrop-blur-sm" type="checkbox"/>
+<div class="flex gap-1">
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="text-white">
+<p class="font-label-sm text-label-sm truncate">Workshop_Day1_001.jpg</p>
+</div>
+</div>
+</div>
+<!-- Media Item (Video) -->
+<div class="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-high cursor-pointer md:col-span-2 md:row-span-2">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="A wide shot of a modern computer training center during a lecture, large screen displaying code, students taking notes, well-lit, professional educational setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA968ci-OwRDf0U2Mq812IMCyY-S-3SpHLCC9zUToMxLdf3rewsuMj4M5mTR5dlf4Ie8S0eHsSInaZ01agQBq3xsKeh9nPUwoie4jKUZCJ3VgaxrOA5-e_UAa1JkDH4y4_enP97iNaaU-C08FZZrZ-6RSh8nmJjsnEjmG0m6eRTq9cKROrVdOS8xzlj45lWKG3NQWSmAKBoUtW6AdkE7OC1I2TUB2Pj71O9AdtW3z_uvUGHMb1GuDua"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-12 h-12 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex flex-col justify-between p-3 opacity-0 group-hover:opacity-100">
+<div class="flex justify-between items-start">
+<input class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary focus:ring-offset-0 bg-white/50 backdrop-blur-sm pointer-events-auto" type="checkbox"/>
+<div class="flex gap-1 pointer-events-auto">
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="text-white mt-auto">
+<span class="px-2 py-1 bg-black/50 backdrop-blur-md rounded font-label-sm text-label-sm mb-1 inline-block">12:45</span>
+<p class="font-label-sm text-label-sm truncate">Keynote_Presentation_Full.mp4</p>
+</div>
+</div>
+</div>
+<!-- Media Item -->
+<div class="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-high cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" data-alt="Close up of a student proudly holding up a Samarth Computers certificate of completion, smiling, professional lighting, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXXXd5pz31tobXzCVdPiODCItUxJZsowmaKCDuO0hA-WBpOtwYUTkwcLXDyD9QVyxzjH_YeN_NKyoGenjpvo8Jq8IUVAFSXeA3EDSV4grwhASO01OrmmVIoUSlfMsjVwusuYv0mXdgPratVQsfmKAaeTO2yIqiZdkrfb-NwBKq8WQB9CxEXzWj2Sn_-D8HvNqHwaXNpfDJhXY7JAz_Xf2BOQprnB578QFs1ufciPWqIb-Yf_3V-k3"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex flex-col justify-between p-3 opacity-0 group-hover:opacity-100">
+<div class="flex justify-between items-start">
+<input class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary focus:ring-offset-0 bg-white/50 backdrop-blur-sm" type="checkbox"/>
+<div class="flex gap-1">
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="text-white">
+<p class="font-label-sm text-label-sm truncate">Cert_Ceremony_045.jpg</p>
+</div>
+</div>
+</div>
+<!-- Media Item -->
+<div class="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-high cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" data-alt="Abstract shot of server racks with blue and green LED lights, modern data center, high tech aesthetic, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALxZNDb3Emjx-kc1eLLY9S_zBYE93LL-XZcDi_1cKrx5IgrrbQTFg2rG4UZiRMK7ssV9_ubPRPvI4F0MZ_HgLb0nRynh2cKnRsxLcywthLSAGPqpyhh2xuuEUPjM4RVetaN9owTPbVATxNiCQJLLKqCmqHfRsGd1-nC0qjMeL6EphT2_13Z_INZtz69kpdv9iZ4ovPEPjoQc1VU_VPyOh7P5qJ-sVkVBCAjDtFxjeDOtJ_2CFP0Iof"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex flex-col justify-between p-3 opacity-0 group-hover:opacity-100">
+<div class="flex justify-between items-start">
+<input class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary focus:ring-offset-0 bg-white/50 backdrop-blur-sm" type="checkbox"/>
+<div class="flex gap-1">
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded text-white transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="text-white">
+<p class="font-label-sm text-label-sm truncate">Infrastructure_01.jpg</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

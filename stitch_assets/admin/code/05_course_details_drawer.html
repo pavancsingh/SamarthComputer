@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Courses Management - Samarth Admin</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c2c6d4",
+                      "on-secondary-fixed-variant": "#2e4b57",
+                      "surface-container": "#eceef0",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "on-primary-fixed": "#001b3d",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#002020",
+                      "tertiary-container": "#036b6b",
+                      "surface-tint": "#005db5",
+                      "surface-container-high": "#e7e8eb",
+                      "inverse-primary": "#a8c8ff",
+                      "primary": "#00488d",
+                      "surface": "#f8f9fc",
+                      "primary-container": "#005fb8",
+                      "inverse-surface": "#2e3133",
+                      "error-container": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "on-tertiary-container": "#98e9e8",
+                      "on-surface-variant": "#424752",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#84d4d3",
+                      "on-secondary-container": "#4a6774",
+                      "surface-dim": "#d8dadd",
+                      "on-secondary-fixed": "#001f2a",
+                      "on-primary-fixed-variant": "#00468b",
+                      "on-background": "#191c1e",
+                      "tertiary-fixed": "#a0f0f0",
+                      "on-tertiary-fixed-variant": "#004f4f",
+                      "secondary-container": "#c6e4f4",
+                      "on-primary-container": "#cadcff",
+                      "surface-container-low": "#f2f4f6",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-surface": "#191c1e",
+                      "tertiary": "#005151",
+                      "primary-fixed": "#d6e3ff",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#466270",
+                      "surface-variant": "#e1e2e5",
+                      "surface-bright": "#f8f9fc",
+                      "secondary-fixed": "#c9e7f7",
+                      "background": "#f8f9fc",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#e1e2e5",
+                      "outline": "#727783",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#adcbda"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "base": "8px",
+                      "margin-desktop": "32px",
+                      "xxl": "48px",
+                      "margin-mobile": "16px",
+                      "xl": "32px",
+                      "xs": "4px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "label-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "title-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                      "title-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "500"}],
+                      "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "600"}],
+                      "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 95, 184, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen w-screen overflow-hidden flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Shared Component) -->
+<nav class="w-72 h-screen fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant shadow-sm flex flex-col py-md z-50">
+<div class="px-lg pb-md mb-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Samarth Admin</h2>
+<p class="font-body-md text-on-surface-variant mt-1">Enterprise Suite</p>
+</div>
+<div class="flex-1 overflow-y-auto px-2 flex flex-col gap-1">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-label-lg text-label-lg">Inbox</span>
+</a>
+<!-- Active Tab -->
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 active:scale-95 transform transition-all" href="#">
+<span class="material-symbols-outlined filled">school</span>
+<span class="font-label-lg text-label-lg">Courses</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">laptop_mac</span>
+<span class="font-label-lg text-label-lg">CSC Services</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-lg text-label-lg">Gov Services</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-lg text-label-lg">Gallery</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">branding_watermark</span>
+<span class="font-label-lg text-label-lg">Branding</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+</div>
+<div class="mt-auto px-4 pt-4 border-t border-outline-variant/30">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full px-4 py-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-lg text-label-lg">Logout</span>
+</a>
+</div>
+</nav>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 h-16 w-[calc(100%-288px)] bg-surface/70 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-xl z-40">
+<div class="flex items-center gap-lg w-1/3">
+<div class="font-headline-lg text-headline-lg font-black text-primary">Samarth Computers</div>
+</div>
+<!-- Search Bar (on_left configuration logic adapted for central/left-ish positioning within remaining space) -->
+<div class="flex-1 max-w-md mx-4">
+<div class="relative focus-within:ring-2 focus-within:ring-primary rounded-full transition-all">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
+<input class="w-full pl-12 pr-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-full font-body-md text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:bg-surface focus:border-primary transition-colors" placeholder="Search across enterprise..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant hover:border-primary hover:bg-surface-container-low rounded-full p-1 pr-5 transition-all focus:outline-none focus:ring-2 focus:ring-primary">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional corporate headshot of a confident executive, well-lit studio lighting, high resolution, minimalist grey background, clean and modern aesthetic suitable for an enterprise dashboard profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGUWj60Fc_xVztUBxkdZ8GMpZhjzTHa21AMhy5zVixeIWdqI_l17EBpbACYJJ8aE7pMSju9rCF5Kz02G8LdPwH-pthB57QZ-cY_hMP-fo1vbFqv-V1HVCf1Ka8nOHV4AlMQdQQine8Hu4po_ri55cqszX3ZwhvnSMTiO1ClIFqUyzhArWBhMtyFQrLxT5e-o0Yl-oYQWb3g-8o-QPdrBRW3-Cmb0qt9o4Dup96cvvTz7fYKJf5LeM9"/>
+<span class="font-label-lg text-label-lg text-on-surface">Profile</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[288px] mt-[64px] p-margin-desktop w-full h-[calc(100vh-64px)] overflow-y-auto bg-surface flex flex-col gap-xl">
+<!-- Header & Primary Action -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight">Courses Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 max-w-2xl">Oversee curriculum structures, manage enrollments, and configure bulk settings for all active and archived programs.</p>
+</div>
+<button class="bg-gradient-to-r from-surface-tint to-primary text-on-primary rounded-full px-6 py-3.5 font-label-lg text-label-lg flex items-center gap-2 shadow-[0_4px_14px_rgba(0,95,184,0.3)] hover:shadow-[0_6px_20px_rgba(0,95,184,0.4)] transition-all active:scale-[0.98] transform">
+<span class="material-symbols-outlined">add</span>
+                Add Course
+            </button>
+</div>
+<!-- Toolbar (Bulk Actions & Filters) -->
+<div class="glass-card rounded-xl p-4 flex justify-between items-center z-10 relative">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/>
+<span class="font-label-lg text-label-lg text-on-surface-variant">2 Selected</span>
+</div>
+<div class="h-6 w-px bg-outline-variant/50"></div>
+<button class="text-error bg-error-container/20 border border-error/20 hover:bg-error-container hover:border-error/40 rounded-full px-4 py-2 font-label-sm text-label-sm transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+                    Delete
+                </button>
+<button class="text-on-surface-variant bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 rounded-full px-4 py-2 font-label-sm text-label-sm transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">archive</span>
+                    Archive
+                </button>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">filter_list</span>
+<select class="pl-10 pr-8 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option>All Categories</option>
+<option>Technology</option>
+<option>Business</option>
+<option>Design</option>
+</select>
+</div>
+<div class="relative">
+<select class="pl-4 pr-8 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+<option>Status: Active</option>
+<option>Status: Draft</option>
+<option>Status: Archived</option>
+</select>
+</div>
+<button class="p-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Data Table (Premium Card Layout) -->
+<div class="glass-card rounded-[24px] flex-1 overflow-hidden flex flex-col mb-xl relative z-0">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead>
+<tr class="bg-surface-container-lowest/50 border-b border-outline-variant/40 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="p-4 pl-6 w-12"><input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/></th>
+<th class="p-4 font-medium">Course Details</th>
+<th class="p-4 font-medium">Category</th><th class="p-4 font-medium">Duration</th>
+<th class="p-4 font-medium">Enrollments</th>
+<th class="p-4 font-medium">Last Updated</th>
+<th class="p-4 text-right pr-6 font-medium">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Row 1 (Selected) -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors group cursor-pointer" onclick="document.getElementById('course-details-drawer').classList.remove('hidden')">
+<td class="p-4 pl-6"><input checked="" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<img class="w-16 h-12 rounded-lg object-cover shadow-sm border border-outline-variant/20" data-alt="A modern, abstract digital graphic representing web development, featuring glowing code brackets and interconnected nodes on a dark blue background, sleek and professional enterprise style suitable for a course thumbnail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuaRFZaDFAm32xd4tue1D9P8LfTI1pasceyMGxy-vrHTXRJtiq13MLKxW6NLGy89pob65fSjnJtd3WfOayLV6onVMseW5pwwPo2T-T8D3fR1gB66IH4to5KkZwdXkusPMGONkjrdoancFMcTKGl_H40hZBNAWL-2_dtS9bx9FcrYUtht3j29c_6dN_6fM97sW_W1l4wNV0SCIJmNcX-2H91VtK_EbHhgQ88Ai5pEao3vdq9bChRz8B"/>
+<div>
+<div class="font-title-lg text-title-lg text-on-surface font-semibold leading-none mb-1">Advanced Cloud Architecture</div>
+<div class="font-body-md text-body-md text-on-surface-variant">ID: CRS-8092 • Prof. Alan Turing</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 bg-tertiary-container/10 text-tertiary-container border border-tertiary-container/30 font-label-sm text-label-sm px-2.5 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px]">memory</span> Technology
+                                </span>
+</td><td class="p-4 font-body-md text-body-md text-on-surface">12 Weeks</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-primary rounded-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">8,402</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">Today, 09:41 AM</td>
+<td class="p-4 text-right pr-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 (Selected) -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors group">
+<td class="p-4 pl-6"><input checked="" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<img class="w-16 h-12 rounded-lg object-cover shadow-sm border border-outline-variant/20" data-alt="A vibrant, abstract graphic design illustration featuring smooth overlapping gradients in soft pastel colors, conveying creativity and modern user interface design, high quality enterprise aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Lkc_SLbZT6CFgfY1QKZJiqDSk0nF_z9AIj2xB2s62-zFC5QnVB9oY-KEr36uGWRtAbWc6CdmPEva_m6hn6GsscjCKbQlimVaVbiUyfJF5Gkc9XeONsJRzVuBl_ETBbJgZ8OqdOzzy5rN62WBzSA1X3rZPUIcMnoJBL2jzSvxeFlKu6xMJjmYPVwLdZZBHzcYR36ezj7wJHmXrk0MeXFTaRAWRaqN1i1mkPyWaVXbix3-qSYkZ2tt"/>
+<div>
+<div class="font-title-lg text-title-lg text-on-surface font-semibold leading-none mb-1">Enterprise UX/UI Design Systems</div>
+<div class="font-body-md text-body-md text-on-surface-variant">ID: CRS-4105 • Sarah Jenkins</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 bg-secondary-container/30 text-secondary border border-secondary/30 font-label-sm text-label-sm px-2.5 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px]">brush</span> Design
+                                </span>
+</td><td class="p-4 font-body-md text-body-md text-on-surface">8 Weeks</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[60%] h-full bg-secondary rounded-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">3,190</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">Yesterday, 14:20 PM</td>
+<td class="p-4 text-right pr-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6"><input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<img class="w-16 h-12 rounded-lg object-cover shadow-sm border border-outline-variant/20 opacity-80" data-alt="A complex data visualization graphic with glowing neon lines and network graphs on a dark background, representing machine learning and data science, high-tech enterprise feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoRInVJ5tSV2QB_7JULU6TheSkoLSbJPkwdQWDs6f1loCBWGnoDDwH59TISmJuu4OMYAL2sl4Y-XUOEQYq7ENfubDccxH3Gl_1b7_5oAS181VIGqK8spdX3CdI2JYI0rMdYfgacPdtAeY7KR3KT5zxjWHj5RznWQACx4aiAZbwzU1PfQaO2uVHRf7eU3fanDCwgZBz_awA_TyJFj9p3g1DJbFpvR3FBXVXM6XxJG0GEIOK7X0Sm2kL"/>
+<div>
+<div class="font-title-lg text-title-lg text-on-surface font-semibold leading-none mb-1">Applied Machine Learning</div>
+<div class="font-body-md text-body-md text-on-surface-variant">ID: CRS-9921 • Dr. Emily Chen</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 bg-tertiary-container/10 text-tertiary-container border border-tertiary-container/30 font-label-sm text-label-sm px-2.5 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px]">psychology</span> AI &amp; Data
+                                </span>
+</td><td class="p-4 font-body-md text-body-md text-on-surface">10 Weeks</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[30%] h-full bg-outline rounded-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">840</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">Oct 12, 2023</td>
+<td class="p-4 text-right pr-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6"><input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface-container cursor-pointer" type="checkbox"/></td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="w-16 h-12 rounded-lg bg-surface-container-high flex items-center justify-center border border-outline-variant/30 text-outline">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div>
+<div class="font-title-lg text-title-lg text-on-surface font-semibold leading-none mb-1">Corporate Leadership Strategy</div>
+<div class="font-body-md text-body-md text-on-surface-variant">ID: CRS-1002 • Marcus Johnson</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 bg-surface-variant text-on-surface-variant border border-outline-variant/50 font-label-sm text-label-sm px-2.5 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px]">business_center</span> Business
+                                </span>
+</td><td class="p-4 font-body-md text-body-md text-on-surface">6 Weeks</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[95%] h-full bg-tertiary rounded-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">12,050</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">Sep 28, 2023</td>
+<td class="p-4 text-right pr-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="border-t border-outline-variant/30 p-4 px-6 flex justify-between items-center bg-surface-container-lowest/80 backdrop-blur-md mt-auto">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing <span class="font-medium text-on-surface">1</span> to <span class="font-medium text-on-surface">4</span> of <span class="font-medium text-on-surface">128</span> entries</span>
+<div class="flex items-center gap-1">
+<button class="p-2 rounded-md text-on-surface-variant hover:bg-surface-container-high disabled:opacity-30 transition-colors" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-primary-container text-on-primary-container font-label-lg text-label-lg">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container-high font-label-lg text-label-lg transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container-high font-label-lg text-label-lg transition-colors">3</button>
+<span class="text-on-surface-variant mx-1">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container-high font-label-lg text-label-lg transition-colors">12</button>
+<button class="p-2 rounded-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Slide-over Drawer (Visualized for 'Add Course' action) - Hidden by default but structurally present for visual reference in prompt context -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden justify-end">
+<div class="w-[500px] h-full bg-surface-container-lowest shadow-[-8px_0_32px_rgba(0,0,0,0.1)] flex flex-col transform translate-x-full transition-transform duration-300">
+<!-- Drawer Header -->
+<div class="px-xl py-lg border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest sticky top-0 z-10">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Create New Course</h2>
+<button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Drawer Content (Placeholder for form) -->
+<div class="flex-1 p-xl overflow-y-auto">
+<div class="space-y-6">
+<!-- Form Field Placeholder -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Course Title</label>
+<input class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Category</label>
+<select class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all appearance-none">
+<option>Select a category</option>
+</select>
+</div>
+<!-- Upload Area Placeholder -->
+<div class="border-2 border-dashed border-outline-variant/50 rounded-xl p-8 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-2 transition-colors">cloud_upload</span>
+<p class="font-label-lg text-label-lg text-on-surface">Upload Course Thumbnail</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">PNG, JPG up to 5MB</p>
+</div>
+</div>
+</div>
+<!-- Drawer Footer -->
+<div class="p-xl border-t border-outline-variant/30 bg-surface-container-lowest flex justify-end gap-4 sticky bottom-0">
+<button class="px-6 py-2.5 rounded-full border border-outline-variant text-on-surface font-label-lg text-label-lg hover:bg-surface-container-high transition-colors">Cancel</button>
+<button class="px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">Save Course</button>
+</div>
+</div>
+</div>
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300 hidden" id="course-details-drawer">
+<div class="w-[500px] h-full bg-surface-container-lowest shadow-[-8px_0_32px_rgba(0,0,0,0.1)] flex flex-col transform transition-transform duration-300">
+<!-- Drawer Header -->
+<div class="px-xl py-lg border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest sticky top-0 z-10">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Course Details</h2>
+<button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="document.getElementById('course-details-drawer').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Drawer Content -->
+<div class="flex-1 p-xl overflow-y-auto">
+<div class="space-y-6">
+<!-- Course Identity -->
+<div class="flex flex-col gap-2">
+<img alt="Course Thumbnail" class="w-full h-48 rounded-2xl object-cover shadow-sm border border-outline-variant/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuaRFZaDFAm32xd4tue1D9P8LfTI1pasceyMGxy-vrHTXRJtiq13MLKxW6NLGy89pob65fSjnJtd3WfOayLV6onVMseW5pwwPo2T-T8D3fR1gB66IH4to5KkZwdXkusPMGONkjrdoancFMcTKGl_H40hZBNAWL-2_dtS9bx9FcrYUtht3j29c_6dN_6fM97sW_W1l4wNV0SCIJmNcX-2H91VtK_EbHhgQ88Ai5pEao3vdq9bChRz8B"/>
+<div class="mt-4">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Advanced Cloud Architecture</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">ID: CRS-8092 • 12 Weeks Duration</p>
+</div>
+</div>
+<!-- Description -->
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface mb-2">Description</h4>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Master the complexities of modern cloud infrastructure. This course covers multi-cloud strategies, serverless computing, and high-availability design patterns used by top-tier enterprise organizations.
+                    </p>
+</div>
+<!-- Instructor -->
+<div class="bg-surface-container-low p-4 rounded-2xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">AT</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Prof. Alan Turing</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lead Cloud Architect</p>
+</div>
+</div>
+<!-- Curriculum -->
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface mb-3">Curriculum Overview</h4>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-body-md text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-outline-variant/20 flex items-center justify-center text-[12px] font-bold">01</span>
+                            Cloud Fundamentals &amp; Virtualization
+                        </li>
+<li class="flex items-center gap-3 text-body-md text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-outline-variant/20 flex items-center justify-center text-[12px] font-bold">02</span>
+                            Microservices &amp; Containerization
+                        </li>
+<li class="flex items-center gap-3 text-body-md text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-outline-variant/20 flex items-center justify-center text-[12px] font-bold">03</span>
+                            Serverless Architectures
+                        </li>
+</ul>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 border border-outline-variant/30 rounded-2xl">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Enrollments</p>
+<p class="font-headline-lg text-headline-lg text-primary">8,402</p>
+</div>
+<div class="p-4 border border-outline-variant/30 rounded-2xl">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Completion Rate</p>
+<p class="font-headline-lg text-headline-lg text-tertiary">85%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Footer -->
+<div class="p-xl border-t border-outline-variant/30 bg-surface-container-lowest flex justify-end gap-4 sticky bottom-0">
+<button class="px-6 py-2.5 rounded-full border border-outline-variant text-on-surface font-label-lg text-label-lg hover:bg-surface-container-high transition-colors">Archive</button>
+<button class="px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">Edit Course</button>
+</div>
+</div>
+</div></body></html>

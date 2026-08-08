@@ -1,0 +1,102 @@
+.emergency-banner-container {
+  background: linear-gradient(90deg, #991b1b 0%, #b91c1c 50%, #991b1b 100%);
+  color: #ffffff;
+  padding: 8px 0;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1000;
+}
+
+.emergency-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.emergency-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.emergency-badge {
+  background-color: #f59e0b;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  animation: pulse-glow 2s infinite;
+}
+
+.emergency-message {
+  font-weight: 500;
+  margin: 0;
+  color: #fef2f2;
+}
+
+.emergency-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.emergency-action-btn {
+  background-color: #ffffff;
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.emergency-action-btn:hover {
+  background-color: #fef2f2;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.emergency-close-btn {
+  background: transparent;
+  color: #fca5a5;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.emergency-close-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 640px) {
+  .emergency-banner-content {
+    justify-content: center;
+    text-align: center;
+  }
+  .emergency-banner-left {
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}

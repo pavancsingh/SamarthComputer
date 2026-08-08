@@ -1,0 +1,307 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Contact Us - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"stitch-slate-card": "#1E293B", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", primary: "#b7000e", "on-secondary": "#ffffff", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-tertiary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "tertiary-fixed": "#e2dfff", "surface-dim": "#d8dadc", surface: "#f7f9fb", "surface-bright": "#f7f9fb", "text-primary": "#1E293B", "primary-fixed": "#ffdad5", "stitch-red-light": "#FEF2F2", "tertiary-fixed-dim": "#c3c0ff", "on-tertiary-fixed-variant": "#3323cc", "inverse-surface": "#2d3133", "primary-fixed-dim": "#ffb4aa", "secondary-fixed": "#dae2fd", "inverse-on-surface": "#eff1f3", background: "#f7f9fb", "secondary-fixed-dim": "#bec6e0", "stitch-ivory": "#FAFAF9", "surface-container-highest": "#e0e3e5", "inverse-primary": "#ffb4aa", "outline-variant": "#e6bdb8", "surface-tint": "#c00311", error: "#ba1a1a", "surface-container-low": "#f2f4f6", "on-error-container": "#93000a", "on-primary-fixed-variant": "#930009", "surface-variant": "#e0e3e5", "on-surface-variant": "#5c403c", tertiary: "#483ede", "primary-container": "#dd2423", "on-secondary-fixed": "#131b2e", secondary: "#565e74", "stitch-red-dark": "#991B1B", "on-tertiary-container": "#fbf7ff", "surface-container": "#eceef0", "stitch-red-border": "#FCA5A5", "stitch-emerald": "#059669", outline: "#916f6b", "on-background": "#191c1e", "on-primary-fixed": "#410002", "on-primary-container": "#fff6f5", "tertiary-container": "#625bf8", "on-error": "#ffffff", "on-surface": "#191c1e", "surface-container-high": "#e6e8ea"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", md: "16px", gutter: "24px", xs: "4px", "2xl": "80px", sm: "8px", xl: "48px", "container-max": "1280px", lg: "24px"}, fontFamily: {"marathi-body": ["Noto Sans Devanagari"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-hero": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "label-bold": ["Inter"], "display-hero-mobile": ["Inter"], "label-caps": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"marathi-body": ["16px", {lineHeight: "1.85", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "1.6", fontWeight: "400"}], "body-lg": ["18px", {lineHeight: "1.75", fontWeight: "400"}], "display-hero": ["60px", {lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "800"}], "headline-lg": ["32px", {lineHeight: "40px", fontWeight: "700"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-bold": ["14px", {lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600"}], "display-hero-mobile": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800"}], "label-caps": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700"}]}}}};</script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .stitch-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+        .stitch-glow:hover {
+            box-shadow: 0 10px 30px -5px rgba(183, 0, 17, 0.15);
+            transform: translateY(-4px);
+        }
+        .form-input {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: #b70011;
+            box-shadow: 0 0 0 1px #b70011;
+            outline: none;
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid #b70011;
+            color: #b70011;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Hide navs on linear flows per strict rule */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary font-body-md antialiased min-h-screen relative overflow-x-hidden">
+<!-- Ambient Background Depth -->
+<div class="ambient-orb w-[600px] h-[600px] bg-primary top-0 left-[-200px]"></div>
+<div class="ambient-orb w-[500px] h-[500px] bg-tertiary bottom-[10%] right-[-100px]"></div>
+<!-- Top Navigation (Hidden as per Contextual Suppression Rules for Contact/Task pages if needed, but keeping for global structure as it's a main destination) -->
+<!-- Applying Shared Component JSON for TopAppBar -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<div class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight cursor-pointer">
+                Samarth Computers
+            </div>
+<nav class="hidden md:flex items-center gap-6">
+<!-- Using labels from JSON, applying inactive styles to all as this is Contact -->
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Courses</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Workshops</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Success Stories</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Faculty</a>
+</nav>
+<div class="hidden md:flex items-center gap-4">
+
+<button class="px-md py-sm bg-primary text-white font-label-bold rounded-lg shadow-sm hover:bg-stitch-red-dark transition-colors border border-b-2 border-primary whileTap: { scale: 0.98 }">Apply Now</button>
+</div>
+<button class="md:hidden text-text-primary p-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-md md:px-lg lg:px-[32px] py-xl lg:py-2xl">
+<!-- Header Section -->
+<div class="text-center mb-xl max-w-3xl mx-auto">
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary mb-md">Get in Touch</h1>
+<p class="text-body-lg font-body-lg text-secondary">Whether you're looking to start a new course, need CSC services, or just have a question, our team is here to help you achieve your goals.</p>
+</div>
+<!-- Split Layout Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Multi-tab Lead Gen Form (Bento Style) -->
+<div class="lg:col-span-7 glass-panel rounded-xl stitch-shadow p-md md:p-lg">
+<!-- Tabs -->
+<div class="flex border-b border-surface-variant/50 mb-lg overflow-x-auto hide-scrollbar">
+<button class="tab-btn active px-md py-sm text-label-bold font-label-bold text-text-primary whitespace-nowrap transition-colors" data-target="tab-admission">Admission Inquiry</button>
+<button class="tab-btn px-md py-sm text-label-bold font-label-bold text-secondary hover:text-text-primary whitespace-nowrap transition-colors" data-target="tab-csc">CSC Service</button>
+<button class="tab-btn px-md py-sm text-label-bold font-label-bold text-secondary hover:text-text-primary whitespace-nowrap transition-colors" data-target="tab-general">General Feedback</button>
+</div>
+<!-- Tab Content: Admission -->
+<div class="tab-content active" id="tab-admission">
+<form class="space-y-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Full Name / पूर्ण नाव</label>
+<input class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="Enter your full name" type="text">
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Phone Number / फोन नंबर</label>
+<input class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="+91" type="tel">
+</div>
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Course of Interest / अभ्यासक्रम</label>
+<select class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md">
+<option>Select a course...</option>
+<option>MS-CIT</option>
+<option>Tally Prime</option>
+<option>Advanced Excel</option>
+<option>Web Development</option>
+</select>
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Message / संदेश (Optional)</label>
+<textarea class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="How can we help you?" rows="4"></textarea>
+</div>
+<button class="w-full bg-primary text-white font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-stitch-red-dark transition-colors flex items-center justify-center gap-xs" type="submit">
+                            Submit Inquiry <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Tab Content: CSC -->
+<div class="tab-content" id="tab-csc">
+<form class="space-y-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Name</label>
+<input class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="Your name" type="text">
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Aadhar/Phone</label>
+<input class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="Contact info" type="text">
+</div>
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Required Service</label>
+<select class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md">
+<option>Select service...</option>
+<option>PAN Card Services</option>
+<option>Aadhar Updates</option>
+<option>Passport Application</option>
+<option>Other E-Seva</option>
+</select>
+</div>
+<button class="w-full bg-stitch-slate-card text-white font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-black transition-colors" type="submit">
+                            Request Service
+                        </button>
+</form>
+</div>
+<!-- Tab Content: General -->
+<div class="tab-content" id="tab-general">
+<form class="space-y-md">
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Email or Phone</label>
+<input class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="Contact detail" type="text">
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Feedback / Inquiry</label>
+<textarea class="form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md" placeholder="Your message here..." rows="5"></textarea>
+</div>
+<button class="w-full border border-slate-200 text-text-primary font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-surface-container transition-colors" type="submit">
+                            Send Message
+                        </button>
+</form>
+</div>
+</div>
+<!-- Right Column: Contact Info & Map -->
+<div class="lg:col-span-5 flex flex-col gap-gutter">
+<!-- Info Card -->
+<div class="bg-white rounded-xl border border-slate-200/50 p-lg stitch-shadow stitch-glow transition-all duration-300">
+<h3 class="text-headline-md font-headline-md text-text-primary mb-md">Contact Information</h3>
+<div class="space-y-md">
+<div class="flex items-start gap-md">
+<div class="p-sm bg-stitch-red-light text-primary rounded-lg">
+<span class="material-symbols-outlined" data-icon="location_on" data-weight="fill">location_on</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-text-primary">Main Office</p>
+<p class="text-body-md font-body-md text-secondary mt-xs">Shop No. 4, Shivaji Chowk, Near Bus Stand,<br>Khandala, Maharashtra 412802</p>
+</div>
+</div>
+<div class="flex items-start gap-md">
+<div class="p-sm bg-surface-container text-stitch-slate-card rounded-lg">
+<span class="material-symbols-outlined" data-icon="schedule" data-weight="fill">schedule</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-text-primary">Office Hours</p>
+<p class="text-body-md font-body-md text-secondary mt-xs">Monday - Saturday: 9:00 AM - 7:00 PM<br>Sunday: Closed</p>
+</div>
+</div>
+<div class="flex items-start gap-md">
+<div class="p-sm bg-stitch-red-light text-primary rounded-lg">
+<span class="material-symbols-outlined" data-icon="call" data-weight="fill">call</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-text-primary">Phone</p>
+<p class="text-body-md font-body-md text-primary font-medium mt-xs hover:underline cursor-pointer">+91 98765 43210</p>
+</div>
+</div>
+</div>
+<!-- WhatsApp CTA -->
+<div class="mt-lg pt-lg border-t border-slate-100">
+<a class="flex items-center justify-center gap-sm w-full bg-[#25D366]/10 text-[#075E54] hover:bg-[#25D366]/20 py-sm px-md rounded-lg transition-colors font-label-bold text-label-bold" href="#">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+                            Chat on WhatsApp
+                        </a>
+</div>
+</div>
+<!-- Embedded Map Area (Stylized) -->
+<div class="bg-surface-container rounded-xl overflow-hidden h-[300px] relative stitch-shadow border border-slate-200/50">
+<img class="w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="A detailed overhead stylized map view of Khandala town center, featuring a modern, clean cartographic style in light mode. The map highlights a central business district with subtle red and blue accents against a pale gray and white base. The aesthetic is professional, architectural, and highly legible, suitable for a corporate contact page." data-location="Khandala" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_QBykD9gjt7x5hwu7GhYrCNmz4ajZjustm2MM8AXw9Q9SRk4HS-164ml131TIwBy9TnYRvmG9fpLtEPJAIlWzwZo8-xnKr9_yssCS0YvWZYkfEKUBJJdWjwU_X5A94D42t3UKR90DKP8yu_Td_Nj0ZCizlshFzLBlmoyIp0qk_tOWnkTgFe9fudFLfb1zbsVYnrq4QGDqGgWod57WM0jWdYE7u05rprN87QUSdcNFtCtmrBhG9Wy0">
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-md">
+<span class="bg-white/90 backdrop-blur text-text-primary px-sm py-xs rounded text-label-caps font-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="pin_drop">pin_drop</span>
+                            View on Google Maps
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Mobile Nav (Shared Component JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg border-t border-surface-variant/50 dark:border-outline-variant/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] shadow-lg rounded-t-xl docked full-width">
+<!-- Assuming Home or specific Context isn't active on Contact page for strict highlighting, applying inactive to all to avoid hallucination, or hiding entirely based on prompt rules. Since Contact is a main destination in some architectures, we render it but nothing is 'active' if 'Contact' isn't a tab. -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="text-label-caps font-label-caps mt-1">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="text-label-caps font-label-caps mt-1">CSC Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="text-label-caps font-label-caps mt-1">AI Assistant</span>
+</a>
+</nav>
+<!-- Footer (Shared Component JSON) -->
+<footer class="w-full py-xl px-gutter max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg bg-on-background dark:bg-inverse-surface full-width relative mt-2xl md:mb-0 mb-20">
+<div>
+<div class="text-headline-md font-headline-lg text-primary-fixed mb-sm">
+                Samarth Computers
+            </div>
+<p class="text-surface-variant/80 text-body-md font-body-md max-w-sm">
+                Bridging traditional education with technological innovation in Khandala.
+            </p>
+<p class="text-surface-variant/80 text-label-bold font-label-bold mt-md">
+                © 2024 Samarth Computers &amp; CSC Services. All rights reserved.
+            </p>
+</div>
+<div class="flex flex-col gap-sm"><a class="text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">Login</a>
+<a class="text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">About Us</a>
+<a class="text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">Refund Policy</a>
+<a class="text-primary-fixed underline hover:text-primary-fixed transition-colors duration-200 text-label-bold font-label-bold" href="#">Contact Support</a>
+</div>
+</footer>
+<script>
+        // Simple Tab Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all
+                    tabBtns.forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.remove('text-primary');
+                        b.classList.remove('border-b-2');
+                        b.classList.remove('border-primary');
+                        b.classList.add('text-secondary');
+                    });
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    btn.classList.remove('text-secondary');
+                    btn.classList.add('text-primary', 'border-b-2', 'border-primary');
+                    
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

@@ -1,0 +1,120 @@
+.utility-bar {
+  background-color: var(--color-dark-navy);
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 0;
+  position: relative;
+  z-index: 999;
+}
+
+.utility-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.utility-left, .utility-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.utility-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+.utility-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--color-secondary-cyan);
+  flex-shrink: 0;
+}
+
+.utility-gold-icon {
+  color: var(--color-accent-gold);
+}
+
+.utility-phone-link {
+  font-weight: 600;
+  color: #ffffff;
+  transition: color 0.2s ease;
+}
+
+.utility-phone-link:hover {
+  color: var(--color-accent-gold);
+}
+
+.utility-cert-btn {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  color: var(--color-accent-gold);
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.utility-cert-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+.utility-lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: var(--radius-md);
+}
+
+.lang-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.lang-btn {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 4px;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.lang-btn:hover {
+  color: #ffffff;
+}
+
+.lang-btn.active {
+  color: var(--color-accent-gold);
+  font-weight: 700;
+}
+
+.lang-divider {
+  color: #475569;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .utility-hide-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .utility-left {
+    display: none;
+  }
+  .utility-bar-content {
+    justify-content: center;
+  }
+}

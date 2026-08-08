@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Admin - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c2c6d4",
+                        "on-secondary-fixed-variant": "#2e4b57",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-primary-fixed": "#001b3d",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002020",
+                        "tertiary-container": "#036b6b",
+                        "surface-tint": "#005db5",
+                        "surface-container-high": "#e7e8eb",
+                        "inverse-primary": "#a8c8ff",
+                        "primary": "#00488d",
+                        "surface": "#f8f9fc",
+                        "primary-container": "#005fb8",
+                        "inverse-surface": "#2e3133",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#98e9e8",
+                        "on-surface-variant": "#424752",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#84d4d3",
+                        "on-secondary-container": "#4a6774",
+                        "surface-dim": "#d8dadd",
+                        "on-secondary-fixed": "#001f2a",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed": "#a0f0f0",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "secondary-container": "#c6e4f4",
+                        "on-primary-container": "#cadcff",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#005151",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#466270",
+                        "surface-variant": "#e1e2e5",
+                        "surface-bright": "#f8f9fc",
+                        "secondary-fixed": "#c9e7f7",
+                        "background": "#f8f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e2e5",
+                        "outline": "#727783",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#adcbda"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "xxl": "48px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 95, 184, 0.08);
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #f8f9fc, #eceef0, #c6e4f4, #f2f4f6);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .input-float:focus-within label {
+            transform: translateY(-1.5rem) scale(0.85);
+            color: #00488d;
+        }
+        
+        .input-float input:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.85);
+        }
+    </style>
+</head>
+<body class="h-full font-body-lg text-on-surface bg-background animated-bg flex flex-col items-center justify-center p-margin-mobile md:p-margin-desktop antialiased">
+<!-- Transactional Page: Navigation Shell is Suppressed -->
+<main class="w-full max-w-md w-full relative z-10">
+<!-- Logo Header -->
+<div class="text-center mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-primary flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">branding_watermark</span>
+                Samarth Computers
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Enterprise Suite Admin</p>
+</div>
+<!-- Login Card -->
+<div class="glass-card rounded-[24px] p-xl relative overflow-hidden">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-lg">Sign In</h2>
+<form action="#" class="space-y-lg" method="POST">
+<!-- Email Input -->
+<div class="relative input-float pt-sm">
+<input class="peer w-full h-12 bg-transparent border-2 border-outline-variant rounded-xl px-md pt-4 pb-2 text-on-surface font-body-md focus:border-primary focus:ring-0 transition-colors bg-white/50" id="email" name="email" placeholder=" " required="" type="email"/>
+<label class="absolute left-md top-4 text-on-surface-variant font-body-md transition-all duration-200 pointer-events-none origin-left" for="email">
+                        Email Address
+                    </label>
+</div>
+<!-- Password Input -->
+<div class="relative input-float pt-sm">
+<input class="peer w-full h-12 bg-transparent border-2 border-outline-variant rounded-xl px-md pt-4 pb-2 text-on-surface font-body-md focus:border-primary focus:ring-0 transition-colors bg-white/50" id="password" name="password" placeholder=" " required="" type="password"/>
+<label class="absolute left-md top-4 text-on-surface-variant font-body-md transition-all duration-200 pointer-events-none origin-left" for="password">
+                        Password
+                    </label>
+</div>
+<!-- Action Bar -->
+<div class="flex items-center justify-between pt-sm">
+<div class="flex items-center">
+<input class="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary bg-transparent" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block font-label-lg text-label-lg text-on-surface-variant" for="remember-me">
+                            Remember me
+                        </label>
+</div>
+<div class="text-sm">
+<a class="font-label-lg text-label-lg text-primary hover:text-primary-container transition-colors" href="#">
+                            Forgot password?
+                        </a>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="pt-sm">
+<button class="w-full flex justify-center py-3 px-4 rounded-full shadow-sm font-label-lg text-label-lg text-on-primary bg-gradient-to-r from-primary to-primary-container hover:shadow-md transform active:scale-95 transition-all duration-200 relative overflow-hidden group" type="submit">
+<span class="relative z-10 flex items-center gap-2">
+                            Sign in to Dashboard
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</span>
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+</button>
+</div>
+</form>
+</div>
+<!-- Footer Security Note -->
+<div class="mt-xl text-center flex items-center justify-center gap-2 text-on-surface-variant/70">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Enterprise Security Enabled</span>
+</div>
+</main>
+</body></html>

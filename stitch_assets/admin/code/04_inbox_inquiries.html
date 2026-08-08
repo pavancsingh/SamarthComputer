@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Admin - Inbox</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c2c6d4",
+                        "on-secondary-fixed-variant": "#2e4b57",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-primary-fixed": "#001b3d",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002020",
+                        "tertiary-container": "#036b6b",
+                        "surface-tint": "#005db5",
+                        "surface-container-high": "#e7e8eb",
+                        "inverse-primary": "#a8c8ff",
+                        "primary": "#00488d",
+                        "surface": "#f8f9fc",
+                        "primary-container": "#005fb8",
+                        "inverse-surface": "#2e3133",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#98e9e8",
+                        "on-surface-variant": "#424752",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#84d4d3",
+                        "on-secondary-container": "#4a6774",
+                        "surface-dim": "#d8dadd",
+                        "on-secondary-fixed": "#001f2a",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed": "#a0f0f0",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "secondary-container": "#c6e4f4",
+                        "on-primary-container": "#cadcff",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#005151",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#466270",
+                        "surface-variant": "#e1e2e5",
+                        "surface-bright": "#f8f9fc",
+                        "secondary-fixed": "#c9e7f7",
+                        "background": "#f8f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e2e5",
+                        "outline": "#727783",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#adcbda"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "xxl": "48px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for list view */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.full');
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<nav class="w-72 h-screen fixed left-0 top-0 bg-surface-container-lowest dark:bg-surface-dim backdrop-blur-xl border-r border-outline-variant shadow-sm z-50">
+<div class="flex flex-col h-full py-md">
+<!-- Header/Brand -->
+<div class="px-lg pb-xl pt-md flex items-center gap-sm border-b border-outline-variant/30 mb-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">
+                    S
+                </div>
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim leading-tight">Samarth Admin</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Suite</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<!-- ACTIVE TAB: Inbox -->
+<a class="bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg" style="font-variation-settings: 'FILL' 1;">inbox</span>
+<span class="font-label-lg text-label-lg font-bold">Inbox</span>
+<span class="ml-auto bg-on-primary-container text-primary-container font-label-sm text-label-sm px-2 py-0.5 rounded-full">12</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">school</span>
+<span class="font-label-lg text-label-lg">Courses</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">laptop_mac</span>
+<span class="font-label-lg text-label-lg">CSC Services</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">account_balance</span>
+<span class="font-label-lg text-label-lg">Gov Services</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">grid_view</span>
+<span class="font-label-lg text-label-lg">Gallery</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">branding_watermark</span>
+<span class="font-label-lg text-label-lg">Branding</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-primary transition-colors">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+</div>
+<!-- Footer -->
+<div class="mt-auto pt-md border-t border-outline-variant/30">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-colors duration-200 active:scale-95 transform transition-all group" href="#">
+<span class="material-symbols-outlined font-label-lg text-label-lg group-hover:text-error transition-colors">logout</span>
+<span class="font-label-lg text-label-lg">Logout</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper (offset by sidebar width) -->
+<main class="ml-72 flex-1 flex flex-col h-screen relative bg-surface-container-lowest">
+<!-- Subtle background pattern/gradient -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-fixed-dim via-transparent to-transparent"></div>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 h-16 w-[calc(100%-288px)] bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-xl z-40">
+<!-- Search Bar (Left aligned per JSON) -->
+<div class="flex-1 max-w-md focus-within:ring-2 focus-within:ring-primary rounded-lg transition-shadow">
+<div class="relative flex items-center w-full h-10 rounded-lg bg-surface-container-highest border border-transparent focus-within:border-primary focus-within:bg-surface-container-lowest overflow-hidden">
+<div class="grid place-items-center h-full w-12 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="peer h-full w-full outline-none text-body-md font-body-md text-on-surface bg-transparent pr-2 placeholder-on-surface-variant/70 border-none focus:ring-0" id="global-search" placeholder="Search global..." type="text"/>
+</div>
+</div>
+<!-- Brand Logo (Centered contextually or hidden if space is tight, JSON says text-primary font-black) -->
+<div class="hidden lg:block font-headline-lg text-headline-lg font-black text-primary mx-lg">
+<span class="opacity-0">Samarth Computers</span> <!-- Visually hidden but structurally present if needed, keeping focus on search/actions -->
+</div>
+<!-- Actions (Right) -->
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest hover:text-primary transition-colors focus:ring-2 focus:ring-primary outline-none">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest hover:text-primary transition-colors focus:ring-2 focus:ring-primary outline-none">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container-high p-1 pr-3 rounded-full transition-colors focus:ring-2 focus:ring-primary outline-none group">
+<img alt="User Avatar" class="w-8 h-8 rounded-full object-cover border border-outline-variant group-hover:border-primary transition-colors" data-alt="A small, professional headshot of an administrator in a light mode enterprise setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh_ZSd-gFoPprpHsSlh_2pbDeXzl21PMYUcAdQz6bxOJnwlM18Zw-ZDr_FFNI8RvJNgrHlGQyaH5MAsmyP8CmsuX2T8tAsn6SmLbEsdXTGz8DdKUlGKSMp6sGYFqHC2tQSGzLEXoAL2yweRnrlebtMq_izlt8Jip2StZEEjH6NF-DgC6xBmdn8vvgtP0AJW3F9MO-13K5pfdBgGktHI-xFboiie8nJBjPXZjeIcUA28plCxV9l5Twm"/>
+<span class="font-label-lg text-label-lg text-on-surface group-hover:text-primary transition-colors">Profile</span>
+</button>
+</div>
+</header>
+<!-- Page Content: Two-Column Email Client Layout -->
+<div class="flex-1 mt-16 flex z-10 overflow-hidden relative">
+<!-- Left Column: Inquiry List -->
+<div class="w-1/3 min-w-[350px] max-w-[450px] flex flex-col border-r border-outline-variant bg-surface-container-lowest/80 backdrop-blur-md">
+<!-- List Header & Filters -->
+<div class="p-4 border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Student Inquiries</h2>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors tooltip relative group">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<!-- Search within list -->
+<div class="relative flex items-center w-full h-9 rounded-md bg-surface-container border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all overflow-hidden mb-3">
+<div class="grid place-items-center h-full w-9 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</div>
+<input class="h-full w-full outline-none text-body-md font-body-md text-on-surface bg-transparent pr-2 border-none focus:ring-0 placeholder-on-surface-variant/60" placeholder="Search inquiries..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto custom-scrollbar pb-1">
+<button class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm whitespace-nowrap border border-transparent hover:brightness-95 transition-all">All (42)</button>
+<button class="px-3 py-1 rounded-full bg-surface text-on-surface-variant font-label-sm text-label-sm border border-outline-variant hover:bg-surface-variant transition-all whitespace-nowrap">Unread (12)</button>
+<button class="px-3 py-1 rounded-full bg-surface text-on-surface-variant font-label-sm text-label-sm border border-outline-variant hover:bg-surface-variant transition-all whitespace-nowrap">Requires Action</button>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="flex-1 overflow-y-auto custom-scrollbar bg-surface/30">
+<!-- List Item 1 (Active/Selected) -->
+<div class="p-4 border-b border-outline-variant/50 bg-primary-container/10 border-l-4 border-l-primary cursor-pointer hover:bg-primary-container/20 transition-colors relative">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-lg text-label-lg text-on-surface font-semibold truncate pr-2">Rahul Sharma</h3>
+<span class="font-label-sm text-label-sm text-primary whitespace-nowrap">10:42 AM</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<p class="font-body-md text-body-md text-on-surface-variant font-medium truncate">Clarification on Web Dev Syllabus</p>
+<!-- Badge: New -->
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary-fixed text-on-primary-fixed">New</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant/80 line-clamp-2 text-sm leading-snug">
+                            Hello Admin, I was reviewing the newly uploaded syllabus for the Web Development bootcamp and I noticed that React hooks are not...
+                        </p>
+</div>
+<!-- List Item 2 -->
+<div class="p-4 border-b border-outline-variant/50 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-lg text-label-lg text-on-surface font-medium truncate pr-2 group-hover:text-primary transition-colors">Priya Patel</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Yesterday</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Issue with Fee Payment Portal</p>
+<!-- Badge: In Progress -->
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary-fixed text-on-secondary-fixed">In Progress</span>
+</div>
+<p class="font-body-md text-body-md text-outline line-clamp-2 text-sm leading-snug">
+                            My recent payment for the Advanced Excel course failed, but the amount was deducted from my bank account. Can you please verify...
+                        </p>
+</div>
+<!-- List Item 3 -->
+<div class="p-4 border-b border-outline-variant/50 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-lg text-label-lg text-on-surface font-medium truncate pr-2 group-hover:text-primary transition-colors">Amit Kumar</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Oct 24</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Certificate Not Received</p>
+<!-- Badge: Completed -->
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant">Completed</span>
+</div>
+<p class="font-body-md text-body-md text-outline line-clamp-2 text-sm leading-snug">
+                            I completed the Digital Marketing course last week but haven't received the digital certificate in my portal yet.
+                        </p>
+</div>
+<!-- List Item 4 -->
+<div class="p-4 border-b border-outline-variant/50 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+<h3 class="font-label-lg text-label-lg text-on-surface font-semibold truncate pr-2 group-hover:text-primary transition-colors">Neha Gupta</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Oct 22</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<p class="font-body-md text-body-md text-on-surface-variant font-medium truncate">Course Transfer Request</p>
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary-fixed text-on-primary-fixed">New</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant/80 line-clamp-2 text-sm leading-snug">
+                            Is it possible to transfer my enrollment from the morning batch to the weekend batch? I recently got a job and...
+                        </p>
+</div>
+<!-- List Item 5 -->
+<div class="p-4 border-b border-outline-variant/50 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-lg text-label-lg text-on-surface font-medium truncate pr-2 group-hover:text-primary transition-colors">Vikas Singh</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Oct 20</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Login Credentials Lost</p>
+<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant">Completed</span>
+</div>
+<p class="font-body-md text-body-md text-outline line-clamp-2 text-sm leading-snug">
+                            I am unable to reset my password using the registered email ID. It says account not found. Please help me regain access.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Right Column: Detail View -->
+<div class="flex-1 flex flex-col bg-surface-bright relative">
+<!-- Detail Header -->
+<div class="p-6 border-b border-outline-variant/50 glass-panel z-10">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-title-lg text-title-lg font-bold uppercase">
+                                RS
+                            </div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Clarification on Web Dev Syllabus</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-lg text-label-lg text-on-surface-variant">Rahul Sharma</span>
+<span class="text-outline-variant">•</span>
+<span class="font-body-md text-body-md text-outline">&lt;rahul.s@example.com&gt;</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Oct 26, 2023, 10:42 AM (2 hours ago)</span>
+<div class="flex gap-2">
+<!-- Status Tag inside detail -->
+<div class="px-3 py-1 rounded-full bg-primary-fixed-dim/20 text-on-primary-fixed border border-primary-fixed-dim flex items-center gap-1 cursor-pointer hover:bg-primary-fixed-dim/30 transition-colors">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider">Status: New</span>
+<span class="material-symbols-outlined text-[14px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex items-center gap-3 pt-2">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface text-on-surface border border-outline-variant hover:bg-surface-variant transition-colors shadow-sm font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-[18px]">reply</span>
+                            Reply
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface text-on-surface border border-outline-variant hover:bg-surface-variant transition-colors shadow-sm font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-[18px]">forward</span>
+                            Forward
+                        </button>
+<div class="h-6 w-px bg-outline-variant mx-1"></div>
+<button class="flex items-center justify-center w-9 h-9 rounded-full text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors tooltip" title="Assign to team">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+</button>
+<button class="flex items-center justify-center w-9 h-9 rounded-full text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors tooltip" title="Add tags">
+<span class="material-symbols-outlined text-[20px]">label</span>
+</button>
+<button class="flex items-center justify-center w-9 h-9 rounded-full text-on-surface-variant hover:bg-error-container hover:text-error transition-colors tooltip ml-auto" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Message Body -->
+<div class="flex-1 p-8 overflow-y-auto custom-scrollbar text-on-surface font-body-lg text-body-lg leading-relaxed max-w-4xl">
+<p class="mb-4">Hello Admin,</p>
+<p class="mb-4">I hope this email finds you well.</p>
+<p class="mb-4">I was reviewing the newly uploaded syllabus for the upcoming Web Development bootcamp (Batch A), and I noticed that React hooks are not explicitly mentioned in the Module 4 breakdown. Given that functional components are the standard now, I wanted to confirm if hooks (useState, useEffect, useContext) will be covered in depth, or if the curriculum still focuses on class components.</p>
+<p class="mb-4">Also, will we be needing any specific local environment setup before the first class, or will we use cloud IDEs initially?</p>
+<p class="mb-4">Looking forward to the course starting!</p>
+<p class="mt-8 text-on-surface-variant">
+                        Best regards,<br/>
+                        Rahul Sharma<br/>
+                        Student ID: WEB23-045
+                    </p>
+</div>
+<!-- Quick Reply / Composer Footer -->
+<div class="p-6 border-t border-outline-variant/50 bg-surface-container-lowest shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-10">
+<div class="rounded-xl border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary bg-surface transition-all overflow-hidden flex flex-col">
+<!-- Rich Text formatting dummy toolbar -->
+<div class="flex items-center gap-1 p-2 border-b border-outline-variant/40 bg-surface-container-lowest">
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">attach_file</span></button>
+</div>
+<textarea class="w-full p-4 min-h-[120px] resize-none outline-none bg-transparent font-body-md text-body-md text-on-surface placeholder-on-surface-variant/60 border-none focus:ring-0" placeholder="Type your reply here..."></textarea>
+<div class="p-3 flex justify-between items-center bg-surface-container-lowest">
+<div class="flex gap-2">
+<span class="px-2 py-1 rounded bg-surface-variant text-on-surface-variant font-label-sm text-label-sm cursor-pointer hover:bg-surface-container-highest transition-colors">Template: Syllabus Clarification</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors">Discard</button>
+<button class="flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-lg text-label-lg hover:shadow-md hover:brightness-110 transition-all">
+                                    Send
+                                    <span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

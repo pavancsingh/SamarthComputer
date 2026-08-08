@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Mukta:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Google Stitch Color Palette */
+  --stitch-red: #DC2626;
+  --stitch-red-dark: #B91C1C;
+  --stitch-red-light: #FEF2F2;
+  --stitch-red-border: #FECACA;
+  
+  --stitch-navy: #0B132B;
+  --stitch-slate-dark: #0F172A;
+  --stitch-slate-card: #182238;
+  
+  --stitch-ivory: #FAFAFA;
+  --stitch-surface: #FFFFFF;
+  --stitch-border: #E2E8F0;
+  --stitch-border-strong: #CBD5E1;
+  
+  --stitch-text-dark: #0F172A;
+  --stitch-text-muted: #64748B;
+  --stitch-text-light: #94A3B8;
+
+  --stitch-emerald: #10B981;
+  --stitch-amber: #F59E0B;
+  --stitch-indigo: #6366F1;
+  --stitch-whatsapp: #25D366;
+
+  /* Typography */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  --font-marathi: 'Mukta', 'Noto Sans Devanagari', sans-serif;
+
+  /* Elevation & Shadows */
+  --stitch-shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  --stitch-shadow-md: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+  --stitch-shadow-lg: 0 16px 40px -8px rgba(15, 23, 42, 0.12);
+  --stitch-shadow-glow: 0 0 25px -5px rgba(220, 38, 38, 0.25);
+  --stitch-glass: backdrop-filter: blur(16px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--stitch-ivory);
+  color: var(--stitch-text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Devanagari / Marathi Text Override */
+.marathi-text {
+  font-family: var(--font-marathi);
+  line-height: 1.65;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--stitch-text-dark);
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* Custom Stitch Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Utility Glassmorphism Cards */
+.stitch-glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.stitch-glass-dark {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+}
+

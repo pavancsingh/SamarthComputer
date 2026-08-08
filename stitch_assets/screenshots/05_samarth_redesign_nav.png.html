@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Computers - Empowering Careers Through Technology</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#191c1e",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "inverse-primary": "#ffb4ab",
+                        "primary-container": "#dc2626",
+                        "on-tertiary-container": "#fbf7ff",
+                        "tertiary-fixed": "#e2dfff",
+                        "stitch-slate-card": "#1E293B",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#5c403c",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed": "#ffdad6",
+                        "surface": "#f7f9fb",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#93000b",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "stitch-emerald": "#059669",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "text-primary": "#1E293B",
+                        "stitch-ivory": "#FAFAF9",
+                        "on-primary-container": "#fff6f5",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#bf0715",
+                        "secondary": "#565e74",
+                        "stitch-red-dark": "#991B1B",
+                        "tertiary": "#483ede",
+                        "error-container": "#ffdad6",
+                        "primary": "#b70011",
+                        "outline": "#916f6b",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#ffb4ab",
+                        "outline-variant": "#e6bdb8",
+                        "tertiary-container": "#625bf8",
+                        "surface-container-low": "#f2f4f6",
+                        "stitch-red-border": "#FCA5A5",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "background": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "on-surface": "#191c1e",
+                        "stitch-red-light": "#FEF2F2",
+                        "on-primary-fixed": "#410002",
+                        "on-tertiary-fixed": "#0f0069"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "sm": "8px",
+                        "container-max": "1280px",
+                        "md": "16px",
+                        "xl": "48px",
+                        "2xl": "80px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "display-hero": ["Inter", "sans-serif"],
+                        "display-hero-mobile": ["Inter", "sans-serif"],
+                        "marathi-body": ["Noto Sans Devanagari", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.75", "fontWeight": "400" }],
+                        "display-hero": ["60px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "marathi-body": ["16px", { "lineHeight": "1.85", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    },
+                    "boxShadow": {
+                        "stitch-glow": "0 0 15px rgba(220, 38, 38, 0.2)",
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .glow-orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220,38,38,0.05) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hover-lift {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- 1. Emergency Urgency Banner -->
+<div class="bg-primary text-on-primary text-center py-2 px-4 flex items-center justify-center gap-2 relative z-50">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+<span class="font-label-bold text-sm">Admissions Open for Summer Batches 2024! Special Discount on MS-CIT + Tally Combo.</span>
+<a class="underline font-label-bold text-sm ml-2 hover:text-primary-fixed transition-colors" href="#contact">Apply Now</a>
+</div>
+<!-- 3. Primary Header (TopAppBar) -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl docked full-width top-0 sticky z-40 border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none transition-all duration-300" id="main-header">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<!-- Brand -->
+<a class="flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-primary text-3xl">computer</span>
+<span class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight">Samarth Computers</span>
+</a>
+<!-- Desktop Navigation -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-bold pb-1 whileTap: { scale: 0.98 } transition-transform" href="#home">Home</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#courses">Courses</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#csc">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#timetable">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#workshops">Workshops</a>
+</nav>
+<!-- Actions -->
+<div class="hidden md:flex items-center gap-4">
+<a class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-bold shadow-sm hover:shadow-md transition-shadow active:scale-95 border border-primary/20 relative overflow-hidden group" href="#contact">
+<span class="relative z-10">Apply Now</span>
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+</a>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main>
+<!-- 4. Hero Section -->
+<section class="relative pt-12 pb-2xl md:pt-24 md:pb-32 overflow-hidden px-4 md:px-8 max-w-7xl mx-auto" id="home">
+<div class="glow-orb top-0 -left-20"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left Content -->
+<div class="lg:col-span-6 z-10 animate-fade-in-up">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stitch-red-light border border-stitch-red-border text-primary font-label-caps mb-6">
+<span class="w-2 h-2 rounded-full bg-stitch-emerald animate-pulse"></span>
+                        Govt. Recognized Institute
+                    </div>
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary mb-6">
+                        Master IT Skills. <br/>
+<span class="text-primary">Build Your Future.</span>
+</h1>
+<p class="text-body-lg font-body-lg text-secondary mb-4">
+                        Join thousands of successful students who have transformed their careers with our industry-aligned computer courses. Expert faculty, hands-on labs, and placement assistance.
+                    </p>
+<p class="text-marathi-body font-marathi-body text-secondary mb-8 opacity-80 border-l-4 border-surface-variant pl-4">
+                        समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-bold text-center shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 group" href="#courses">
+                            Explore Courses
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="bg-transparent border border-surface-variant text-text-primary px-8 py-3 rounded-lg font-label-bold text-center hover:bg-surface-container-low transition-colors active:scale-95 flex items-center justify-center gap-2" href="#contact">
+<span class="material-symbols-outlined">call</span>
+                            Contact Counselor
+                        </a>
+</div>
+</div>
+<!-- Right Image Grid -->
+<div class="lg:col-span-6 relative z-10 animate-fade-in-up" style="animation-delay: 0.2s;">
+<div class="relative rounded-2xl overflow-hidden border border-surface-variant/50 shadow-xl bg-white p-2">
+<img alt="Modern Computer Lab" class="w-full h-auto rounded-xl object-cover aspect-[4/3]" data-alt="A bright, modern computer laboratory with sleek desktop computers arranged neatly on wooden desks. The room is well-lit with natural light streaming through large windows. Students in professional casual attire are actively engaged in coding and software training. High-end modern aesthetic, professional education environment, clean lines, bright white and subtle slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbX34HCVSdqxQv6BqekZUtEcR_kWH_1-yPgKLwEB7MqRjPAhwPKsy9JLdjA61ZZ9I7trxv9jIajF_wB-rmjYHGdu5zyZUYyOtMi_YyRHm60qhCcD1G-vdmt4aeszqIMmC_oGlY6JnDacXr4Cqox0DX4XykBa4tjRGCWPN728yzIbd8Q-zth2JdyT4KI3Vibso8PQOxtGclxN_0Or6fD5oGgy5YPVydMlAk9ERtswuzPkDFoIbzQ9m5"/>
+<!-- Floating Glass Card -->
+<div class="absolute bottom-6 left-6 right-6 md:right-auto md:w-72 glass-panel p-4 rounded-xl shadow-lg flex items-center gap-4">
+<div class="bg-stitch-emerald/10 p-3 rounded-full flex-shrink-0">
+<span class="material-symbols-outlined text-stitch-emerald">school</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-text-primary">MKCL Authorized</p>
+<p class="text-sm text-secondary">Premium Learning Center</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Trust Strip -->
+<section class="border-y border-surface-variant/30 bg-surface/50 py-8">
+<div class="max-w-7xl mx-auto px-4 md:px-8">
+<p class="text-center text-label-caps font-label-caps text-secondary mb-6 tracking-widest">RECOGNIZED &amp; CERTIFIED BY</p>
+<div class="flex flex-wrap justify-center gap-8 md:gap-16 items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+<!-- Trust Logos Placeholders -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl">verified</span>
+<span class="font-label-bold text-lg text-text-primary">MKCL</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+<span class="font-label-bold text-lg text-text-primary">Govt. of Maharashtra</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl">badge</span>
+<span class="font-label-bold text-lg text-text-primary">ISO 9001:2015</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. Courses Showcase -->
+<section class="py-2xl relative px-4 md:px-8 max-w-7xl mx-auto" id="courses">
+<div class="text-center mb-16">
+<span class="text-primary font-label-caps tracking-widest uppercase mb-2 block">Our Programs</span>
+<h2 class="text-headline-lg font-headline-lg text-text-primary mb-4">Professional Computer Courses</h2>
+<p class="text-body-md text-secondary max-w-2xl mx-auto">Industry-relevant curriculum designed to make you job-ready. From basic literacy to advanced programming.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Course Card 1 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift hover:shadow-stitch-glow group">
+<div class="w-12 h-12 rounded-lg bg-stitch-red-light flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">computer</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">FOUNDATION</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2">MS-CIT</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Maharashtra State Certificate in Information Technology. The most popular IT literacy course.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary">2 Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift hover:shadow-stitch-glow group">
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant">calculate</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">ACCOUNTING</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2">Tally Prime</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Master computerized accounting, inventory management, and GST taxation with practical scenarios.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary">3 Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift hover:shadow-stitch-glow group">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant">code</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">DEVELOPMENT</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2">Web Development</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Learn HTML, CSS, JavaScript, and modern frameworks to build responsive, dynamic websites.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary">4 Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center">
+<a class="inline-block bg-white border border-surface-variant text-text-primary px-8 py-3 rounded-lg font-label-bold shadow-sm hover:shadow-md transition-all active:scale-95" href="#">
+                    View All Courses
+                </a>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg rounded-t-xl border-t border-surface-variant/50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-primary font-bold hover:bg-surface-container-low p-2 rounded-xl transition-all w-16" href="#home">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-caps font-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16" href="#courses">
+<span class="material-symbols-outlined">school</span>
+<span class="text-label-caps font-label-caps mt-1">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16" href="#csc">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-label-caps font-label-caps mt-1">Services</span>
+</a>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 relative">
+<div class="absolute -top-3 right-1 w-3 h-3 bg-primary rounded-full border-2 border-white"></div>
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+<span class="text-label-caps font-label-caps mt-1 text-primary">AI Chat</span>
+</button>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16" href="#login">
+<span class="material-symbols-outlined">login</span>
+<span class="text-label-caps font-label-caps mt-1">Login</span>
+</a></nav>
+<!-- Footer -->
+<footer class="bg-on-background dark:bg-inverse-surface w-full py-xl px-4 md:px-8 mt-2xl relative pb-24 md:pb-xl">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg">
+<div class="text-primary-fixed text-headline-md font-headline-lg flex items-center gap-2">
+<span class="material-symbols-outlined">computer</span>
+                Samarth Computers
+            </div>
+<div class="flex flex-wrap gap-4 md:gap-8">
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#login">Login</a></div>
+</div>
+<div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-surface-variant/20 text-surface-variant/60 text-sm">
+            © 2024 Samarth Computers &amp; CSC Services. All rights reserved.
+        </div>
+</footer>
+<!-- Scripts -->
+<script>
+        // Sticky Header Shrink Effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('py-2', 'shadow-md');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.remove('py-2', 'shadow-md');
+                header.classList.add('py-4');
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Courses - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "stitch-slate-card": "#1E293B",
+                      "on-secondary-container": "#5c647a",
+                      "secondary-container": "#dae2fd",
+                      "primary": "#b70011",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#0f0069",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "tertiary-fixed": "#e2dfff",
+                      "surface-dim": "#d8dadc",
+                      "surface": "#f7f9fb",
+                      "surface-bright": "#f7f9fb",
+                      "text-primary": "#1E293B",
+                      "primary-fixed": "#ffdad6",
+                      "stitch-red-light": "#FEF2F2",
+                      "tertiary-fixed-dim": "#c3c0ff",
+                      "on-tertiary-fixed-variant": "#3323cc",
+                      "inverse-surface": "#2d3133",
+                      "primary-fixed-dim": "#ffb4ab",
+                      "secondary-fixed": "#dae2fd",
+                      "inverse-on-surface": "#eff1f3",
+                      "background": "#f7f9fb",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "stitch-ivory": "#FAFAF9",
+                      "surface-container-highest": "#e0e3e5",
+                      "inverse-primary": "#ffb4ab",
+                      "outline-variant": "#e6bdb8",
+                      "surface-tint": "#bf0715",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#f2f4f6",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#93000b",
+                      "surface-variant": "#e0e3e5",
+                      "on-surface-variant": "#5c403c",
+                      "tertiary": "#483ede",
+                      "primary-container": "#dc2626",
+                      "on-secondary-fixed": "#131b2e",
+                      "secondary": "#565e74",
+                      "stitch-red-dark": "#991B1B",
+                      "on-tertiary-container": "#fbf7ff",
+                      "surface-container": "#eceef0",
+                      "stitch-red-border": "#FCA5A5",
+                      "stitch-emerald": "#059669",
+                      "outline": "#916f6b",
+                      "on-background": "#191c1e",
+                      "on-primary-fixed": "#410002",
+                      "on-primary-container": "#fff6f5",
+                      "tertiary-container": "#625bf8",
+                      "on-error": "#ffffff",
+                      "on-surface": "#191c1e",
+                      "surface-container-high": "#e6e8ea"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "2xl": "80px",
+                      "sm": "8px",
+                      "xl": "48px",
+                      "container-max": "1280px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "marathi-body": [
+                              "Noto Sans Devanagari"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "display-hero": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "label-bold": [
+                              "Inter"
+                      ],
+                      "display-hero-mobile": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "marathi-body": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.85",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.75",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-hero": [
+                              "60px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-hero-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .stitch-card-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        .stitch-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 15px -3px theme('colors.primary-fixed-dim'), 0 4px 6px -4px theme('colors.outline-variant');
+        }
+        .btn-interact {
+            transition: transform 0.1s;
+        }
+        .btn-interact:active {
+            transform: scale(0.98);
+        }
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative overflow-x-hidden">
+<!-- Ambient Background Effects -->
+<div class="ambient-glow bg-primary w-[600px] h-[600px] top-[-200px] left-[-200px]"></div>
+<div class="ambient-glow bg-stitch-slate-card w-[500px] h-[500px] top-[40%] right-[-100px] opacity-10"></div>
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none hidden md:block">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<!-- Brand -->
+<div class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight cursor-pointer">
+                Samarth Computers
+            </div>
+<!-- Navigation Links -->
+<nav class="flex gap-lg h-full items-center">
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Courses</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Workshops</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Success Stories</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 whileTap: { scale: 0.98 } transition-transform" href="#">Faculty</a>
+</nav>
+<!-- Actions -->
+<div class="flex gap-md items-center">
+<button class="bg-primary text-on-primary font-label-bold text-label-bold px-lg py-sm rounded border border-white/20 btn-interact shadow-sm">Apply Now</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pb-2xl md:pb-0">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-4 md:px-gutter pt-xl pb-2xl flex flex-col items-center text-center">
+<span class="bg-stitch-red-light text-primary border border-stitch-red-border px-md py-xs rounded-full font-label-caps text-label-caps mb-lg inline-flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">school</span>
+                Explore Our Programs
+            </span>
+<h1 class="font-display-hero-mobile text-display-hero-mobile md:font-display-hero md:text-display-hero text-text-primary mb-md max-w-4xl">
+                Master the Digital World
+            </h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mb-xl">
+                From foundational digital literacy to advanced software development, equip yourself with industry-ready skills. Browse our comprehensive course catalog below.
+            </p>
+<!-- Search & Filter Bar -->
+<div class="w-full max-w-3xl bg-white p-sm rounded-xl border border-surface-variant/50 shadow-md flex flex-col md:flex-row gap-sm">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-secondary">search</span>
+<input class="w-full pl-xl pr-sm py-md bg-surface-container-lowest border-none rounded-lg focus:ring-1 focus:ring-primary font-body-md text-body-md text-text-primary placeholder:text-on-secondary-container" placeholder="Search courses (e.g. Tally, MS-CIT)..." type="text"/>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-low text-text-primary px-md py-md rounded-lg font-label-bold text-label-bold flex items-center gap-xs hover:bg-surface-container-highest transition-colors flex-1 md:flex-none justify-center">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Filters
+                    </button>
+<button class="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold text-label-bold btn-interact flex-1 md:flex-none">
+                        Search
+                    </button>
+</div>
+</div>
+</section>
+<!-- Course Category Filters (Chips) -->
+<section class="max-w-7xl mx-auto px-4 md:px-gutter mb-xl overflow-x-auto hide-scrollbar">
+<div class="flex gap-sm pb-sm min-w-max">
+<button class="bg-primary-container text-on-primary-container border-primary font-label-bold text-label-bold px-lg py-sm rounded-full border">All Courses</button>
+<button class="bg-white text-secondary hover:bg-surface border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded-full transition-colors">Foundation</button>
+<button class="bg-white text-secondary hover:bg-surface border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded-full transition-colors">Accounting</button>
+<button class="bg-white text-secondary hover:bg-surface border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded-full transition-colors">Development</button>
+<button class="bg-white text-secondary hover:bg-surface border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded-full transition-colors">Government Services</button>
+<button class="bg-white text-secondary hover:bg-surface border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded-full transition-colors">Typing</button>
+</div>
+</section>
+<!-- Course Grid (Bento Style) -->
+<section class="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Course Card 1: MS-CIT (Featured) -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover md:col-span-2 lg:col-span-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-bl-full -z-0"></div>
+<div class="relative z-10 flex flex-col h-full">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-stitch-indigo/10 text-tertiary font-label-caps text-label-caps px-md py-xs rounded-full border border-tertiary-fixed-dim">Foundation</span>
+<span class="bg-stitch-emerald/10 text-stitch-emerald font-label-caps text-label-caps px-md py-xs rounded-full flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">check_circle</span> Admissions Open</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-text-primary mb-xs">MS-CIT</h3>
+<p class="font-body-md text-body-md text-secondary mb-lg flex-grow max-w-xl">
+                            Maharashtra State Certificate in Information Technology. The most popular IT literacy course covering fundamental computer concepts, office productivity tools, and internet skills essential for modern workplaces.
+                        </p>
+<div class="flex flex-wrap gap-md mb-lg text-sm text-on-secondary-container">
+<div class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">schedule</span> 2 Months</div>
+<div class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">laptop_mac</span> Practical Focus</div>
+<div class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">workspace_premium</span> MKCL Certified</div>
+</div>
+<div class="flex gap-sm mt-auto">
+<button class="bg-primary text-on-primary font-label-bold text-label-bold px-lg py-sm rounded btn-interact flex-1 md:flex-none shadow-sm">Enroll Now</button>
+<button class="bg-white text-stitch-slate-card border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded btn-interact hover:bg-slate-50 flex-1 md:flex-none">Syllabus</button>
+</div>
+</div>
+</div>
+<!-- Course Card 2: Tally Prime -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-highest text-on-surface font-label-caps text-label-caps px-md py-xs rounded-full">Accounting</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-text-primary mb-xs">Tally Prime with GST</h3>
+<p class="font-body-md text-body-md text-secondary mb-lg flex-grow">
+                        Master computerized accounting, inventory management, and GST taxation using the latest Tally Prime software.
+                    </p>
+<div class="flex gap-sm mt-auto flex-col w-full">
+<div class="flex justify-between text-sm text-secondary mb-sm border-b border-surface-variant/50 pb-sm">
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">timer</span> 3 Months</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">group</span> Batch filling</span>
+</div>
+<button class="w-full bg-white text-primary border border-primary/30 font-label-bold text-label-bold px-lg py-sm rounded btn-interact hover:bg-stitch-red-light">View Details</button>
+</div>
+</div>
+<!-- Course Card 3: Web Development -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-highest text-on-surface font-label-caps text-label-caps px-md py-xs rounded-full">Development</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-text-primary mb-xs">Full Stack Web Dev</h3>
+<p class="font-body-md text-body-md text-secondary mb-lg flex-grow">
+                        Build modern, responsive websites from scratch using HTML, CSS, JavaScript, and backend frameworks.
+                    </p>
+<div class="flex gap-sm mt-auto flex-col w-full">
+<div class="flex justify-between text-sm text-secondary mb-sm border-b border-surface-variant/50 pb-sm">
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">timer</span> 6 Months</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">code</span> Project-based</span>
+</div>
+<button class="w-full bg-white text-primary border border-primary/30 font-label-bold text-label-bold px-lg py-sm rounded btn-interact hover:bg-stitch-red-light">View Details</button>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
+<div class="bg-stitch-slate-card rounded-xl p-xl flex flex-col md:flex-row items-center justify-between gap-xl relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+<div class="relative z-10 max-w-2xl text-center md:text-left">
+<h2 class="font-headline-lg text-headline-lg text-on-secondary mb-md">Not sure which course is right for you?</h2>
+<p class="font-body-md text-body-md text-secondary-fixed-dim">
+                        Our expert counselors can help you chart a career path based on your current skills and future goals. Book a free consultation today.
+                    </p>
+</div>
+<div class="relative z-10 flex-shrink-0">
+<button class="bg-primary text-on-primary font-label-bold text-label-bold px-xl py-md rounded-lg btn-interact shadow-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+                         Book Counseling
+                     </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg docked full-width bottom-0 rounded-t-xl border-t border-surface-variant/50 dark:border-outline-variant/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] shadow-lg fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 w-16" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 w-16 scale-95 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="text-label-caps font-label-caps">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 w-16" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">account_balance</span>
+<span class="text-label-caps font-label-caps text-center leading-tight">CSC Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 w-16" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">smart_toy</span>
+<span class="text-label-caps font-label-caps text-center leading-tight">AI Assistant</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="bg-on-background dark:bg-inverse-surface full-width relative flat no shadows w-full py-xl px-gutter max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg mb-[80px] md:mb-0 transition-opacity duration-200">
+<div class="flex flex-col gap-sm">
+<div class="text-headline-md font-headline-lg text-primary-fixed">Samarth Computers</div>
+<p class="text-body-md font-body-md text-surface-variant/80 max-w-md">Empowering careers through premium digital education and comprehensive citizen services.</p>
+<p class="text-body-md font-body-md text-surface-variant/60 text-sm mt-md">© 2024 Samarth Computers &amp; CSC Services. All rights reserved.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-lg md:gap-xl">
+<nav class="flex flex-col gap-sm">
+<h4 class="text-primary-fixed font-label-bold text-label-bold mb-xs">Legal</h4>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">Refund Policy</a>
+</nav>
+<nav class="flex flex-col gap-sm">
+<h4 class="text-primary-fixed font-label-bold text-label-bold mb-xs">Company</h4>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+<a class="text-surface-variant/80 text-body-md font-body-md hover:text-primary-fixed transition-colors" href="#">Login</a></nav>
+</div>
+</footer>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</body></html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MS-CIT Course - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"stitch-slate-card": "#1E293B", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", primary: "#b7000e", "on-secondary": "#ffffff", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-tertiary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "tertiary-fixed": "#e2dfff", "surface-dim": "#d8dadc", surface: "#f7f9fb", "surface-bright": "#f7f9fb", "text-primary": "#1E293B", "primary-fixed": "#ffdad5", "stitch-red-light": "#FEF2F2", "tertiary-fixed-dim": "#c3c0ff", "on-tertiary-fixed-variant": "#3323cc", "inverse-surface": "#2d3133", "primary-fixed-dim": "#ffb4aa", "secondary-fixed": "#dae2fd", "inverse-on-surface": "#eff1f3", background: "#f7f9fb", "secondary-fixed-dim": "#bec6e0", "stitch-ivory": "#FAFAF9", "surface-container-highest": "#e0e3e5", "inverse-primary": "#ffb4aa", "outline-variant": "#e6bdb8", "surface-tint": "#c00311", error: "#ba1a1a", "surface-container-low": "#f2f4f6", "on-error-container": "#93000a", "on-primary-fixed-variant": "#930009", "surface-variant": "#e0e3e5", "on-surface-variant": "#5c403c", tertiary: "#483ede", "primary-container": "#dd2423", "on-secondary-fixed": "#131b2e", secondary: "#565e74", "stitch-red-dark": "#991B1B", "on-tertiary-container": "#fbf7ff", "surface-container": "#eceef0", "stitch-red-border": "#FCA5A5", "stitch-emerald": "#059669", outline: "#916f6b", "on-background": "#191c1e", "on-primary-fixed": "#410002", "on-primary-container": "#fff6f5", "tertiary-container": "#625bf8", "on-error": "#ffffff", "on-surface": "#191c1e", "surface-container-high": "#e6e8ea"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", md: "16px", gutter: "24px", xs: "4px", "2xl": "80px", sm: "8px", xl: "48px", "container-max": "1280px", lg: "24px"}, fontFamily: {"marathi-body": ["Noto Sans Devanagari"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-hero": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "label-bold": ["Inter"], "display-hero-mobile": ["Inter"], "label-caps": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"marathi-body": ["16px", {lineHeight: "1.85", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "1.6", fontWeight: "400"}], "body-lg": ["18px", {lineHeight: "1.75", fontWeight: "400"}], "display-hero": ["60px", {lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "800"}], "headline-lg": ["32px", {lineHeight: "40px", fontWeight: "700"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-bold": ["14px", {lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600"}], "display-hero-mobile": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800"}], "label-caps": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700"}]}}}};</script>
+<style>
+        .shadow-stitch-glow {
+            box-shadow: 0 4px 20px rgba(183, 0, 17, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary antialiased font-body-md selection:bg-primary selection:text-white">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<div class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight">
+                Samarth Computers
+            </div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-bold pb-1 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Courses</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Workshops</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Success Stories</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Faculty</a>
+</nav>
+<div class="hidden md:flex items-center gap-md">
+
+<button class="bg-primary text-white font-label-bold px-md py-sm rounded border border-stitch-red-dark shadow-sm hover:bg-stitch-red-dark transition-colors duration-200" onmousedown="this.style.transform='scale(0.98)'" onmouseleave="this.style.transform='scale(1)'" onmouseup="this.style.transform='scale(1)'" style="transform: scale(1);">Apply Now</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="w-full max-w-7xl mx-auto px-md md:px-gutter lg:px-lg py-xl">
+<div class="flex flex-col lg:flex-row gap-xl relative">
+<!-- Left Content Area -->
+<div class="flex-1 space-y-2xl">
+<!-- Hero Section -->
+<section class="relative rounded-xl overflow-hidden bg-stitch-slate-card text-white p-xl shadow-md">
+<div class="absolute inset-0 z-0 opacity-40">
+<img class="w-full h-full object-cover" data-alt="A modern computer lab classroom environment with sleek desktop computers lined up on neat desks. Students are focused on their screens. High quality bright overhead lighting, professional educational setting, slate and subtle red accent colors, wide angle shot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPO-_IX6UqlvZNhFoTEoTXkiSQSnG76LHzTj9u6u8ewxPJOSMRiXfqMpTUeDn48lBdXiq-hdxEcYplrjuq07iRUt0Y9swbuR1TcIQhkodpetg46ZXWx0laNmHbwda6jCjjH4HUeQIcphbBstdF1ZmIjTGh4nqc45g5omyNQgv68kyZTCoC9fqyfV31k3X9G5Ab0iTbov94HnQWfR8eXID-xJ48aMYOZs1nplRESs9pHZ8Gsq1sS5aF">
+<div class="absolute inset-0 bg-gradient-to-r from-stitch-slate-card via-stitch-slate-card/90 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-2xl space-y-md">
+<div class="flex items-center gap-sm mb-4">
+<span class="bg-stitch-emerald text-white px-3 py-1 rounded-full text-label-caps font-label-caps">Admissions Open</span>
+<span class="bg-stitch-indigo/20 text-stitch-indigo px-3 py-1 rounded-full text-label-caps font-label-caps backdrop-blur-sm border border-stitch-indigo/30">MKCL Certified</span>
+</div>
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-white mb-xs">
+                            MS-CIT Certification
+                        </h1>
+<p class="text-marathi-body font-marathi-body text-surface-dim opacity-90 text-lg">
+                            महाराष्ट्र राज्य तंत्रज्ञान प्रमाणपत्र - Master essential computer skills for the modern workplace with Maharashtra's most recognized IT literacy course.
+                        </p>
+<div class="flex flex-wrap gap-md mt-lg">
+<div class="flex items-center gap-xs text-surface-dim bg-white/10 px-4 py-2 rounded backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+<span class="text-label-bold font-label-bold">2 Months</span>
+</div>
+<div class="flex items-center gap-xs text-surface-dim bg-white/10 px-4 py-2 rounded backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-label-bold font-label-bold">200+ Topics</span>
+</div>
+<div class="flex items-center gap-xs text-surface-dim bg-white/10 px-4 py-2 rounded backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+<span class="text-label-bold font-label-bold">Govt. Recognized</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Course Overview & Curriculum -->
+<section class="space-y-lg">
+<h2 class="text-headline-lg font-headline-lg text-text-primary border-b border-surface-variant/50 pb-sm">Course Curriculum</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Module Card -->
+<div class="bg-white rounded-lg p-md border border-slate-200/50 shadow-md hover:-translate-y-1 hover:shadow-stitch-glow transition-all duration-300">
+<div class="flex items-start gap-md">
+<div class="bg-primary-container/10 p-sm rounded text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="computer">computer</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md mb-xs">Computing Basics</h3>
+<p class="text-body-md font-body-md text-secondary">Fundamentals of operating systems, hardware components, and file management.</p>
+</div>
+</div>
+</div>
+<!-- Module Card -->
+<div class="bg-white rounded-lg p-md border border-slate-200/50 shadow-md hover:-translate-y-1 hover:shadow-stitch-glow transition-all duration-300">
+<div class="flex items-start gap-md">
+<div class="bg-primary-container/10 p-sm rounded text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="description">description</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md mb-xs">Office Productivity</h3>
+<p class="text-body-md font-body-md text-secondary">Master Microsoft Word, Excel, and PowerPoint for professional document creation.</p>
+</div>
+</div>
+</div>
+<!-- Module Card -->
+<div class="bg-white rounded-lg p-md border border-slate-200/50 shadow-md hover:-translate-y-1 hover:shadow-stitch-glow transition-all duration-300">
+<div class="flex items-start gap-md">
+<div class="bg-primary-container/10 p-sm rounded text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="public">public</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md mb-xs">Internet &amp; Email</h3>
+<p class="text-body-md font-body-md text-secondary">Safe web browsing, email etiquette, and digital communication tools.</p>
+</div>
+</div>
+</div>
+<!-- Module Card -->
+<div class="bg-white rounded-lg p-md border border-slate-200/50 shadow-md hover:-translate-y-1 hover:shadow-stitch-glow transition-all duration-300">
+<div class="flex items-start gap-md">
+<div class="bg-primary-container/10 p-sm rounded text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="security">security</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md mb-xs">Digital Citizen Skills</h3>
+<p class="text-body-md font-body-md text-secondary">Cybersecurity basics, online transactions, and e-Governance services.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Certification Detail -->
+<section class="bg-surface-container-low rounded-xl p-lg border border-surface-variant/50 flex flex-col md:flex-row gap-lg items-center">
+<div class="flex-1 space-y-md">
+<h2 class="text-headline-lg font-headline-lg text-text-primary">Official Certification</h2>
+<p class="text-body-md font-body-md text-secondary">
+                             Upon successful completion, students receive a joint certificate from MKCL and Maharashtra State Board of Technical Education (MSBTE). This certificate is mandatory for various government jobs in Maharashtra.
+                         </p>
+<div class="flex items-center gap-sm text-primary font-label-bold">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+                             Recognized by Govt. of Maharashtra
+                         </div>
+</div>
+<div class="w-full md:w-1/3 aspect-video md:aspect-square bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-md shadow-sm">
+<img class="max-w-full max-h-full object-contain" data-alt="A close up shot of a formal professional academic certificate printed on premium paper. The certificate has a gold foil seal, official signatures, and elegant typography. Set against a clean light background, bright studio lighting, professional corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWrVHjwPkTb0Z6iozHk5aFWW1sYdxRa-u9bzSH6VopLE2CXzxJJqXMB-CTtbYUfh_4_qGhT-mcDaN4A_kd_b0IPfdRsYNCiInMU81Wk9cJ3QOA6Rn6IL0V5b7Fj_fdSFUHB8q9Gev5RrZ21S8-xQdRdtDL56ru9wofwUfm0med0jRZuRVItUpG92ai31r6VoiD8pPdpOzDp7cfKdBEUl5X9RU75YH6GcNj1_SZbllF3P4ebItHHm-Z">
+</div>
+</section>
+</div>
+<!-- Sticky Sidebar (Apply Now) -->
+<aside class="w-full lg:w-80 flex-shrink-0">
+<div class="sticky top-28 glass-panel rounded-xl p-lg shadow-lg">
+<h3 class="text-headline-md font-headline-md mb-md text-text-primary">Enroll Now</h3>
+<div class="space-y-sm mb-lg border-b border-surface-variant/50 pb-md">
+<div class="flex justify-between items-center text-sm">
+<span class="text-secondary">Next Batch:</span>
+<span class="font-label-bold text-stitch-emerald">Starting 15th Oct</span>
+</div>
+</div>
+<form class="space-y-md">
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Full Name</label>
+<input class="w-full rounded border-slate-200 bg-white focus:border-primary focus:ring-1 focus:ring-primary text-body-md font-body-md p-2" placeholder="Enter your name" type="text">
+</div>
+<div>
+<label class="block text-label-bold font-label-bold text-text-primary mb-xs">Mobile Number</label>
+<input class="w-full rounded border-slate-200 bg-white focus:border-primary focus:ring-1 focus:ring-primary text-body-md font-body-md p-2" placeholder="+91" type="tel">
+</div>
+<button class="w-full bg-primary text-white font-label-bold py-3 rounded shadow-sm hover:bg-stitch-red-dark transition-colors duration-200 flex items-center justify-center gap-sm mt-4" onmousedown="this.style.transform='scale(0.98)'" onmouseleave="this.style.transform='scale(1)'" onmouseup="this.style.transform='scale(1)'" style="transform: scale(1);" type="button">
+                            Apply For Admission
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<p class="text-label-caps font-label-caps text-secondary text-center mt-md">Limited seats available per batch</p>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg docked full-width rounded-t-xl border-t border-surface-variant/50 dark:border-outline-variant/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] shadow-lg">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all duration-150 scale-95" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="school" data-weight="fill" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="text-label-caps font-label-caps">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="account_balance">account_balance</span>
+<span class="text-label-caps font-label-caps">CSC Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-2 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="smart_toy">smart_toy</span>
+<span class="text-label-caps font-label-caps">AI Assistant</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full relative bg-on-background dark:bg-inverse-surface mt-2xl pb-20 md:pb-0">
+<div class="w-full py-xl px-gutter max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg text-primary-fixed">
+<div class="space-y-4">
+<div class="text-headline-md font-headline-lg text-primary-fixed">Samarth Computers</div>
+<p class="text-surface-variant/80 text-body-md font-body-md max-w-xs">Empowering students through quality technical education since 2010.</p>
+</div>
+<div class="flex flex-wrap gap-x-lg gap-y-sm">
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Refund Policy</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors" href="#">Login</a></div>
+<div class="text-surface-variant/80 text-body-md font-body-md mt-lg md:mt-0 w-full md:w-auto text-center md:text-right">
+                © 2024 Samarth Computers &amp; CSC Services. All rights reserved.
+            </div>
+</div>
+</footer>
+
+
+</body></html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Computers - Empowering Careers Through Technology</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "inverse-surface": "#2d3133",
+                "tertiary-fixed-dim": "#c3c0ff",
+                "primary": "#8b000a",
+                "on-secondary-fixed-variant": "#3e465b",
+                "tertiary-container": "#483ede",
+                "primary-fixed-dim": "#ffb4ab",
+                "surface-container-low": "#f2f4f6",
+                "surface-variant": "#e0e3e5",
+                "primary-container": "#b70011",
+                "surface-dim": "#d8dadc",
+                "on-error": "#ffffff",
+                "surface": "#f7f9fb",
+                "on-tertiary-fixed-variant": "#3323cc",
+                "secondary-container": "#d7dff9",
+                "on-surface-variant": "#5c403c",
+                "on-background": "#191c1e",
+                "surface-bright": "#f7f9fb",
+                "inverse-on-surface": "#eff1f3",
+                "surface-container": "#eceef0",
+                "surface-tint": "#be0a15",
+                "secondary-fixed": "#dae2fc",
+                "outline-variant": "#e6bdb8",
+                "on-tertiary-container": "#cfccff",
+                "on-surface": "#191c1e",
+                "on-error-container": "#93000a",
+                "outline": "#916f6b",
+                "stitch-red-light": "#FEF2F2",
+                "on-primary-fixed-variant": "#93000b",
+                "surface-container-highest": "#e0e3e5",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-fixed": "#e2dfff",
+                "on-primary-container": "#ffc3bc",
+                "primary-fixed": "#ffdad6",
+                "inverse-primary": "#ffb4ab",
+                "background": "#f7f9fb",
+                "surface-container-lowest": "#ffffff",
+                "stitch-slate-card": "#1E293B",
+                "on-primary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#410002",
+                "surface-container-high": "#e6e8ea",
+                "stitch-emerald": "#059669",
+                "on-tertiary-fixed": "#0f0069",
+                "secondary-fixed-dim": "#bec6e0",
+                "tertiary": "#2e1ac7",
+                "error": "#ba1a1a",
+                "stitch-red-border": "#FCA5A5",
+                "on-secondary": "#ffffff",
+                "error-container": "#ffdad6",
+                "secondary": "#565e74",
+                "on-secondary-container": "#5a6278"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "container-max": "1280px",
+                "sm": "8px",
+                "lg": "24px",
+                "xs": "4px",
+                "md": "16px",
+                "xl": "48px",
+                "2xl": "80px"
+        },
+        "fontFamily": {
+                "marathi-body": [
+                        "Noto Sans Devanagari"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "display-hero-mobile": [
+                        "Inter"
+                ],
+                "headline-lg": [
+                        "Inter"
+                ],
+                "display-hero": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-bold": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "marathi-body": [
+                        "16px",
+                        {
+                                "lineHeight": "1.85",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-hero-mobile": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-hero": [
+                        "60px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-bold": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.75",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .glow-orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139,0,10,0.08) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Animations */
+        @media (prefers-reduced-motion: no-preference) {
+            .page-enter {
+                animation: pageFadeIn 0.8s ease-out forwards;
+            }
+            
+            .stagger-reveal > * {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            
+            .reveal-on-scroll {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            .reveal-on-scroll.is-revealed {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .marquee-container {
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+            }
+            
+            .marquee-content {
+                display: inline-block;
+                animation: marquee 20s linear infinite;
+            }
+
+            .marquee-content:hover {
+                animation-play-state: paused;
+            }
+            
+            @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+
+            .hover-lift {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .hover-lift:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 20px 30px -10px rgba(139, 0, 10, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.05);
+            }
+
+            .btn-ripple {
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-ripple .ripple {
+                position: absolute;
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #eceef0 25%, #f2f4f6 50%, #eceef0 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+        }
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container page-enter">
+<!-- 1. Emergency Urgency Banner -->
+<div class="bg-primary text-on-primary text-center py-2 px-4 flex items-center justify-center gap-2 relative z-50">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+<span class="font-label-bold text-sm">Admissions Open for Summer Batches 2024! Special Discount on MS-CIT + Tally Combo.</span>
+<a class="underline font-label-bold text-sm ml-2 hover:text-primary-fixed transition-colors" href="#contact">Apply Now</a>
+</div>
+<!-- 3. Primary Header (TopAppBar) -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl docked full-width top-0 sticky z-40 border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none transition-all duration-300" id="main-header">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<!-- Brand -->
+<a class="flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">computer</span>
+<span class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight">Samarth Computers</span>
+</a>
+<!-- Desktop Navigation -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-bold pb-1 transition-transform hover:scale-105" href="#home">Home</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 hover:scale-105" href="#courses">Courses</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 hover:scale-105" href="#csc">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 hover:scale-105" href="#timetable">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200 hover:scale-105" href="#workshops">Workshops</a>
+</nav>
+<!-- Actions -->
+<div class="hidden md:flex items-center gap-4">
+<a class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-bold shadow-sm hover:shadow-md transition-all active:scale-95 border border-primary/20 relative overflow-hidden group btn-ripple magnetic-btn" href="#contact">
+<span class="relative z-10 group-hover:scale-105 inline-block transition-transform">Apply Now</span>
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+</a>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main>
+<!-- 4. Hero Section -->
+<section class="relative pt-12 pb-2xl md:pt-24 md:pb-32 overflow-hidden px-4 md:px-8 max-w-7xl mx-auto" id="home">
+<div class="glow-orb top-0 -left-20 parallax-bg" data-speed="0.05"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left Content -->
+<div class="lg:col-span-6 z-10 stagger-reveal" id="hero-content">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stitch-red-light border border-stitch-red-border text-primary font-label-caps mb-6 hover:shadow-md transition-shadow">
+<span class="w-2 h-2 rounded-full bg-stitch-emerald animate-pulse"></span>
+                        Govt. Recognized Institute
+                    </div>
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary mb-6">
+                        Master IT Skills. <br/>
+<span class="text-primary inline-block hover:scale-105 transition-transform duration-300">Build Your Future.</span>
+</h1>
+<p class="text-body-lg font-body-lg text-secondary mb-4">
+                        Join thousands of successful students who have transformed their careers with our industry-aligned computer courses. Expert faculty, hands-on labs, and placement assistance.
+                    </p>
+<p class="text-marathi-body font-marathi-body text-secondary mb-8 opacity-80 border-l-4 border-primary pl-4 transition-all hover:pl-6 hover:border-l-8 duration-300">
+                        समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-bold text-center shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 group btn-ripple magnetic-btn" href="#courses">
+<span class="relative z-10">Explore Courses</span>
+<span class="material-symbols-outlined group-hover:translate-x-2 transition-transform relative z-10">arrow_forward</span>
+</a>
+<a class="bg-transparent border border-surface-variant text-text-primary px-8 py-3 rounded-lg font-label-bold text-center hover:bg-surface-container-low transition-colors active:scale-95 flex items-center justify-center gap-2 group magnetic-btn" href="#contact">
+<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">call</span>
+                            Contact Counselor
+                        </a>
+</div>
+</div>
+<!-- Right Image Grid -->
+<div class="lg:col-span-6 relative z-10 reveal-on-scroll parallax-el" data-speed="-0.03">
+<div class="relative rounded-2xl overflow-hidden border border-surface-variant/50 shadow-xl bg-white p-2 group">
+<div class="overflow-hidden rounded-xl">
+<img alt="Modern Computer Lab" class="w-full h-auto rounded-xl object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-700 ease-in-out" data-alt="A bright, modern computer laboratory with sleek desktop computers arranged neatly on wooden desks. The room is well-lit with natural light streaming through large windows. Students in professional casual attire are actively engaged in coding and software training. High-end modern aesthetic, professional education environment, clean lines, bright white and subtle slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbX34HCVSdqxQv6BqekZUtEcR_kWH_1-yPgKLwEB7MqRjPAhwPKsy9JLdjA61ZZ9I7trxv9jIajF_wB-rmjYHGdu5zyZUYyOtMi_YyRHm60qhCcD1G-vdmt4aeszqIMmC_oGlY6JnDacXr4Cqox0DX4XykBa4tjRGCWPN728yzIbd8Q-zth2JdyT4KI3Vibso8PQOxtGclxN_0Or6fD5oGgy5YPVydMlAk9ERtswuzPkDFoIbzQ9m5"/>
+</div>
+<!-- Floating Glass Card -->
+<div class="absolute bottom-6 left-6 right-6 md:right-auto md:w-72 glass-panel p-4 rounded-xl shadow-lg flex items-center gap-4 hover:-translate-y-2 transition-transform duration-300">
+<div class="bg-stitch-emerald/10 p-3 rounded-full flex-shrink-0 group-hover:bg-stitch-emerald/20 transition-colors">
+<span class="material-symbols-outlined text-stitch-emerald">school</span>
+</div>
+<div>
+<p class="text-label-bold font-label-bold text-text-primary">MKCL Authorized</p>
+<p class="text-sm text-secondary">Premium Learning Center</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Trust Strip -->
+<section class="border-y border-surface-variant/30 bg-surface/50 py-8 overflow-hidden reveal-on-scroll">
+<div class="max-w-7xl mx-auto px-4 md:px-8">
+<p class="text-center text-label-caps font-label-caps text-secondary mb-6 tracking-widest">RECOGNIZED &amp; CERTIFIED BY</p>
+<div class="marquee-container">
+<div class="marquee-content flex gap-16 items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-500 pr-16">
+<!-- Set 1 -->
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">verified</span>
+<span class="font-label-bold text-lg text-text-primary">MKCL</span>
+</div>
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">account_balance</span>
+<span class="font-label-bold text-lg text-text-primary">Govt. of Maharashtra</span>
+</div>
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">badge</span>
+<span class="font-label-bold text-lg text-text-primary">ISO 9001:2015</span>
+</div>
+<!-- Set 2 for infinite scroll -->
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">verified</span>
+<span class="font-label-bold text-lg text-text-primary">MKCL</span>
+</div>
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">account_balance</span>
+<span class="font-label-bold text-lg text-text-primary">Govt. of Maharashtra</span>
+</div>
+<div class="flex items-center gap-2 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">badge</span>
+<span class="font-label-bold text-lg text-text-primary">ISO 9001:2015</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. Courses Showcase -->
+<section class="py-2xl relative px-4 md:px-8 max-w-7xl mx-auto reveal-on-scroll" id="courses">
+<div class="text-center mb-16">
+<span class="text-primary font-label-caps tracking-widest uppercase mb-2 block">Our Programs</span>
+<h2 class="text-headline-lg font-headline-lg text-text-primary mb-4">Professional Computer Courses</h2>
+<p class="text-body-md text-secondary max-w-2xl mx-auto">Industry-relevant curriculum designed to make you job-ready. From basic literacy to advanced programming.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Course Card 1 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift group relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+<div class="w-12 h-12 rounded-lg bg-stitch-red-light flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary transition-all duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-white transition-colors duration-300">computer</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">FOUNDATION</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2 group-hover:text-primary transition-colors">MS-CIT</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Maharashtra State Certificate in Information Technology. The most popular IT literacy course.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> <span class="counter" data-target="2">0</span> Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift group relative overflow-hidden" style="transition-delay: 100ms;">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary transition-all duration-300">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant group-hover:text-white transition-colors duration-300">calculate</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">ACCOUNTING</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2 group-hover:text-primary transition-colors">Tally Prime</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Master computerized accounting, inventory management, and GST taxation with practical scenarios.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> <span class="counter" data-target="3">0</span> Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-white rounded-xl border border-surface-variant/50 p-6 hover-lift group relative overflow-hidden" style="transition-delay: 200ms;">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary transition-all duration-300">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant group-hover:text-white transition-colors duration-300">code</span>
+</div>
+<span class="inline-block px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-label-caps rounded mb-3">DEVELOPMENT</span>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-2 group-hover:text-primary transition-colors">Web Development</h3>
+<p class="text-secondary text-sm mb-4 line-clamp-2">Learn HTML, CSS, JavaScript, and modern frameworks to build responsive, dynamic websites.</p>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant/30">
+<span class="text-sm font-label-bold text-text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> <span class="counter" data-target="4">0</span> Months</span>
+<a class="text-primary font-label-bold text-sm flex items-center gap-1 group-hover:underline" href="#">
+                            View Details <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center">
+<a class="inline-block bg-white border border-surface-variant text-text-primary px-8 py-3 rounded-lg font-label-bold shadow-sm hover:shadow-md transition-all active:scale-95 group magnetic-btn" href="#">
+<span class="inline-block group-hover:scale-105 transition-transform">View All Courses</span>
+</a>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg rounded-t-xl border-t border-surface-variant/50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-primary font-bold hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 group" href="#home">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-caps font-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 group hover:text-primary" href="#courses">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">school</span>
+<span class="text-label-caps font-label-caps mt-1">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 group hover:text-primary" href="#csc">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">account_balance</span>
+<span class="text-label-caps font-label-caps mt-1">Services</span>
+</a>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 relative group">
+<div class="absolute -top-3 right-1 w-3 h-3 bg-primary rounded-full border-2 border-white animate-pulse"></div>
+<span class="material-symbols-outlined text-primary group-hover:rotate-12 transition-transform">smart_toy</span>
+<span class="text-label-caps font-label-caps mt-1 text-primary">AI Chat</span>
+</button>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low p-2 rounded-xl transition-all w-16 group hover:text-primary" href="#login">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">login</span>
+<span class="text-label-caps font-label-caps mt-1">Login</span>
+</a></nav>
+<!-- Footer -->
+<footer class="bg-on-background dark:bg-inverse-surface w-full py-xl px-4 md:px-8 mt-2xl relative pb-24 md:pb-xl reveal-on-scroll">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg">
+<div class="text-primary-fixed text-headline-md font-headline-lg flex items-center gap-2 group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">computer</span>
+                Samarth Computers
+            </div>
+<div class="flex flex-wrap gap-4 md:gap-8">
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors hover:translate-x-1 inline-block transform" href="#">About Us</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors hover:translate-x-1 inline-block transform" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors hover:translate-x-1 inline-block transform" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors hover:translate-x-1 inline-block transform" href="#">Contact Support</a>
+<a class="text-surface-variant/80 text-label-bold font-label-bold hover:text-primary-fixed transition-colors hover:translate-x-1 inline-block transform" href="#login">Login</a></div>
+</div>
+<div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-surface-variant/20 text-surface-variant/60 text-sm">
+            © 2024 Samarth Computers &amp; CSC Services. All rights reserved.
+        </div>
+</footer>
+<!-- Scripts -->
+<script>
+        // Sticky Header Shrink Effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('py-2', 'shadow-md');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.remove('py-2', 'shadow-md');
+                header.classList.add('py-4');
+            }
+        });
+
+        // Staggered Reveal for Hero Content
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+                const heroElements = document.querySelectorAll('#hero-content > *');
+                heroElements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, 100 * (index + 1));
+                });
+            }
+        });
+
+        // Scroll Reveal Observer
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                    
+                    // Trigger counters if inside revealed section
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('counted')) {
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 1500; // ms
+                            const step = target / (duration / 16); // 60fps
+                            let current = 0;
+                            
+                            const updateCounter = () => {
+                                current += step;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current);
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    counter.innerText = target;
+                                    counter.classList.add('counted');
+                                }
+                            };
+                            updateCounter();
+                        }
+                    });
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
+        
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Mouse Parallax
+        document.addEventListener('mousemove', (e) => {
+            if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+                const x = (e.clientX - window.innerWidth / 2);
+                const y = (e.clientY - window.innerHeight / 2);
+
+                document.querySelectorAll('.parallax-bg').forEach(el => {
+                    const speed = el.getAttribute('data-speed');
+                    el.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+                
+                document.querySelectorAll('.parallax-el').forEach(el => {
+                    const speed = el.getAttribute('data-speed');
+                    el.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            }
+        });
+
+        // Button Ripple Effect
+        document.querySelectorAll('.btn-ripple').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                // Set size based on button dimension
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.marginLeft = ripple.style.marginTop = `-${size/2}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Magnetic Buttons
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+                    const rect = btn.getBoundingClientRect();
+                    const h = rect.width / 2;
+                    const v = rect.height / 2;
+                    const x = e.clientX - rect.left - h;
+                    const y = e.clientY - rect.top - v;
+                    
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                }
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = `translate(0px, 0px)`;
+            });
+        });
+    </script>
+</body></html>

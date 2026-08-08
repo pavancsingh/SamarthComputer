@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Our Faculty - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#565e74",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "outline": "#916f6b",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#0f0069",
+                        "on-secondary": "#ffffff",
+                        "primary": "#af000d",
+                        "on-tertiary-container": "#f3efff",
+                        "surface-tint": "#c00311",
+                        "tertiary": "#4439da",
+                        "primary-container": "#d71f1f",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#ffb4aa",
+                        "on-primary-container": "#ffeeeb",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "outline-variant": "#e6bdb8",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#5d3f3c",
+                        "secondary-fixed": "#dae2fd",
+                        "tertiary-fixed": "#e2dfff",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "on-primary-fixed-variant": "#930009",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "primary-fixed": "#ffdad5",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-high": "#e6e8ea",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#ffb4aa",
+                        "on-primary-fixed": "#410002",
+                        "surface": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-variant": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#5d56f3",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "48px",
+                        "2xl": "80px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "marathi-body": ["Noto Sans Devanagari"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "display-hero-mobile": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-hero": ["Inter"]
+                    },
+                    "fontSize": {
+                        "marathi-body": ["16px", { "lineHeight": "1.85", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.75", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-hero": ["60px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-panel { background: rgba(247, 249, 251, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(224, 227, 229, 0.5); }
+        .stitch-glow:hover { box-shadow: 0 4px 20px -2px rgba(175, 0, 13, 0.15); transform: translateY(-4px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl sticky top-0 z-50 border-b border-surface-variant/50 shadow-sm w-full">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-[1280px] mx-auto h-20">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="text-headline-md font-headline-lg text-primary tracking-tight">Samarth Computers</span>
+</div>
+<!-- Navigation (Web) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-secondary font-label-bold hover:text-primary transition-colors duration-200" href="#">Courses</a>
+<a class="text-secondary font-label-bold hover:text-primary transition-colors duration-200" href="#">CSC Services</a>
+<a class="text-secondary font-label-bold hover:text-primary transition-colors duration-200" href="#">Timetable</a>
+<a class="text-secondary font-label-bold hover:text-primary transition-colors duration-200" href="#">Workshops</a>
+<a class="text-secondary font-label-bold hover:text-primary transition-colors duration-200" href="#">Success Stories</a>
+<a class="text-primary border-b-2 border-primary font-label-bold" href="#">Faculty</a>
+</nav>
+<!-- Actions -->
+<div class="hidden md:flex items-center gap-4">
+<button class="px-6 py-2 rounded border border-surface-variant text-secondary font-label-bold hover:bg-surface-container-low transition-colors">Login</button>
+<button class="px-6 py-2 rounded bg-primary text-on-primary font-label-bold hover:bg-primary-container transition-colors shadow-sm">Apply Now</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-8 py-xl flex flex-col gap-2xl">
+<!-- Hero Section -->
+<section class="text-center max-w-3xl mx-auto space-y-md">
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-on-background">Expert Guidance for Your Digital Future</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Meet our certified instructors bridging the gap between education and employment through practical, industry-aligned mentorship.</p>
+</section>
+<!-- Faculty Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-md md:gap-lg">
+<!-- Lead Instructor Card (Spans 8 columns) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl border border-surface-variant p-lg flex flex-col md:flex-row gap-lg stitch-glow group">
+<div class="w-full md:w-1/3 aspect-[3/4] relative rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Portrait of a professional Indian male IT instructor in his 40s, wearing a smart casual business shirt. He is standing in a modern computer lab with bright, soft white lighting. The environment looks high-tech and educational. Modern professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtxGwnH7eRkLoe68cwq2KQQhFEoKcFfn55OibqUu_2Rd3nRMi8RTmmzAQZJpODNkB_CEQyoqVR7PzLnN8474aD7ONSq7IMIDP58Ii5Taz8t4qCq05XVPbV2787IkWoSwoOeoGGYytfDWswrvjxa6rfEB0GuH4dLj03PbOOfYgLZ3oZ5E-AHVG9L_Xg8ZQCFbRIzt0MhkrBXIy3czx_PAt_YXeTR2uWA1T9slxtb7S9SDDckD-fNqNH"/>
+</div>
+<div class="w-full md:w-2/3 flex flex-col justify-center space-y-md">
+<div>
+<span class="inline-block px-3 py-1 bg-[#dae2fd] text-[#131b2e] rounded-full text-label-caps font-label-caps mb-2">Center Head &amp; Lead Mentor</span>
+<h2 class="text-headline-lg font-headline-lg text-on-background">Rajesh Deshmukh</h2>
+<p class="text-primary font-label-bold mt-1">15+ Years Experience • MKCL Certified</p>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Specializing in advanced software development and networking. Rajesh has guided over 5,000 students through rigorous curriculum designed to meet actual industry demands, focusing on logical problem-solving and full-stack architecture.</p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="px-3 py-1 border border-surface-variant rounded-md text-label-bold font-label-bold text-secondary">Java</span>
+<span class="px-3 py-1 border border-surface-variant rounded-md text-label-bold font-label-bold text-secondary">Python</span>
+<span class="px-3 py-1 border border-surface-variant rounded-md text-label-bold font-label-bold text-secondary">Network Security</span>
+</div>
+</div>
+</div>
+<!-- Teaching Philosophy Card (Spans 4 columns) -->
+<div class="md:col-span-4 bg-primary rounded-xl p-lg text-on-primary flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-primary-container rounded-full blur-3xl opacity-50"></div>
+<div class="relative z-10 space-y-4">
+<span class="material-symbols-outlined text-4xl mb-2" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h3 class="text-headline-md font-headline-md">Our Philosophy</h3>
+<p class="text-body-md font-body-md text-on-primary/90">"Bridging the gap between traditional education and modern employment."</p>
+<p class="text-body-md font-body-md text-on-primary/80 mt-4">We believe in hands-on, project-based learning. Theory is only as good as its practical application in a real-world tech environment.</p>
+</div>
+</div>
+<!-- Instructor 2 -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl border border-surface-variant p-md flex flex-col gap-4 stitch-glow">
+<div class="w-full aspect-square relative rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young professional Indian female instructor in her late 20s, smiling warmly. She is holding a tablet in a bright, modern classroom setting with natural light pouring in. Modern professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3wiNAPHtnwIX-HdxJZoslEVSVCfa7InmBeeQO9_-E-XU86WIJIDX_Ey-3jSCIRbjsGcYuVHrasmbk0on_WXgm4BPRLsfnzqDENFpVlaFzO907A451oRvRdLFeUh5kdky9knEXYUi3Ml4JiEtfngHEAT-FJ3S2KFPUjaT6OohsvAylk43GjgKAgSsbJKkWl0j_HZgWxwzI8CgXGXfPibcPS4MkHC3uzM-kkTkCbaJBN2EyljTt-maK"/>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-on-background">Sneha Patil</h3>
+<p class="text-primary font-label-bold">Web Technologies • 5 Years Exp</p>
+<p class="text-body-md font-body-md text-on-surface-variant mt-2">Expert in modern frontend frameworks and UI/UX principles. Govt. Certified Trainer.</p>
+</div>
+</div>
+<!-- Instructor 3 -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl border border-surface-variant p-md flex flex-col gap-4 stitch-glow">
+<div class="w-full aspect-square relative rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young male IT instructor in his 30s, focused on a laptop screen. The background is a slightly blurred office environment with modern lighting. High-end professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs2xKKgdZwLNN0UWyHRd19y2eX5B1s8B0l55ewoPtArmup4iJT6GFWFNHTGWCIsaFLJpFOzTPGznrwl7n_jhCTwJDLgiWgI9dtxAsSUHQG5SrgGQVCgAH5tBDje6h87x10BuLDnbJnAoA_T-wdWkKuU-cC6gcP76lLfiRFsr61kOa_nJunPIGVYbEuzl7XpTSrCpo7Z1Szdjzo4ODhuVhJiZgsKBugWtR1IhrT7JSOzb1w6j2zbCHM"/>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-on-background">Amit Kulkarni</h3>
+<p class="text-primary font-label-bold">Data Management • 8 Years Exp</p>
+<p class="text-body-md font-body-md text-on-surface-variant mt-2">Specialist in Database Administration and Tally Prime. MKCL Expert Faculty.</p>
+</div>
+</div>
+<!-- Ask a Mentor Call to Action -->
+<div class="md:col-span-4 bg-surface-container-low rounded-xl border border-surface-variant p-lg flex flex-col justify-center items-center text-center space-y-md">
+<span class="material-symbols-outlined text-secondary text-5xl">forum</span>
+<h3 class="text-headline-md font-headline-md text-on-background">Need Guidance?</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Not sure which course fits your career goals? Talk directly to our mentors.</p>
+<button class="w-full py-3 rounded bg-surface-container-highest text-on-surface font-label-bold hover:bg-primary hover:text-on-primary transition-colors border border-surface-variant hover:border-primary shadow-sm mt-4">Ask a Mentor</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg border-t border-surface-variant/50 shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary font-label-caps" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center text-secondary font-label-caps" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">school</span>
+            Courses
+        </a>
+<a class="flex flex-col items-center justify-center text-secondary font-label-caps" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">account_balance</span>
+            CSC Services
+        </a>
+<a class="flex flex-col items-center justify-center text-primary font-bold font-label-caps" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">groups</span>
+            Faculty
+        </a>
+</nav>
+<!-- Footer -->
+<footer class="w-full bg-on-background py-xl px-gutter mt-2xl md:mb-0 mb-20">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg">
+<div>
+<span class="text-headline-md font-headline-lg text-primary-fixed">Samarth Computers</span>
+<p class="text-surface-variant/80 mt-2 text-body-md font-body-md">© 2024 Samarth Computers &amp; CSC Services. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap gap-md">
+<a class="text-surface-variant/80 font-label-bold hover:text-primary-fixed transition-colors" href="#">About Us</a>
+<a class="text-surface-variant/80 font-label-bold hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant/80 font-label-bold hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant/80 font-label-bold hover:text-primary-fixed transition-colors" href="#">Refund Policy</a>
+<a class="text-surface-variant/80 font-label-bold hover:text-primary-fixed transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CSC &amp; Government Services - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"stitch-slate-card": "#1E293B", "on-secondary-container": "#5c647a", "secondary-container": "#dae2fd", primary: "#b7000e", "on-secondary": "#ffffff", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-tertiary-fixed": "#0f0069", "on-secondary-fixed-variant": "#3f465c", "tertiary-fixed": "#e2dfff", "surface-dim": "#d8dadc", surface: "#f7f9fb", "surface-bright": "#f7f9fb", "text-primary": "#1E293B", "primary-fixed": "#ffdad5", "stitch-red-light": "#FEF2F2", "tertiary-fixed-dim": "#c3c0ff", "on-tertiary-fixed-variant": "#3323cc", "inverse-surface": "#2d3133", "primary-fixed-dim": "#ffb4aa", "secondary-fixed": "#dae2fd", "inverse-on-surface": "#eff1f3", background: "#f7f9fb", "secondary-fixed-dim": "#bec6e0", "stitch-ivory": "#FAFAF9", "surface-container-highest": "#e0e3e5", "inverse-primary": "#ffb4aa", "outline-variant": "#e6bdb8", "surface-tint": "#c00311", error: "#ba1a1a", "surface-container-low": "#f2f4f6", "on-error-container": "#93000a", "on-primary-fixed-variant": "#930009", "surface-variant": "#e0e3e5", "on-surface-variant": "#5c403c", tertiary: "#483ede", "primary-container": "#dd2423", "on-secondary-fixed": "#131b2e", secondary: "#565e74", "stitch-red-dark": "#991B1B", "on-tertiary-container": "#fbf7ff", "surface-container": "#eceef0", "stitch-red-border": "#FCA5A5", "stitch-emerald": "#059669", outline: "#916f6b", "on-background": "#191c1e", "on-primary-fixed": "#410002", "on-primary-container": "#fff6f5", "tertiary-container": "#625bf8", "on-error": "#ffffff", "on-surface": "#191c1e", "surface-container-high": "#e6e8ea"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", md: "16px", gutter: "24px", xs: "4px", "2xl": "80px", sm: "8px", xl: "48px", "container-max": "1280px", lg: "24px"}, fontFamily: {"marathi-body": ["Noto Sans Devanagari"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-hero": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "label-bold": ["Inter"], "display-hero-mobile": ["Inter"], "label-caps": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"marathi-body": ["16px", {lineHeight: "1.85", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "1.6", fontWeight: "400"}], "body-lg": ["18px", {lineHeight: "1.75", fontWeight: "400"}], "display-hero": ["60px", {lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "800"}], "headline-lg": ["32px", {lineHeight: "40px", fontWeight: "700"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-bold": ["14px", {lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600"}], "display-hero-mobile": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800"}], "label-caps": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700"}]}}}};</script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .stitch-card-hover {
+            transition: all 0.3s ease;
+        }
+        .stitch-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(183, 0, 17, 0.1), 0 8px 10px -6px rgba(183, 0, 17, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary antialiased font-body-md">
+<!-- Ambient Background Glow -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-stitch-red-light rounded-full mix-blend-multiply filter blur-[140px] opacity-70"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary-container rounded-full mix-blend-multiply filter blur-[140px] opacity-70"></div>
+</div>
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-stitch-slate-card/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-surface-variant/50 dark:border-outline-variant/20 shadow-sm dark:shadow-none hidden md:block">
+<div class="flex justify-between items-center w-full px-4 md:px-8 max-w-7xl mx-auto h-20">
+<div class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed tracking-tight">Samarth Computers</div>
+<nav class="flex gap-lg">
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Courses</a>
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">CSC Services</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Timetable</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Workshops</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Success Stories</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-bold hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Faculty</a>
+</nav>
+<div class="flex items-center gap-md">
+
+<button class="px-md py-sm text-label-bold font-label-bold bg-primary text-on-primary rounded shadow-sm hover:bg-stitch-red-dark transition-colors border border-primary/20" onmousedown="this.style.transform='scale(0.98)'" onmouseleave="this.style.transform='scale(1)'" onmouseup="this.style.transform='scale(1)'" style="transform: scale(1);">Apply Now</button>
+</div>
+</div>
+</header>
+<main class="w-full max-w-7xl mx-auto px-md md:px-gutter lg:px-lg pb-2xl pt-xl">
+<!-- Hero Section -->
+<section class="mb-2xl flex flex-col md:flex-row items-center gap-xl">
+<div class="flex-1 space-y-md">
+<span class="inline-block px-sm py-xs bg-secondary-container text-on-secondary-container text-label-caps font-label-caps rounded-full">Government Services</span>
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary">
+                    Trusted CSC &amp; <br><span class="text-primary">Maha-E-Seva</span> Center
+                </h1>
+<p class="text-body-lg font-body-lg text-secondary max-w-2xl">
+                    Your one-stop destination for reliable, fast, and secure government document processing. We bridge the gap between citizens and essential services with professional assistance.
+                </p>
+<div class="flex gap-md pt-sm">
+<button class="px-lg py-md bg-primary text-on-primary text-label-bold font-label-bold rounded-lg shadow-sm hover:bg-stitch-red-dark transition-colors border border-primary/20 flex items-center gap-sm">
+<span class="">Book Appointment</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex-1 relative w-full h-[400px] rounded-xl overflow-hidden glass-panel shadow-lg">
+<div class="bg-cover bg-center w-full h-full" data-alt="A modern, well-lit office space where a professional staff member is assisting a citizen with government paperwork on a sleek computer monitor. The environment feels trustworthy, bright, and organized, reflecting a high-end service center. Soft natural light filters in, highlighting the crisp white and slate tones of the room with subtle red branding accents." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBNLP0gDe80P5MH1n3qSFnc9ZXzyShKnCgyQSg36BRpxNQ7kQ8FN2lO0JSchT2_dpjZ8ukAOVVoUSXPwUpdh9pv5cnJrVE0gmYuFan1VWOi8QjxVcRsoaSQQGBVgd3_OvuxzLJUNHSaUDlodxkxNFhd3kwKUdsqGC8S1o03GNsRg3d5350crfbPxMtXlDUHn8cxvX1Lo8juFXYJB97nkWvO1D7FzEYdeJtQD_5qUMOoXMpH1uDlZxvp')"></div>
+</div>
+</section>
+<!-- Services Bento Grid -->
+<section class="mb-2xl space-y-lg">
+<div class="text-center space-y-sm">
+<h2 class="text-headline-lg font-headline-lg text-text-primary">Essential Services</h2>
+<p class="text-body-md font-body-md text-secondary">Comprehensive digital governance solutions at your fingertips.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-md auto-rows-[200px]">
+<!-- Pan Card -->
+<div class="glass-panel p-lg rounded-xl md:col-span-2 md:row-span-2 stitch-card-hover flex flex-col justify-between group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-stitch-red-light rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">id_card</span>
+</div>
+<span class="text-label-caps font-label-caps text-stitch-emerald bg-stitch-emerald/10 px-sm py-xs rounded">Fast Track</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-text-primary mb-xs group-hover:text-primary transition-colors">PAN Card Services</h3>
+<p class="text-body-md font-body-md text-secondary">New applications, corrections, and linking with Aadhaar processed swiftly.</p>
+</div>
+</div>
+<!-- Aadhaar -->
+<div class="glass-panel p-md rounded-xl md:col-span-1 md:row-span-1 stitch-card-hover flex flex-col justify-between group">
+<div class="w-10 h-10 bg-secondary-container rounded-lg flex items-center justify-center text-tertiary-container mb-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+</div>
+<div>
+<h3 class="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">Aadhaar Updates</h3>
+<p class="text-body-md font-body-md text-secondary text-sm">Address, phone, and detail corrections.</p>
+</div>
+</div>
+<!-- Voting -->
+<div class="glass-panel p-md rounded-xl md:col-span-1 md:row-span-1 stitch-card-hover flex flex-col justify-between group">
+<div class="w-10 h-10 bg-surface-container-high rounded-lg flex items-center justify-center text-secondary mb-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">how_to_vote</span>
+</div>
+<div>
+<h3 class="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">Voter ID</h3>
+<p class="text-body-md font-body-md text-secondary text-sm">Registration and modifications.</p>
+</div>
+</div>
+<!-- Insurance -->
+<div class="glass-panel p-md rounded-xl md:col-span-2 md:row-span-1 stitch-card-hover flex flex-col justify-between group">
+<div class="flex items-center gap-md mb-sm">
+<div class="w-10 h-10 bg-stitch-red-light rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+</div>
+<h3 class="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">Vehicle &amp; Life Insurance</h3>
+</div>
+<p class="text-body-md font-body-md text-secondary">Compare and renew policies from top providers instantly.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="bg-white/90 dark:bg-stitch-slate-card/90 backdrop-blur-lg docked full-width bottom-0 rounded-t-xl border-t border-surface-variant/50 dark:border-outline-variant/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] shadow-lg fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-xs" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-caps font-label-caps mt-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-xs" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="text-label-caps font-label-caps mt-xs">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-xs scale-[0.95] transition-all duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="text-label-caps font-label-caps mt-xs">CSC Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-xs" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-label-caps font-label-caps mt-xs">AI Assistant</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest/20 rounded-xl p-xs" href="#"><span class="material-symbols-outlined">login</span><span class="text-label-caps font-label-caps mt-xs">Login</span></a></nav>
+
+
+</body></html>
