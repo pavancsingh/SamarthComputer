@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, Plus, Trash2, Edit3, Save, X, LogOut, CheckCircle2, 
   BookOpen, FileText, Users, RefreshCw, Sparkles, Filter, Building2,
-  Camera, Upload, Image, Loader2
+  Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
@@ -192,11 +192,25 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     }
   };
 
+  const [syncingSupabase, setSyncingSupabase] = useState(false);
+
+  const handleSyncAllToSupabase = async () => {
+    setSyncingSupabase(true);
+    const res = await AdminRepository.syncAllLocalDataToSupabase();
+    setSyncingSupabase(false);
+    if (res.success) {
+      alert(`🎉 Success! All ${res.count} records (Courses, Services, Gallery & Faculty) synced to Supabase Database.`);
+      loadAllData();
+    } else {
+      alert(`Notice: ${res.error || 'Check internet connection'}`);
+    }
+  };
+
   return (
-    <div className="bg-stitch-ivory min-h-screen text-stitch-slate-dark pb-24 font-sans">
+    <div className="min-h-screen bg-stitch-ivory text-stitch-slate-dark pb-20">
       
-      {/* Header Bar */}
-      <header className="bg-white border-b border-slate-200/90 py-4 px-4 sm:px-8 shadow-stitch-sm">
+      {/* Admin Top Header */}
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 shadow-stitch-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-stitch-red text-white flex items-center justify-center font-black text-xl shadow-stitch-sm">
@@ -211,19 +225,29 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button
+              onClick={handleSyncAllToSupabase}
+              disabled={syncingSupabase}
+              className="px-3.5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-stitch-sm transition-all hover:scale-[1.02]"
+              title="Push all courses, services & faculty to Supabase DB"
+            >
+              {syncingSupabase ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <DatabaseBackup className="w-4 h-4 text-white" />}
+              <span>{syncingSupabase ? 'Syncing Supabase...' : 'Sync All Data to Supabase'}</span>
+            </button>
+
             <button
               onClick={loadAllData}
               className="p-2.5 rounded-2xl bg-slate-100 text-stitch-slate-dark hover:bg-slate-200 transition-all border border-slate-200 flex items-center gap-1.5 text-xs font-bold shadow-stitch-sm"
               title="Refresh Data"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              <span>Refresh Data</span>
+              <span className="hidden sm:inline">Refresh</span>
             </button>
 
             <button
               onClick={handleLogout}
-              className="bg-red-50 hover:bg-red-100 text-red-600 font-extrabold text-xs px-4.5 py-2.5 rounded-2xl border border-red-200 flex items-center gap-1.5 transition-all shadow-stitch-sm"
+              className="bg-red-50 hover:bg-red-100 text-red-600 font-extrabold text-xs px-3.5 py-2.5 rounded-2xl border border-red-200 flex items-center gap-1.5 transition-all shadow-stitch-sm"
             >
               <LogOut className="w-4 h-4" />
               <span>Logout</span>
@@ -234,6 +258,44 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 space-y-8">
+        
+        {/* Admin ID / Password & Supabase Config Banner */}
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-stitch-slate-dark text-white rounded-3xl p-6 shadow-stitch-md relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-700/80">
+          <div className="space-y-2 relative z-10">
+            <div className="flex items-center gap-2">
+              <span className="bg-stitch-red/90 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                Authorized Credentials
+              </span>
+              <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                Supabase Connected
+              </span>
+            </div>
+            <h2 className="text-lg font-black text-white flex items-center gap-2">
+              <KeyRound className="w-5 h-5 text-stitch-amber" />
+              Master Admin Config & Login Info
+            </h2>
+            <div className="flex flex-wrap gap-4 text-xs font-mono text-slate-300 pt-1">
+              <div className="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700">
+                Admin Email ID: <strong className="text-white">pawansingh3760@gmail.com</strong>
+              </div>
+              <div className="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700">
+                Master Password: <strong className="text-stitch-amber">Pavan@1137</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 relative z-10 shrink-0">
+            <button
+              onClick={handleSyncAllToSupabase}
+              disabled={syncingSupabase}
+              className="bg-gradient-to-r from-stitch-red to-stitch-red-dark hover:from-stitch-red-dark hover:to-red-800 text-white font-extrabold text-xs px-5 py-3 rounded-2xl shadow-stitch-sm transition-all flex items-center gap-2 border border-stitch-red-border/40"
+            >
+              <Database className="w-4 h-4 text-white" />
+              <span>Push All Catalog Data to Supabase DB</span>
+            </button>
+          </div>
+        </div>
         
         {/* Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/80 pb-4">

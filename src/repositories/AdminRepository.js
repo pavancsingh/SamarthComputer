@@ -298,6 +298,120 @@ export const AdminRepository = {
       console.warn('Supabase faculty delete notice:', e.message);
     }
     return { success: true };
+  },
+
+  // ================= BULK SUPABASE SYNC =================
+  async syncAllLocalDataToSupabase() {
+    let syncedCount = 0;
+    try {
+      // 1. Sync Courses
+      const courses = sharedStore.getCourses();
+      for (const c of courses) {
+        const payload = {
+          slug: c.slug || `course-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          title: c.title,
+          subtitle_mr: c.subtitleMr || c.subtitle_mr,
+          subtitle_en: c.subtitleEn || c.subtitle_en,
+          category: c.category || 'govt',
+          tag: c.tag || 'न्यू',
+          duration_mr: c.durationMr || c.duration_mr,
+          duration_en: c.durationEn || c.duration_en,
+          fee_mr: c.feeMr || c.fee_mr,
+          fee_en: c.feeEn || c.fee_en,
+          certification_mr: c.certificationMr || c.certification_mr,
+          certification_en: c.certificationEn || c.certification_en,
+          eligibility_mr: c.eligibilityMr || c.eligibility_mr,
+          eligibility_en: c.eligibilityEn || c.eligibility_en,
+          overview_mr: c.overviewMr || c.overview_mr,
+          overview_en: c.overviewEn || c.overview_en,
+          image_url: c.imageUrl || c.image_url
+        };
+        await supabase.from('courses').upsert([payload], { onConflict: 'slug' });
+        syncedCount++;
+      }
+
+      // 2. Sync CSC Services
+      const csc = sharedStore.getCSCServices();
+      for (const item of csc) {
+        const payload = {
+          slug: item.slug || `csc-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          title_mr: item.titleMr || item.title_mr || item.titleEn,
+          title_en: item.titleEn || item.title_en,
+          category: item.category || 'identity',
+          badge: item.badge || 'शासकीय सेवा',
+          timeline_mr: item.timelineMr || item.timeline_mr,
+          timeline_en: item.timelineEn || item.timeline_en,
+          govt_fee_mr: item.govtFeeMr || item.govt_fee_mr,
+          govt_fee_en: item.govtFeeEn || item.govt_fee_en,
+          overview_mr: item.overviewMr || item.overview_mr,
+          overview_en: item.overviewEn || item.overview_en,
+          image_url: item.imageUrl || item.image_url
+        };
+        await supabase.from('csc_services').upsert([payload], { onConflict: 'slug' });
+        syncedCount++;
+      }
+
+      // 3. Sync Govt Services
+      const govt = sharedStore.getGovtServices();
+      for (const item of govt) {
+        const payload = {
+          slug: item.slug || `govt-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          title_mr: item.titleMr || item.title_mr || item.titleEn,
+          title_en: item.titleEn || item.title_en,
+          category: item.category || 'revenue',
+          badge: item.badge || 'तहसीलदार प्रमाणपत्र',
+          timeline_mr: item.timelineMr || item.timeline_mr,
+          timeline_en: item.timelineEn || item.timeline_en,
+          govt_fee_mr: item.govtFeeMr || item.govt_fee_mr,
+          govt_fee_en: item.govtFeeEn || item.govt_fee_en,
+          overview_mr: item.overviewMr || item.overview_mr,
+          overview_en: item.overviewEn || item.overview_en,
+          image_url: item.imageUrl || item.image_url
+        };
+        await supabase.from('govt_services').upsert([payload], { onConflict: 'slug' });
+        syncedCount++;
+      }
+
+      // 4. Sync Site Gallery
+      const gallery = sharedStore.getSiteGallery();
+      for (const item of gallery) {
+        const payload = {
+          title_mr: item.titleMr || item.title_mr || item.titleEn,
+          title_en: item.titleEn || item.title_en,
+          desc_mr: item.descMr || item.desc_mr,
+          desc_en: item.descEn || item.desc_en,
+          category: item.category || 'Campus',
+          image_url: item.imageUrl || item.image_url
+        };
+        if (item.id && !item.id.toString().startsWith('gal-')) payload.id = item.id;
+        await supabase.from('site_gallery').upsert([payload]);
+        syncedCount++;
+      }
+
+      // 5. Sync Faculty
+      const faculty = sharedStore.getFaculty();
+      for (const item of faculty) {
+        const payload = {
+          name: item.name,
+          role_mr: item.roleMr || item.role_mr,
+          role_en: item.roleEn || item.role_en,
+          exp_mr: item.expMr || item.exp_mr,
+          exp_en: item.expEn || item.exp_en,
+          spec_mr: item.specMr || item.spec_mr,
+          spec_en: item.specEn || item.spec_en,
+          badge: item.badge || 'Faculty',
+          image_url: item.imageUrl || item.image_url
+        };
+        if (item.id && !item.id.toString().startsWith('fac-')) payload.id = item.id;
+        await supabase.from('faculties').upsert([payload]);
+        syncedCount++;
+      }
+
+      return { success: true, count: syncedCount };
+    } catch (err) {
+      console.warn('Sync all to Supabase error:', err.message);
+      return { success: false, error: err.message };
+    }
   }
 };
 
