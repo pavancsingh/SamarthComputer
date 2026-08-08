@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, ShieldCheck, KeyRound } from 'lucide-react';
-import { useAuth, ADMIN_EMAIL } from '../../context/AuthContext';
+import { Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 /**
  * AdminLoginPage Component - Google Stitch Design System
  * Secure login portal for authorized single admin.
  */
-export default function AdminLoginPage({ lang = 'en', onSuccess }) {
+export default function AdminLoginPage({ lang = 'en', onSuccess, onNavigate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +30,14 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
     }
   };
 
+  const handleBackToHome = () => {
+    if (onNavigate) {
+      onNavigate('home');
+    } else {
+      window.location.href = '/';
+    }
+  };
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-stitch-ivory px-4 py-16 text-stitch-slate-dark relative overflow-hidden">
       {/* Background Glow */}
@@ -43,7 +51,7 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
             <Lock className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-2xl font-black text-stitch-slate-dark tracking-tight">
-            Samarth Master Admin Login
+            Admin Login
           </h1>
           <p className="text-xs text-slate-500 font-semibold">
             Authorized Admin Access Only
@@ -69,7 +77,7 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="pawansingh3760@gmail.com"
+                placeholder="Enter email..."
                 required
                 autoComplete="off"
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:outline-none focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm"
@@ -113,8 +121,16 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
           </button>
         </form>
 
-        <div className="text-center text-[11px] text-slate-400 pt-2 border-t border-slate-100 font-semibold">
-          🔒 Protected by Supabase Auth & Row Level Security.
+        {/* Back to Home Link */}
+        <div className="pt-2 border-t border-slate-100 text-center">
+          <button
+            type="button"
+            onClick={handleBackToHome}
+            className="inline-flex items-center gap-2 text-xs font-extrabold text-slate-600 hover:text-stitch-red transition-colors py-1 px-3 rounded-xl hover:bg-slate-50"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+            <span>← Back to Home</span>
+          </button>
         </div>
 
       </div>

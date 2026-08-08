@@ -58,7 +58,7 @@ function MainApp() {
         isAdmin ? (
           <AdminDashboard lang={lang} onLogout={() => handleNavigate('home')} />
         ) : (
-          <AdminLoginPage lang={lang} onSuccess={() => setCurrentView('admin')} />
+          <AdminLoginPage lang={lang} onSuccess={() => setCurrentView('admin')} onNavigate={handleNavigate} />
         )
       )}
     </MainLayout>

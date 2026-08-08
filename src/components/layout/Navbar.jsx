@@ -201,22 +201,6 @@ export default function Navbar({ lang = 'mr', currentView = 'home', onNavigate }
           {isMarathi ? 'संपर्क' : 'Contact'}
         </span>
       </button>
-
-      {/* Admin Portal Link */}
-      <button
-        type="button"
-        onClick={() => handleLinkClick('admin')}
-        className={`px-3 py-1.5 rounded-2xl transition-all flex items-center gap-1.5 ${
-          currentView === 'admin' 
-            ? 'text-white font-extrabold bg-stitch-red shadow-stitch-sm' 
-            : 'text-slate-700 hover:text-stitch-red hover:bg-slate-100 font-bold border border-slate-200/80'
-        }`}
-      >
-        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span className={isMarathi ? 'marathi-text text-xs' : 'text-xs'}>
-          {isMarathi ? 'ॲडमिन' : 'Admin Login'}
-        </span>
-      </button>
     </nav>
   );
 }
