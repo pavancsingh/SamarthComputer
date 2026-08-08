@@ -1,0 +1,324 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CSC Services Management - Skyline Admin</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600&amp;family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=Merriweather:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#396572",
+                        "tertiary-container": "#b9e7f7",
+                        "on-secondary-fixed-variant": "#00628b",
+                        "on-background": "#32313b",
+                        "secondary-fixed": "#c7e7ff",
+                        "outline-variant": "#b3b0bc",
+                        "on-primary": "#f5f9ff",
+                        "error": "#a8364b",
+                        "outline": "#7b7984",
+                        "surface-container": "#f0ecf6",
+                        "surface-bright": "#fcf8fe",
+                        "surface-container-low": "#f6f2fa",
+                        "error-container": "#f97386",
+                        "on-primary-container": "#003248",
+                        "background": "#fcf8fe",
+                        "inverse-on-surface": "#9e9ca2",
+                        "on-tertiary-fixed-variant": "#33606d",
+                        "tertiary-dim": "#2c5966",
+                        "on-tertiary-fixed": "#124350",
+                        "primary-dim": "#00597d",
+                        "on-surface-variant": "#5f5e68",
+                        "tertiary-fixed-dim": "#abd9e8",
+                        "surface-tint": "#00668e",
+                        "primary-fixed-dim": "#00abec",
+                        "surface": "#fcf8fe",
+                        "secondary-fixed-dim": "#a8dbff",
+                        "primary-container": "#2cb9fb",
+                        "error-dim": "#6b0221",
+                        "surface-dim": "#dcd8e4",
+                        "on-secondary-fixed": "#004462",
+                        "on-error-container": "#6e0523",
+                        "on-tertiary": "#f0fbff",
+                        "surface-container-highest": "#e4e1ed",
+                        "secondary-container": "#c7e7ff",
+                        "on-secondary-container": "#00577d",
+                        "secondary": "#006690",
+                        "inverse-primary": "#2cb9fb",
+                        "primary-fixed": "#2cb9fb",
+                        "inverse-surface": "#0e0e12",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-dim": "#00597f",
+                        "on-primary-fixed-variant": "#003c55",
+                        "on-tertiary-container": "#285663",
+                        "surface-variant": "#e4e1ed",
+                        "primary": "#00668e",
+                        "on-primary-fixed": "#001723",
+                        "on-error": "#fff7f7",
+                        "on-surface": "#32313b",
+                        "tertiary-fixed": "#b9e7f7",
+                        "surface-container-high": "#eae6f1",
+                        "on-secondary": "#f5f9ff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "sm": "0.5rem",
+                        "md": "1.5rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1440px",
+                        "gutter": "1.5rem",
+                        "margin-mobile": "1rem",
+                        "margin-desktop": "2rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    fontFamily: {
+                        "headline": ["Bodoni Moda", "serif"],
+                        "body": ["Anybody", "sans-serif"],
+                        "label": ["Merriweather", "serif"]
+                    },
+                    fontSize: {
+                        "headline-xl": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "headline-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-md": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col md:flex-row">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface-container-lowest border-b border-outline-variant shadow-sm transition-colors duration-300">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-2xl hidden md:block">computer</span>
+<h1 class="font-headline text-headline-xl text-primary">Samarth Computers</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant mr-2 text-sm">search</span>
+<input class="bg-transparent border-none outline-none text-body-md text-on-surface w-48 placeholder-on-surface-variant focus:ring-0" placeholder="Global Search..." type="text">
+</div>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant group">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant group">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer hover:opacity-80 transition-opacity">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional headshot of an administrator in a well-lit office setting. The lighting is soft and bright, casting gentle highlights on the subject's face. The background is a slightly blurred, modern office environment with a clean, organized aesthetic. The overall mood is approachable, competent, and efficient, reflecting a high standard of professional service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvK-72aoQ-0rLrtyAoBN2PBRLJ0bRlN4qwNqRRH0Ax8l8AjwRzHzPhlmP1QZRfJ8Ej0K3s74TcwIztSAPYrBslSaZntyVYGY9R3mkgazUl3YUjp2BZgw_SKo-IT3XBOiW9QAuPJ5qVKifSknphHImF0nPG2YPWbxvOFI-Qm77pjIaF7KSssMcbCVyu3EqnBzmAsfZueIdZSRusHtVsPttxNkwPISs6g7sXYDkwI7q8np4wBJZu4bAjZQ">
+</div>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-[280px] flex-col py-stack-lg bg-surface-container-lowest border-r border-outline-variant shadow-sm z-40 overflow-y-auto">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined icon-fill">admin_panel_settings</span>
+</div>
+<div>
+<h2 class="font-label text-label-md text-on-surface">Admin Dashboard</h2>
+<p class="font-body text-body-sm text-on-surface-variant">Operational Center</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Inbox Leads -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="inbox">inbox</span>
+<span class="font-label text-label-md">Inbox Leads</span>
+</a>
+<!-- Courses -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="school">school</span>
+<span class="font-label text-label-md">Courses</span>
+</a>
+<!-- CSC Services (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 text-primary border-r-2 border-primary bg-surface-container active:translate-x-1 transition-transform group rounded-l" href="#">
+<span class="material-symbols-outlined text-primary icon-fill" data-icon="description">description</span>
+<span class="font-label text-label-md font-bold">CSC Services</span>
+</a>
+<!-- Govt Services -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="account_balance">account_balance</span>
+<span class="font-label text-label-md">Govt Services</span>
+</a>
+<!-- Batch Timetable -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="schedule">schedule</span>
+<span class="font-label text-label-md">Batch Timetable</span>
+</a>
+<!-- News & Updates -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="newspaper">newspaper</span>
+<span class="font-label text-label-md">News &amp; Updates</span>
+</a>
+<!-- Faculty -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="groups">groups</span>
+<span class="font-label text-label-md">Faculty</span>
+</a>
+<!-- Campus Photos -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="photo_library">photo_library</span>
+<span class="font-label text-label-md">Campus Photos</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-secondary hover:bg-surface-container-low transition-all group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="settings">settings</span>
+<span class="font-label text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pt-4 border-t border-outline-variant/50">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-error hover:bg-error-container/10 transition-all group" href="#">
+<span class="material-symbols-outlined text-error" data-icon="logout">logout</span>
+<span class="font-label text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[280px] mt-16 p-margin-mobile md:p-margin-desktop w-full max-w-container-max mx-auto min-h-[calc(100vh-64px)]">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+<div>
+<h1 class="font-headline text-headline-xl text-primary mb-2">CSC Services Management</h1>
+<p class="font-body text-body-lg text-on-surface-variant max-w-2xl">Manage Digital Seva portal service cards, fees, and requirements.</p>
+</div>
+<button class="bg-primary hover:bg-primary-dim text-on-primary font-label text-label-md px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                Add New Service
+            </button>
+</div>
+<!-- Utility Bar (Search & Filter) -->
+<div class="bg-surface-container-lowest p-4 rounded border border-outline-variant shadow-sm mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
+<div class="relative w-full sm:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface rounded-full border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body text-body-md text-on-surface placeholder:text-on-surface-variant" placeholder="Search services..." type="text">
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+<button class="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full font-label text-label-sm whitespace-nowrap">All Services</button>
+<button class="px-4 py-1.5 bg-surface text-on-surface-variant border border-outline-variant rounded-full font-label text-label-sm hover:bg-surface-container-low transition-colors whitespace-nowrap">Financial</button>
+<button class="px-4 py-1.5 bg-surface text-on-surface-variant border border-outline-variant rounded-full font-label text-label-sm hover:bg-surface-container-low transition-colors whitespace-nowrap">Identity</button>
+</div>
+</div>
+<!-- Service Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface">PAN Card Application</h3>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-2 py-1 rounded-sm font-label text-label-sm">Identity</span>
+</div>
+<div class="space-y-3 mb-6 flex-1"></div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-secondary hover:bg-secondary/10 rounded-full font-label text-label-md transition-colors">View Details</button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label text-label-md transition-colors">Edit</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">fingerprint</span>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface">Aadhaar Update</h3>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-2 py-1 rounded-sm font-label text-label-sm">Identity</span>
+</div>
+<div class="space-y-3 mb-6 flex-1"></div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-secondary hover:bg-secondary/10 rounded-full font-label text-label-md transition-colors">View Details</button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label text-label-md transition-colors">Edit</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">how_to_vote</span>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface">Voter ID (EPIC)</h3>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-2 py-1 rounded-sm font-label text-label-sm">Identity</span>
+</div>
+<div class="space-y-3 mb-6 flex-1"></div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-secondary hover:bg-secondary/10 rounded-full font-label text-label-md transition-colors">View Details</button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label text-label-md transition-colors">Edit</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">health_and_safety</span>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface">Health Insurance</h3>
+</div>
+<span class="bg-primary-container/30 text-on-primary-container px-2 py-1 rounded-sm font-label text-label-sm">Financial</span>
+</div>
+<div class="space-y-3 mb-6 flex-1"></div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-secondary hover:bg-secondary/10 rounded-full font-label text-label-md transition-colors">View Details</button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label text-label-md transition-colors">Edit</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface">Bill Payment (BBPS)</h3>
+</div>
+<span class="bg-primary-container/30 text-on-primary-container px-2 py-1 rounded-sm font-label text-label-sm">Financial</span>
+</div>
+<div class="space-y-3 mb-6 flex-1"></div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-secondary hover:bg-secondary/10 rounded-full font-label text-label-md transition-colors">View Details</button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-full font-label text-label-md transition-colors">Edit</button>
+</div>
+</div>
+</div>
+</main>
+
+
+</body></html>

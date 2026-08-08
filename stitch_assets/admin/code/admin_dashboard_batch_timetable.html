@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Batch Timetable 2026 - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400&amp;family=Bodoni+Moda:wght@600;700&amp;family=Merriweather:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#00628b",
+                        "secondary-dim": "#00597f",
+                        "tertiary": "#396572",
+                        "on-error-container": "#6e0523",
+                        "secondary-fixed-dim": "#a8dbff",
+                        "primary": "#00668e",
+                        "on-secondary": "#f5f9ff",
+                        "on-secondary-fixed": "#004462",
+                        "on-primary": "#f5f9ff",
+                        "primary-fixed": "#2cb9fb",
+                        "surface-container": "#f0ecf6",
+                        "surface": "#fcf8fe",
+                        "on-background": "#32313b",
+                        "secondary-container": "#c7e7ff",
+                        "outline": "#7b7984",
+                        "inverse-surface": "#0e0e12",
+                        "on-surface-variant": "#5f5e68",
+                        "tertiary-dim": "#2c5966",
+                        "error": "#a8364b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f2fa",
+                        "background": "#fcf8fe",
+                        "on-secondary-container": "#00577d",
+                        "surface-bright": "#fcf8fe",
+                        "surface-tint": "#00668e",
+                        "on-primary-fixed-variant": "#003c55",
+                        "on-tertiary-fixed-variant": "#33606d",
+                        "on-error": "#fff7f7",
+                        "inverse-on-surface": "#9e9ca2",
+                        "surface-variant": "#e4e1ed",
+                        "tertiary-fixed-dim": "#abd9e8",
+                        "on-surface": "#32313b",
+                        "primary-container": "#2cb9fb",
+                        "primary-dim": "#00597d",
+                        "primary-fixed-dim": "#00abec",
+                        "secondary": "#006690",
+                        "on-primary-fixed": "#001723",
+                        "error-dim": "#6b0221",
+                        "tertiary-fixed": "#b9e7f7",
+                        "on-tertiary": "#f0fbff",
+                        "error-container": "#f97386",
+                        "surface-container-highest": "#e4e1ed",
+                        "on-tertiary-container": "#285663",
+                        "on-primary-container": "#003248",
+                        "on-tertiary-fixed": "#124350",
+                        "outline-variant": "#b3b0bc",
+                        "inverse-primary": "#2cb9fb",
+                        "surface-dim": "#dcd8e4",
+                        "secondary-fixed": "#c7e7ff",
+                        "tertiary-container": "#b9e7f7",
+                        "surface-container-high": "#eae6f1"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Bodoni Moda"],
+                        "display": ["Bodoni Moda"],
+                        "body": ["Anybody"],
+                        "label": ["Merriweather"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen antialiased">
+<!-- TopNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-border-slate dark:border-outline-variant shadow-sm fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 h-16 transition-colors">
+<div class="flex items-center gap-4">
+<span class="font-headline text-2xl font-bold tracking-tight text-primary dark:text-inverse-primary">Samarth Computers</span>
+</div>
+<div class="flex-1 max-w-md mx-8 hidden md:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-md focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all" placeholder="Search timetable..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 text-primary dark:text-primary-fixed-dim">
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-on-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-on-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="Admin Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of an administrative staff member, neutral background, high quality lighting, professional attire, soft shadows, conveying a sense of competence and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAhNHL5d3lwRbbAZmNkYDjMZ_3rP3EMVwZN4jX7P5aAtgZDmtzKeqG7bkSU2s_a9NQHbPpAXKIoxi4tGMsQa3oiUqIHZPDdwWIqK8r6ksR7YmmMAXIn-QDRU76ST6hq6fM9ihie3jUDQP4-6MUAnG911VSPovwbvVLZxhSEd4MIBVeimF7-0vs_mO50URwprVk7r0xOaa0ongexuXdvXgB80ShQ6DDdmG4taQDdGICCGSokzeaR7TydQ"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="bg-surface-container-lowest dark:bg-inverse-surface border-r border-border-slate dark:border-outline-variant shadow-sm fixed left-0 top-16 h-[calc(100vh-64px)] w-[280px] flex flex-col py-6 hidden lg:flex transition-all">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined font-bold text-xl">admin_panel_settings</span>
+</div>
+<div>
+<h2 class="font-headline text-lg font-semibold text-primary">Admin Dashboard</h2>
+<p class="font-body text-sm text-on-surface-variant">Operational Center</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">inbox</span>
+                Inbox Leads
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">school</span>
+                Courses
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">description</span>
+                CSC Services
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                Govt Services
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-inverse-primary border-r-4 border-primary dark:border-inverse-primary bg-surface-container dark:bg-surface-container-highest transition-all font-label text-sm font-bold active:translate-x-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">schedule</span>
+                Batch Timetable
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">newspaper</span>
+                News &amp; Updates
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">groups</span>
+                Faculty
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+                Campus Photos
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="px-4 mt-auto pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container hover:text-on-error-container transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="pt-24 lg:pl-[312px] pr-4 lg:pr-8 pb-12 w-full max-w-[1440px] mx-auto min-h-screen">
+<!-- Header Area -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-headline text-3xl font-bold tracking-tight text-on-surface mb-1">Batch Timetable 2026</h1>
+<p class="font-body text-on-surface-variant text-sm">Manage daily schedules, course assignments, and capacity tracking.</p>
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container px-5 py-2.5 rounded-full font-label text-sm font-bold hover:brightness-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-sm">download</span>
+                    Export
+                </button>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-full font-label text-sm font-bold hover:brightness-110 transition-all shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-sm">add</span>
+                    New Slot
+                </button>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<!-- Morning Section -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">wb_sunny</span>
+                        Morning
+                    </h2>
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-bold text-secondary-dim font-body">08:00 - 12:00</span>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Slot 1 -->
+<div class="group relative bg-background border border-outline-variant/50 rounded-xl p-4 hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-on-surface font-body text-sm">Advanced Tally Prime</h3>
+<p class="text-xs text-on-surface-variant font-body">Lab 1 • Room 101</p>
+</div>
+<span class="bg-error/10 text-error px-2 py-1 rounded-md text-xs font-bold font-body">Full</span>
+</div>
+<div class="flex justify-between items-end mt-4">
+<div class="text-xs font-body text-secondary-dim flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+                                30/30 Seats
+                            </div>
+<div class="text-sm font-bold text-on-surface font-body">08:00 AM</div>
+</div>
+<!-- Actions Overlay -->
+<div class="absolute inset-0 bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 border border-outline-variant">
+<button class="p-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-2 rounded-full bg-error-container hover:bg-error hover:text-on-error text-on-error-container transition-colors" title="Delete">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="group relative bg-background border border-outline-variant/50 rounded-xl p-4 hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-on-surface font-body text-sm">DTP Graphic Design</h3>
+<p class="text-xs text-on-surface-variant font-body">Lab 2 • Room 102</p>
+</div>
+<span class="bg-emerald-500/10 text-emerald-700 px-2 py-1 rounded-md text-xs font-bold font-body">Available</span>
+</div>
+<div class="flex justify-between items-end mt-4">
+<div class="text-xs font-body text-emerald-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+                                12/25 Seats
+                            </div>
+<div class="text-sm font-bold text-on-surface font-body">10:00 AM</div>
+</div>
+<!-- Actions Overlay -->
+<div class="absolute inset-0 bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 border border-outline-variant">
+<button class="p-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-2 rounded-full bg-error-container hover:bg-error hover:text-on-error text-on-error-container transition-colors" title="Delete">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 border border-dashed border-outline-variant rounded-xl text-secondary-dim font-label text-sm font-bold hover:bg-surface-container hover:border-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Morning Slot
+                </button>
+</section>
+<!-- Afternoon Section -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">partly_cloudy_day</span>
+                        Afternoon
+                    </h2>
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-bold text-tertiary-dim font-body">12:00 - 17:00</span>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Slot 1 -->
+<div class="group relative bg-background border border-outline-variant/50 rounded-xl p-4 hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-on-surface font-body text-sm">MS Office Pro</h3>
+<p class="text-xs text-on-surface-variant font-body">Lab 1 • Room 101</p>
+</div>
+<span class="bg-amber-500/10 text-amber-700 px-2 py-1 rounded-md text-xs font-bold font-body">Filling Fast</span>
+</div>
+<div class="flex justify-between items-end mt-4">
+<div class="text-xs font-body text-amber-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+                                28/30 Seats
+                            </div>
+<div class="text-sm font-bold text-on-surface font-body">01:00 PM</div>
+</div>
+<!-- Actions Overlay -->
+<div class="absolute inset-0 bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 border border-outline-variant">
+<button class="p-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-2 rounded-full bg-error-container hover:bg-error hover:text-on-error text-on-error-container transition-colors" title="Delete">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 border border-dashed border-outline-variant rounded-xl text-tertiary-dim font-label text-sm font-bold hover:bg-surface-container hover:border-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Afternoon Slot
+                </button>
+</section>
+<!-- Evening Section -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-dim">bedtime</span>
+                        Evening
+                    </h2>
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-bold text-primary-dim font-body">17:00 - 20:00</span>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Slot 1 -->
+<div class="group relative bg-background border border-outline-variant/50 rounded-xl p-4 hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-on-surface font-body text-sm">Web Development</h3>
+<p class="text-xs text-on-surface-variant font-body">Lab 3 • Room 103</p>
+</div>
+<span class="bg-emerald-500/10 text-emerald-700 px-2 py-1 rounded-md text-xs font-bold font-body">Available</span>
+</div>
+<div class="flex justify-between items-end mt-4">
+<div class="text-xs font-body text-emerald-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+                                15/20 Seats
+                            </div>
+<div class="text-sm font-bold text-on-surface font-body">05:30 PM</div>
+</div>
+<!-- Actions Overlay -->
+<div class="absolute inset-0 bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 border border-outline-variant">
+<button class="p-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-2 rounded-full bg-error-container hover:bg-error hover:text-on-error text-on-error-container transition-colors" title="Delete">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 border border-dashed border-outline-variant rounded-xl text-primary-dim font-label text-sm font-bold hover:bg-surface-container hover:border-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Evening Slot
+                </button>
+</section>
+</div>
+</main>
+</body></html>

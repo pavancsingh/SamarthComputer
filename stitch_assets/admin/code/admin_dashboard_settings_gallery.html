@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Campus Photos &amp; Settings - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=Anybody:ital,wght@0,100..900;1,100..900&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#00628b",
+                      "secondary-dim": "#00597f",
+                      "tertiary": "#396572",
+                      "on-error-container": "#6e0523",
+                      "secondary-fixed-dim": "#a8dbff",
+                      "primary": "#00668e",
+                      "on-secondary": "#f5f9ff",
+                      "on-secondary-fixed": "#004462",
+                      "on-primary": "#f5f9ff",
+                      "primary-fixed": "#2cb9fb",
+                      "surface-container": "#f0ecf6",
+                      "surface": "#fcf8fe",
+                      "on-background": "#32313b",
+                      "secondary-container": "#c7e7ff",
+                      "outline": "#7b7984",
+                      "inverse-surface": "#0e0e12",
+                      "on-surface-variant": "#5f5e68",
+                      "tertiary-dim": "#2c5966",
+                      "error": "#a8364b",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f6f2fa",
+                      "background": "#fcf8fe",
+                      "on-secondary-container": "#00577d",
+                      "surface-bright": "#fcf8fe",
+                      "surface-tint": "#00668e",
+                      "on-primary-fixed-variant": "#003c55",
+                      "on-tertiary-fixed-variant": "#33606d",
+                      "on-error": "#fff7f7",
+                      "inverse-on-surface": "#9e9ca2",
+                      "surface-variant": "#e4e1ed",
+                      "tertiary-fixed-dim": "#abd9e8",
+                      "on-surface": "#32313b",
+                      "primary-container": "#2cb9fb",
+                      "primary-dim": "#00597d",
+                      "primary-fixed-dim": "#00abec",
+                      "secondary": "#006690",
+                      "on-primary-fixed": "#001723",
+                      "error-dim": "#6b0221",
+                      "tertiary-fixed": "#b9e7f7",
+                      "on-tertiary": "#f0fbff",
+                      "error-container": "#f97386",
+                      "surface-container-highest": "#e4e1ed",
+                      "on-tertiary-container": "#285663",
+                      "on-primary-container": "#003248",
+                      "on-tertiary-fixed": "#124350",
+                      "outline-variant": "#b3b0bc",
+                      "inverse-primary": "#2cb9fb",
+                      "surface-dim": "#dcd8e4",
+                      "secondary-fixed": "#c7e7ff",
+                      "tertiary-container": "#b9e7f7",
+                      "surface-container-high": "#eae6f1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                    "container-max": "1440px",
+                    "gutter": "1.5rem",
+                    "margin-mobile": "1rem",
+                    "margin-desktop": "2rem",
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "stack-lg": "1.5rem"
+              },
+              "fontFamily": {
+                      "headline": ["Bodoni Moda", "serif"],
+                      "body": ["Anybody", "sans-serif"],
+                      "label": ["Merriweather", "serif"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        body { font-family: 'Anybody', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-headline { font-family: 'Bodoni Moda', serif; letter-spacing: -0.01em; }
+        .font-label { font-family: 'Merriweather', serif; }
+      </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface-container-lowest border-b border-outline-variant shadow-sm transition-transform active:scale-95">
+<div class="flex items-center gap-4">
+<span class="font-headline text-2xl font-bold text-primary">Samarth Computers</span>
+</div>
+<div class="flex-1 flex justify-center max-w-md hidden md:flex">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors group hidden md:block">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden border border-outline-variant cursor-pointer">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional headshot of an administrator in a well-lit office setting. The lighting is soft and natural, emphasizing a bright, modern, and clean light-mode aesthetic. The subject is wearing business casual attire, subtly incorporating shades of cyan and slate blue to match the brand identity. The mood is approachable yet authoritative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwTXUhtLXszgtH2NNwd-yUIxTS4ywLkRNdr03IhuLGrfMfdyiQKyIsOA6qewd2_kHHb_1XjLgbQHmieBfk8zrTIRAHLEjc6gjIiWS7icWJ49xMjqeTxh1PsDydOcO4jZm8tix2ByG3Af4GU1ejHMpbThIURXMWzENvdGgLYbWGrteIzOUwQ7p1C3MD6wd4LsgmesnWB1iXdrzQg_Qse7mlrIiaR6qZNiAmnBNJASDUCbSUhhyJNDC95w"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar & Main Content Wrapper -->
+<div class="flex pt-16 h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-[280px] flex flex-col py-stack-lg bg-surface-container-lowest border-r border-outline-variant shadow-sm z-40 hidden lg:flex transition-transform active:translate-x-1">
+<div class="px-6 mb-6">
+<h2 class="font-headline text-xl font-bold text-primary">Admin Dashboard</h2>
+<p class="font-body text-xs text-on-surface-variant mt-1">Operational Center</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-1">
+<!-- Nav Items -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">inbox</span>
+                    Inbox Leads
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">school</span>
+                    Courses
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">description</span>
+                    CSC Services
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                    Govt Services
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">schedule</span>
+                    Batch Timetable
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">newspaper</span>
+                    News &amp; Updates
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Faculty
+                </a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-primary border-r-2 border-primary bg-surface-container transition-all font-label text-sm font-bold shadow-[inset_4px_0px_0px_0px_var(--tw-colors-primary)]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+                    Campus Photos
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary hover:bg-surface-container-low transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</div>
+<div class="px-4 mt-auto pt-4 border-t border-surface-variant">
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-error hover:bg-error-container/10 transition-all font-label text-sm font-bold" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-[280px] overflow-y-auto bg-surface p-margin-mobile md:p-margin-desktop">
+<div class="max-w-container-max mx-auto space-y-8">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="font-headline text-3xl font-bold text-on-surface">Campus Photos &amp; Branding</h1>
+<p class="text-on-surface-variant mt-1">Manage institutional imagery and global brand settings.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-2.5 bg-surface-container-lowest border border-outline-variant text-on-surface rounded-full font-label text-sm font-bold hover:bg-surface-container-low transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">upload</span>
+                            Upload Media
+                        </button>
+<button class="px-5 py-2.5 bg-primary text-on-primary rounded-full font-label text-sm font-bold hover:brightness-110 transition-all shadow-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">save</span>
+                            Save Changes
+                        </button>
+</div>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+<!-- Left Column: Photo Gallery (Takes up 2/3 on XL screens) -->
+<div class="xl:col-span-2 space-y-6">
+<!-- Gallery Section -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-sm border border-outline-variant relative overflow-hidden">
+<!-- Subtle decorative bg -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+<div class="flex items-center justify-between mb-6 relative z-10">
+<div>
+<h2 class="font-headline text-xl font-bold text-on-surface">Event &amp; Lab Gallery</h2>
+<p class="text-sm text-on-surface-variant mt-1">Manage 16:9 aspect ratio photos for the main campus portal.</p>
+</div>
+<div class="flex gap-2">
+<button aria-label="Grid View" class="p-2 rounded-md hover:bg-surface-container-low text-primary transition-colors bg-surface-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</button>
+<button aria-label="List View" class="p-2 rounded-md hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">view_list</span>
+</button>
+</div>
+</div>
+<!-- Bento-style Gallery Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+<!-- Photo Card 1 (Featured) -->
+<div class="md:col-span-2 group relative rounded-lg overflow-hidden border border-outline-variant shadow-sm aspect-[21/9]">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+<img alt="Main Computer Lab" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A wide-angle, high-quality photograph of a modern computer laboratory at an educational institute. Students are focused on their sleek desktop monitors. The lighting is bright and cool, reflecting a professional, technical environment. The color palette emphasizes whites, subtle grays, and the glowing cyan from the monitors, aligning with the brand's light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaXTVq6HtISeDMcGGL3lfq5TkFEvmQ2vrIjbi_NB3gmDZwst6uJ0HKxyLAlddrTohDRyc-Y90YZprSlGAC-7MSa3KvnSt5eUQ-7op_drWUuLgT5xhjNpkHyqctWEuczl9TK53dbc__VHq3Ij_R9pJau563BiIf51QLwRDFIDIy9LwJKvy72-OXZxhi3p9ehmqHxqui8vZA8senmJZ8CeieLRVE3GiUPs830bjZR2letIugFgTlouINeg"/>
+<div class="absolute bottom-0 left-0 p-4 z-20 w-full flex justify-between items-end">
+<div>
+<span class="px-2 py-1 bg-primary/90 text-on-primary text-xs font-bold rounded-sm mb-2 inline-block font-label">Main Lab</span>
+<h3 class="font-headline text-lg font-bold text-surface-container-lowest">Advanced Programming Session</h3>
+<p class="text-xs text-surface-container-lowest/80 mt-1">Uploaded 2 days ago</p>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 bg-surface-container-lowest text-on-surface rounded-full hover:bg-primary hover:text-on-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-2 bg-surface-container-lowest text-error rounded-full hover:bg-error hover:text-on-error transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Photo Card 2 -->
+<div class="group relative rounded-lg overflow-hidden border border-outline-variant shadow-sm aspect-video">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/70 via-transparent to-transparent z-10 opacity-50 group-hover:opacity-70 transition-opacity"></div>
+<img alt="Workshop Event" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A medium shot of an instructor leading a workshop in a bright, modern classroom. The instructor is gesturing towards a projection screen displaying code. The atmosphere is engaging and educational. Soft, natural light fills the room, complementing the clean, cyan-accented brand palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD21jpsohzQzzCtIF92cTmRr2xHRfRbs98gMymcTHYXG0bfK69MnMrbKDh5wzw5z1hBR_rgZ_DBNEhe2k2J8stQjGKalrS0RRRz7Bn2-6epgqnAtj2QMiMn5VCdHlnYxozFRWHsdFSl9Nq2RKT-1zOefuBmU4OpyB4yLVCUbXQIq4EpeHBh0Z8mnO3Ttyu6jg5DG-nNvfWYrF4DYloLrp6BzyFHVnv11bVj47OlYm45TbQhQYBP_ViYGw"/>
+<div class="absolute bottom-0 left-0 p-4 z-20 w-full flex justify-between items-end">
+<div>
+<span class="px-2 py-1 bg-secondary/90 text-on-secondary text-xs font-bold rounded-sm mb-1 inline-block font-label">Event</span>
+<h3 class="font-headline text-base font-bold text-surface-container-lowest leading-tight">Web Dev Workshop</h3>
+</div>
+<button class="p-1.5 bg-surface-container-lowest/20 backdrop-blur-sm text-surface-container-lowest rounded-full hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Photo Card 3 -->
+<div class="group relative rounded-lg overflow-hidden border border-outline-variant shadow-sm aspect-video">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/70 via-transparent to-transparent z-10 opacity-50 group-hover:opacity-70 transition-opacity"></div>
+<img alt="Student Coding" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A close-up shot of hands typing efficiently on a modern mechanical keyboard with a softly glowing screen in the background. The aesthetic is clean, technical, and professional, utilizing a bright light-mode style with subtle blue and cyan tones to reinforce the brand's high-tech identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCULlv_soBvJFiV6vot9k1FQFzmt8MclMMNuQQPtZdeSaaquo7fNDCRUKNThE1n_9Fz8ADcL__Aeuekj67ZAYHU2HZp_Z_GnpzXiJFaGQ1IG8c5ZRszJGwKTeh6y1oQjnFjfJYTwfdqCfAXDw2_o0UGfDapcEmt91DWThymjD5a83jMkcwtlcTN1DsFUHsSIfhvz2__87t9dqCyPCvNriJZ_xdIAnwea7Uym2XEk5JnO9bzXra6_vol3Q"/>
+<div class="absolute bottom-0 left-0 p-4 z-20 w-full flex justify-between items-end">
+<div>
+<span class="px-2 py-1 bg-tertiary/90 text-on-tertiary text-xs font-bold rounded-sm mb-1 inline-block font-label">Campus Life</span>
+<h3 class="font-headline text-base font-bold text-surface-container-lowest leading-tight">Hackathon 2023</h3>
+</div>
+<button class="p-1.5 bg-surface-container-lowest/20 backdrop-blur-sm text-surface-container-lowest rounded-full hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Add New Card -->
+<button class="rounded-lg border-2 border-dashed border-outline-variant bg-surface-container-low/50 hover:bg-surface-container hover:border-primary/50 transition-all aspect-video flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group">
+<div class="h-12 w-12 rounded-full bg-surface-container-lowest shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">add_photo_alternate</span>
+</div>
+<span class="font-label text-sm font-bold">Add New Photo</span>
+<span class="text-xs mt-1 opacity-70">16:9 Aspect Ratio</span>
+</button>
+</div>
+<div class="mt-6 flex justify-center">
+<button class="text-primary font-label text-sm font-bold hover:underline flex items-center gap-1">
+                                    View All 42 Photos
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Settings & Branding -->
+<div class="xl:col-span-1 space-y-6">
+<!-- Branding Settings Card -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-sm border border-outline-variant">
+<div class="flex items-center gap-3 mb-6 border-b border-surface-variant pb-4">
+<div class="p-2 bg-primary-container/20 rounded-md text-primary">
+<span class="material-symbols-outlined">brush</span>
+</div>
+<div>
+<h2 class="font-headline text-lg font-bold text-on-surface">Brand Identity</h2>
+<p class="text-xs text-on-surface-variant mt-0.5">Manage logo and hero assets</p>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Logo Upload -->
+<div>
+<label class="block font-label text-sm font-bold text-on-surface mb-2">Primary Logo</label>
+<div class="flex items-start gap-4">
+<div class="h-16 w-16 rounded-md bg-surface border border-outline-variant flex items-center justify-center shadow-inner overflow-hidden shrink-0">
+<img alt="Current Logo" class="w-full h-full object-contain p-2" data-alt="A minimalist, professional logo for an educational computer institute. The design features an abstract representation of a microchip merging with a book, rendered in a crisp, vibrant Cyan (#18B1F2) against a pure white background. The style is modern, geometric, and clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxKhv05YsaAy5vUYjlkhwj7Uy6MLz2rRAU_0PKl7yE2Nh-5TON2oy4OADiRjBL7H1Hm8apE2h6t79D1y6aaAW8pP6WmgFl66yRCRYwLrmenRpYokaMYmSNtIxgHcsxj9o7QxuDqctV0Vc0s0zG8zbOgnkIEDeoAUlBWT53oPqgxGs823kFt7NuzKdpUNJC63avX8lG3gHa1bZAuEH5jgQLJKHkftsFw8eMFenVWVhH_0WgQLTncXEJnA"/>
+</div>
+<div class="flex-1">
+<p class="text-xs text-on-surface-variant mb-2">Recommended size: 256x256px (PNG with transparent background)</p>
+<button class="px-4 py-1.5 bg-surface-container text-on-surface border border-outline-variant rounded-full text-xs font-bold hover:bg-surface-container-high transition-colors">
+                                                Change Logo
+                                            </button>
+</div>
+</div>
+</div>
+<!-- Hero Banner Setting -->
+<div>
+<label class="block font-label text-sm font-bold text-on-surface mb-2">Hero Background Banner</label>
+<div class="relative w-full aspect-[3/1] rounded-md overflow-hidden border border-outline-variant mb-3 group cursor-pointer">
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+<span class="material-symbols-outlined text-white text-3xl">edit</span>
+</div>
+<img alt="Hero Banner Preview" class="w-full h-full object-cover z-10" data-alt="A wide, sweeping panoramic shot of a modern university campus exterior bathed in bright, soft daylight. The architecture features clean lines, glass facades reflecting a clear blue sky, and vibrant green lawns. The overall tone is optimistic, professional, and aligns seamlessly with a light-mode, cyan-accented design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS8Z0V7u9j5yRaptq5ELS-H9tDHnOpj_dnTVfUJroCbQzu5q2ugrckqB2wZ40aQVmYpINiaV3urrTRQbuTFHsbln2kx4SfvTkgufnbB5mYgyKarxB46jeLCPdsyXVQlJQOxL5fmS2gWAXxs6biK5cOfQS0tXzUARRSHRvxZ0luXEGjhARrYKyLuvm_TLuGzUtH0EM-FvMCcGt7fgIqEALAQrdKlrFgmo4mRyZU9-I7XdLj_ttlH3bzyg"/>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">Used on public portal header</span>
+<span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Active</span>
+</div>
+</div>
+<hr class="border-surface-variant"/>
+<!-- Update Button -->
+<button class="w-full py-3 bg-secondary text-on-secondary rounded-full font-label text-sm font-bold hover:bg-secondary-dim transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">sync</span>
+                                    Update Branding
+                                </button>
+</div>
+</section>
+<!-- Quick Settings Card (Glassmorphism inspired) -->
+<section class="bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-lg p-6 shadow-sm border border-outline-variant/50 backdrop-blur-sm">
+<h3 class="font-headline text-base font-bold text-on-surface mb-4">Display Preferences</h3>
+<ul class="space-y-4">
+<li class="flex items-center justify-between">
+<div>
+<span class="block font-label text-sm font-bold text-on-surface">Auto-crop Images</span>
+<span class="text-xs text-on-surface-variant">Enforce 16:9 aspect ratio</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</li>
+<li class="flex items-center justify-between">
+<div>
+<span class="block font-label text-sm font-bold text-on-surface">Lazy Loading</span>
+<span class="text-xs text-on-surface-variant">Optimize gallery performance</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</li>
+</ul>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

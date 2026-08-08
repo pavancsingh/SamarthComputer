@@ -1,0 +1,288 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Courses Management - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400&amp;family=Bodoni+Moda:wght@600;700&amp;family=Merriweather:wght@700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#00628b",
+                        "secondary-dim": "#00597f",
+                        "tertiary": "#396572",
+                        "on-error-container": "#6e0523",
+                        "secondary-fixed-dim": "#a8dbff",
+                        "primary": "#00668e",
+                        "on-secondary": "#f5f9ff",
+                        "on-secondary-fixed": "#004462",
+                        "on-primary": "#f5f9ff",
+                        "primary-fixed": "#2cb9fb",
+                        "surface-container": "#f0ecf6",
+                        "surface": "#fcf8fe",
+                        "on-background": "#32313b",
+                        "secondary-container": "#c7e7ff",
+                        "outline": "#7b7984",
+                        "inverse-surface": "#0e0e12",
+                        "on-surface-variant": "#5f5e68",
+                        "tertiary-dim": "#2c5966",
+                        "error": "#a8364b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f2fa",
+                        "background": "#fcf8fe",
+                        "on-secondary-container": "#00577d",
+                        "surface-bright": "#fcf8fe",
+                        "surface-tint": "#00668e",
+                        "on-primary-fixed-variant": "#003c55",
+                        "on-tertiary-fixed-variant": "#33606d",
+                        "on-error": "#fff7f7",
+                        "inverse-on-surface": "#9e9ca2",
+                        "surface-variant": "#e4e1ed",
+                        "tertiary-fixed-dim": "#abd9e8",
+                        "on-surface": "#32313b",
+                        "primary-container": "#2cb9fb",
+                        "primary-dim": "#00597d",
+                        "primary-fixed-dim": "#00abec",
+                        "secondary": "#006690",
+                        "on-primary-fixed": "#001723",
+                        "error-dim": "#6b0221",
+                        "tertiary-fixed": "#b9e7f7",
+                        "on-tertiary": "#f0fbff",
+                        "error-container": "#f97386",
+                        "surface-container-highest": "#e4e1ed",
+                        "on-tertiary-container": "#285663",
+                        "on-primary-container": "#003248",
+                        "on-tertiary-fixed": "#124350",
+                        "outline-variant": "#b3b0bc",
+                        "inverse-primary": "#2cb9fb",
+                        "surface-dim": "#dcd8e4",
+                        "secondary-fixed": "#c7e7ff",
+                        "tertiary-container": "#b9e7f7",
+                        "surface-container-high": "#eae6f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "gutter": "1.5rem",
+                        "margin-mobile": "1rem",
+                        "margin-desktop": "2rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Bodoni Moda"],
+                        "display": ["Bodoni Moda"],
+                        "body": ["Anybody"],
+                        "label": ["Merriweather"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "headline-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-md": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-background text-on-surface font-body-md">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface-container-lowest border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-4">
+<span class="font-headline-xl text-headline-xl text-primary">Samarth Computers</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 rounded-full border border-outline-variant bg-surface text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 text-body-md transition-colors" placeholder="Search..." type="text">
+</div>
+<button aria-label="Notifications" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Settings" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img alt="Admin Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A small, circular avatar portrait of a professional administrative assistant. They are smiling slightly and dressed in business casual attire. The lighting is bright and clean, fitting a modern office environment. High-key light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0alu1k6P0qpoMS2JAf2sUiNFCdm5BcDabdib7YMu4s7hC-0YnTal2TEB8ssT5PkhT7FcPOWoGyBZXdRgADvI7buCc9a2t8L-EOI99E_eDLoPK9qTUXiIAChJ3yc4zRheDjPeuuuAUUAPkVqOUZ5D_duuxdF5c8cURjrD0Au0yCnHwjbG70oeIJC6lqPS53SqKzLXIc-1fTgzmDRMwhFerP1Q7GyA-Z9-cPo62R1wonttoyE-P6b3q1Q">
+</div>
+</header>
+<!-- SideNavBar & Main Content -->
+<div class="flex h-screen pt-16">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-16 h-[calc(100vh-64px)] w-[280px] flex flex-col py-stack-lg bg-surface-container-lowest border-r border-outline-variant shadow-sm hidden lg:flex">
+<div class="px-6 mb-8">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-1">Admin Dashboard</h2>
+<p class="text-body-sm text-on-surface-variant">Operational Center</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="inbox">inbox</span>
+                    Inbox Leads
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-primary border-r-2 border-primary bg-surface-container font-label-md active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="school" data-weight="fill" style="font-variation-settings: 'FILL' 1;">school</span>
+                    Courses
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                    CSC Services
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+                    Govt Services
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+                    Batch Timetable
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>
+                    News &amp; Updates
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+                    Faculty
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+                    Campus Photos
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</div>
+<div class="mt-auto px-4 pt-4 border-t border-surface-variant">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:bg-surface-container-low transition-all active:translate-x-1 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    Logout
+                </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-[280px] p-margin-mobile md:p-margin-desktop overflow-y-auto bg-background">
+<div class="max-w-[1440px] mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-1">Courses Management</h1>
+<p class="text-body-md text-on-surface-variant">Manage curriculum, fees, and syllabus materials.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-3">
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-body-md transition-colors shadow-sm" placeholder="Search courses..." type="text">
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:brightness-110 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Add New Course
+                        </button>
+</div>
+</div>
+<!-- Course Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Course Card 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT shadow-sm border border-outline-variant overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bright, modern digital illustration representing 'Advanced Python Programming'. Abstract code snippets and geometric shapes floating in a clean, light-mode environment. Dominated by primary cyan and sky blue tones, conveying a professional, educational tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsh9-0ruvPFOuOAP8Wb2_uGOMxUWN4aoeQ6FdFLBotKW_Lx1yUoqHjB4HVmGQ0oeXBFDYb_flApFrHsKnldiNE_hnaguFkn2SHVyRZ2eRp0alfDfh-Fc6Ng2AK0nPqNL_qRJyyHyLgCEwKiPpHWE0dYR64d3vawC9FfUIZkHHJCH5Cxmn8RAJf49YUz84sD30XPOSEZ9kg5mifevb5Rn10u7-s0_J8A0c9kInGhvqVeJvHfeKWAxtIvQ">
+<div class="absolute top-3 right-3">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-sm shadow-sm backdrop-blur-sm bg-opacity-90">Programming</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Advanced Python Programming</h3>
+<div class="flex justify-between items-center mb-4">
+
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">view_module</span>
+<span class="text-body-sm">12 Modules</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-surface-variant flex justify-between items-center gap-2">
+<button class="flex-1 bg-secondary-container text-on-secondary-container py-2 rounded-full font-label-md text-sm hover:brightness-95 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+                                    Edit Syllabus
+                                </button>
+<button aria-label="Delete Course" class="p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT shadow-sm border border-outline-variant overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, minimalist 3D rendering representing 'Digital Marketing Fundamentals'. Conceptual icons of megaphones, charts, and social media floating in a pristine, well-lit studio environment. Colors are soft whites and cyan accents, matching a light-mode admin dashboard style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABdjMR7iQtnI01LtjT6BHsWfMNGHThMSZCny9o7dQ8OTquO4mVI3nrvJbMAT-RketwqVHk98gw_SS8yL6RuanSvx16w60ssVDHDHYMowKz1goC7F8t3vGwVVJTpUtTQhPHsz0NJlkSX5DNCGcXDRTCKrAWrWK1O1xqUz4jF5DOmhSPunj7-IXAnSPrGKj4GucprdHCh1rKrbcX9TYMvPgDFWlPsQnSUgFP9mVdtF5Ud2jZMhROkYkctA">
+<div class="absolute top-3 right-3">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm shadow-sm backdrop-blur-sm bg-opacity-90">Marketing</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Digital Marketing Fundamentals</h3>
+<div class="flex justify-between items-center mb-4">
+
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">view_module</span>
+<span class="text-body-sm">8 Modules</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-surface-variant flex justify-between items-center gap-2">
+<button class="flex-1 bg-secondary-container text-on-secondary-container py-2 rounded-full font-label-md text-sm hover:brightness-95 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+                                    Edit Syllabus
+                                </button>
+<button aria-label="Delete Course" class="p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT shadow-sm border border-outline-variant overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+<div class="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An elegant, vector-style illustration for a 'UI/UX Design Masterclass'. Features wireframes, color palettes, and mobile screens arranged aesthetically. Light and airy lighting, using the primary brand cyan and soft neutral tones for a polished, educational feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmWAVYInMJRpKGwKYXXi_ysdHrSprY3G36znDidRblYcREGd73mSfnHXCOaMAmTv6Y248vUofpI9DRTK-bnd3gq6cTZfUf7IPCI5fEalh-xnV_1h_eqlFyBOEYyqkPgdM_BAlCu4ulxTabT-D1Kk6xDPCRKo_6DbGnbI0rcKwhcCGnNJ7MmvVNKuidq-Qmv0sTWCExvwarCuipCKVT2_Y9FpLHTz0azEtOGGQhwVYlcLC4IhmWKmBAwg">
+<div class="absolute top-3 right-3">
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full font-label-sm shadow-sm backdrop-blur-sm bg-opacity-90">Design</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">UI/UX Design Masterclass</h3>
+<div class="flex justify-between items-center mb-4">
+
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">view_module</span>
+<span class="text-body-sm">15 Modules</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-surface-variant flex justify-between items-center gap-2">
+<button class="flex-1 bg-secondary-container text-on-secondary-container py-2 rounded-full font-label-md text-sm hover:brightness-95 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+                                    Edit Syllabus
+                                </button>
+<button aria-label="Delete Course" class="p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+
+</body></html>

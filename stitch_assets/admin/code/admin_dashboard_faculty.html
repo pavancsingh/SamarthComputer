@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Faculty &amp; Instructors - Samarth Computers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400&amp;family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&amp;family=Merriweather:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#00628b",
+                        "secondary-dim": "#00597f",
+                        "tertiary": "#396572",
+                        "on-error-container": "#6e0523",
+                        "secondary-fixed-dim": "#a8dbff",
+                        "primary": "#00668e",
+                        "on-secondary": "#f5f9ff",
+                        "on-secondary-fixed": "#004462",
+                        "on-primary": "#f5f9ff",
+                        "primary-fixed": "#2cb9fb",
+                        "surface-container": "#f0ecf6",
+                        "surface": "#fcf8fe",
+                        "on-background": "#32313b",
+                        "secondary-container": "#c7e7ff",
+                        "outline": "#7b7984",
+                        "inverse-surface": "#0e0e12",
+                        "on-surface-variant": "#5f5e68",
+                        "tertiary-dim": "#2c5966",
+                        "error": "#a8364b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f2fa",
+                        "background": "#fcf8fe",
+                        "on-secondary-container": "#00577d",
+                        "surface-bright": "#fcf8fe",
+                        "surface-tint": "#00668e",
+                        "on-primary-fixed-variant": "#003c55",
+                        "on-tertiary-fixed-variant": "#33606d",
+                        "on-error": "#fff7f7",
+                        "inverse-on-surface": "#9e9ca2",
+                        "surface-variant": "#e4e1ed",
+                        "tertiary-fixed-dim": "#abd9e8",
+                        "on-surface": "#32313b",
+                        "primary-container": "#2cb9fb",
+                        "primary-dim": "#00597d",
+                        "primary-fixed-dim": "#00abec",
+                        "secondary": "#006690",
+                        "on-primary-fixed": "#001723",
+                        "error-dim": "#6b0221",
+                        "tertiary-fixed": "#b9e7f7",
+                        "on-tertiary": "#f0fbff",
+                        "error-container": "#f97386",
+                        "surface-container-highest": "#e4e1ed",
+                        "on-tertiary-container": "#285663",
+                        "on-primary-container": "#003248",
+                        "on-tertiary-fixed": "#124350",
+                        "outline-variant": "#b3b0bc",
+                        "inverse-primary": "#2cb9fb",
+                        "surface-dim": "#dcd8e4",
+                        "secondary-fixed": "#c7e7ff",
+                        "tertiary-container": "#b9e7f7",
+                        "surface-container-high": "#eae6f1"
+                    },
+                    borderRadius: {
+                        "sm": "0.5rem",
+                        "DEFAULT": "1rem",
+                        "md": "1.5rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1440px",
+                        "gutter": "1.5rem",
+                        "margin-mobile": "1rem",
+                        "margin-desktop": "2rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    fontFamily: {
+                        "headline": ["Bodoni Moda", "serif"],
+                        "body": ["Anybody", "sans-serif"],
+                        "label": ["Merriweather", "serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- App Container -->
+<div class="flex min-h-screen">
+<!-- SideNavBar (from JSON) -->
+<nav class="fixed left-0 top-0 h-full w-[280px] flex flex-col py-stack-lg bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant shadow-sm z-40 hidden md:flex">
+<!-- Header -->
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline font-bold">S</div>
+<h1 class="font-headline text-headline-lg text-primary tracking-tight">Samarth Computers</h1>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-wider">Admin Dashboard</p>
+<p class="text-xs text-on-surface-variant mt-1">Operational Center</p>
+</div>
+<!-- Navigation Links -->
+<ul class="flex-1 px-4 space-y-1">
+<!-- Inactive Tab -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">inbox</span>
+                        Inbox Leads
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">school</span>
+                        Courses
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+                        CSC Services
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">account_balance</span>
+                        Govt Services
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">schedule</span>
+                        Batch Timetable
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">newspaper</span>
+                        News &amp; Updates
+                    </a>
+</li>
+<!-- Active Tab -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-primary dark:text-inverse-primary border-r-2 border-primary dark:border-inverse-primary bg-surface-container dark:bg-surface-container-highest font-label text-sm shadow-sm transition-transform active:translate-x-1" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">groups</span>
+                        Faculty
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">photo_library</span>
+                        Campus Photos
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+                        Settings
+                    </a>
+</li>
+</ul>
+<!-- Footer -->
+<div class="px-4 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT text-secondary dark:text-secondary-fixed-dim font-label text-sm hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+                    Logout
+                </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[280px] min-h-screen bg-surface-bright flex flex-col">
+<!-- Page Header -->
+<header class="px-margin-desktop py-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-surface-variant bg-surface-container-lowest sticky top-0 z-30 shadow-sm">
+<div>
+<p class="text-secondary font-label text-sm mb-1 uppercase tracking-wide">Administration</p>
+<h2 class="font-headline text-[32px] font-bold text-on-surface leading-tight tracking-tight">Faculty &amp; Instructors</h2>
+</div>
+<button class="inline-flex items-center justify-center gap-2 bg-primary hover:brightness-110 text-on-primary font-label text-sm py-3 px-6 rounded-full shadow-sm transition-all active:scale-95" onclick="toggleModal()">
+<span class="material-symbols-outlined text-lg">person_add</span>
+                    Add Faculty
+                </button>
+</header>
+<!-- Content Grid -->
+<div class="p-margin-desktop flex-1 max-w-[1440px] mx-auto w-full">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Faculty Card 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-6 shadow-sm border border-outline-variant/40 flex flex-col items-center text-center group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container hover:bg-primary-container text-on-surface hover:text-on-primary-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="w-24 h-24 rounded-full p-1 border-2 border-primary-container mb-4">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional headshot of a female computer science professor in her late 30s. She is wearing a tailored navy blazer over a crisp white shirt. The background is a subtly blurred modern server room with cool blue lighting, fitting a sophisticated, light-mode tech institute aesthetic. The lighting on her face is soft, bright, and highly professional, exuding confidence and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-PiMDI0t1u8foj9ABqSirXEbMPh1lbCqpqqYSEdk3ptLIQsGMfaRDaweEKGUuRzlhkq6_1yT_-bn8ZCBDLf_rZ0FVIm2_BtZAVDHytT-VV3lDSWwnt2Gp6NK1AKHVsvjkF7gK4Y13vKvZ_bmSvhpfdyC3bAdDrnpWSMx8C61wG7HPZ0LueUY60pL_qclgRbSZrGZpYSYe5lJchlyeMYk5fxz270_glKsz7aYIm8GebBvUtMnR2-FsBQ"/>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface mb-1">Dr. Aditi Sharma</h3>
+<div class="inline-block bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-sm text-xs font-label mb-4">
+                            12 Years Experience
+                        </div>
+<p class="font-body text-body-sm text-on-surface-variant line-clamp-3">
+                            Specializes in advanced Java programming and database management systems. Leading the curriculum development for the new cloud computing certification track.
+                        </p>
+<div class="mt-auto pt-4 w-full flex justify-center gap-2 border-t border-surface-variant/50">
+<span class="bg-surface-container-high text-on-surface text-[11px] px-2 py-1 rounded-sm font-body">Java</span>
+<span class="bg-surface-container-high text-on-surface text-[11px] px-2 py-1 rounded-sm font-body">SQL</span>
+<span class="bg-surface-container-high text-on-surface text-[11px] px-2 py-1 rounded-sm font-body">Cloud</span>
+</div>
+</div>
+<!-- Faculty Card 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-6 shadow-sm border border-outline-variant/40 flex flex-col items-center text-center group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded-full bg-surface-container hover:bg-primary-container text-on-surface hover:text-on-primary-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="w-24 h-24 rounded-full p-1 border-2 border-primary-container mb-4">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional portrait of a male data analytics instructor in his 40s. He has short neat hair and glasses, wearing a light blue button-down shirt without a tie. The setting is a bright, modern classroom with a whiteboard subtly visible in the out-of-focus background. The image uses a clean, high-key lighting setup that matches a refined, authoritative educational brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-WCpiCQ8eQVLVld5AhofDvIrwnfxmJXasYApQj9D_H8ReYcdbkTc2cr4vyPXNt9myQWW0_6HnbQe-mCkmwY71LTAri1vJs1YD6XQG4JpJ66iZllovyd7tlEJS6_khRRBCaJ0bn5nKfoB3EzCoaN-rS-ps4syDUE1n1D5iJTmSO0pjtX5U4L5k-4am7nrCl5nXeDTMUkWsOAMFXk4C4uOrSeptywrSo_MxQw3-_wPJVDkQmg3NU-h7Fw"/>
+</div>
+<h3 class="font-headline text-headline-md text-on-surface mb-1">Rohan Desai</h3>
+<div class="inline-block bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-sm text-xs font-label mb-4">
+                            8 Years Experience
+                        </div>
+<p class="font-body text-body-sm text-on-surface-variant line-clamp-3">
+                            Expert in Python and Data Analytics. Passionate about turning complex datasets into actionable insights. Mentors students in regional hackathons.
+                        </p>
+<div class="mt-auto pt-4 w-full flex justify-center gap-2 border-t border-surface-variant/50">
+<span class="bg-surface-container-high text-on-surface text-[11px] px-2 py-1 rounded-sm font-body">Python</span>
+<span class="bg-surface-container-high text-on-surface text-[11px] px-2 py-1 rounded-sm font-body">Data Science</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Add Faculty Modal -->
+<div class="fixed inset-0 z-50 hidden" id="addFacultyModal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-on-surface/30 backdrop-blur-sm transition-opacity" onclick="toggleModal()"></div>
+<!-- Modal Content -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-surface-container-lowest rounded-md shadow-xl border border-outline-variant/20 overflow-hidden flex flex-col max-h-[921px]">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b border-surface-variant flex justify-between items-center bg-surface-bright">
+<div>
+<h3 class="font-headline text-headline-lg text-on-surface">Add New Faculty</h3>
+<p class="text-sm font-body text-on-surface-variant mt-1">Enter instructor details and upload a profile picture.</p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors rounded-full p-2 hover:bg-error-container/20" onclick="toggleModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable) -->
+<div class="p-8 overflow-y-auto flex-1">
+<div class="flex flex-col md:flex-row gap-8">
+<!-- Image Cropper Area -->
+<div class="w-full md:w-1/3 flex flex-col items-center">
+<p class="font-label text-sm text-on-surface mb-3 self-start">Profile Photo</p>
+<!-- 1:1 Square Cropper Placeholder -->
+<div class="relative w-48 h-48 rounded-DEFAULT border-2 border-dashed border-primary/40 bg-surface-container overflow-hidden group cursor-pointer shadow-inner">
+<!-- Tinted Overlay -->
+<div class="absolute inset-0 bg-primary-container/10 backdrop-blur-[2px] flex flex-col items-center justify-center transition-all group-hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-primary text-4xl mb-2">add_a_photo</span>
+<span class="text-xs font-body text-primary font-semibold">Upload Image</span>
+</div>
+<!-- Floating Controls (Simulated active state) -->
+<div class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-surface-container-lowest/95 backdrop-blur-md rounded-full shadow-sm border border-outline-variant/30 px-3 py-1.5 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+<button class="text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">crop</span>
+</button>
+<div class="w-px h-4 bg-outline-variant/50 self-center"></div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">rotate_right</span>
+</button>
+</div>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-3 text-center w-48">Recommended size: 500x500px. Image will be cropped to a 1:1 square.</p>
+</div>
+<!-- Form Fields -->
+<div class="w-full md:w-2/3 space-y-5">
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 sm:col-span-1">
+<label class="block font-label text-sm text-on-surface mb-1.5">First Name</label>
+<input class="w-full bg-surface px-4 py-2.5 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface placeholder:text-outline outline-none transition-shadow" placeholder="e.g. Aditi" type="text"/>
+</div>
+<div class="col-span-2 sm:col-span-1">
+<label class="block font-label text-sm text-on-surface mb-1.5">Last Name</label>
+<input class="w-full bg-surface px-4 py-2.5 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface placeholder:text-outline outline-none transition-shadow" placeholder="e.g. Sharma" type="text"/>
+</div>
+</div>
+<div>
+<label class="block font-label text-sm text-on-surface mb-1.5">Primary Specialization</label>
+<input class="w-full bg-surface px-4 py-2.5 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface placeholder:text-outline outline-none transition-shadow" placeholder="e.g. Java Programming" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 sm:col-span-1">
+<label class="block font-label text-sm text-on-surface mb-1.5">Experience (Years)</label>
+<input class="w-full bg-surface px-4 py-2.5 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface placeholder:text-outline outline-none transition-shadow" placeholder="0" type="number"/>
+</div>
+<div class="col-span-2 sm:col-span-1">
+<label class="block font-label text-sm text-on-surface mb-1.5">Status</label>
+<select class="w-full bg-surface px-4 py-2.5 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface outline-none transition-shadow appearance-none">
+<option>Active</option>
+<option>On Leave</option>
+<option>Inactive</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-label text-sm text-on-surface mb-1.5">Short Bio</label>
+<textarea class="w-full bg-surface px-4 py-3 rounded-DEFAULT border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body text-sm text-on-surface placeholder:text-outline outline-none transition-shadow resize-none" placeholder="Brief professional background..." rows="3"></textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-5 border-t border-surface-variant bg-surface-container-lowest flex justify-end gap-3 rounded-b-md">
+<button class="px-6 py-2.5 rounded-full font-label text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleModal()" type="button">
+                    Cancel
+                </button>
+<button class="px-6 py-2.5 rounded-full font-label text-sm bg-primary text-on-primary hover:brightness-110 shadow-sm transition-all active:scale-95" type="button">
+                    Save Faculty
+                </button>
+</div>
+</div>
+</div>
+<script>
+        function toggleModal() {
+            const modal = document.getElementById('addFacultyModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                // Small delay to allow display:block to apply before animating opacity if we were using complex transitions
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body></html>

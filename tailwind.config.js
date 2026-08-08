@@ -67,7 +67,10 @@ export default {
           'border-strong': '#CBD5E1',
           emerald: '#10B981',
           amber: '#F59E0B',
-          indigo: '#6366F1',
+          indigo: '#4F46E5',
+          'indigo-dark': '#3730A3',
+          'indigo-light': '#EEF2FF',
+          'indigo-container': '#E0E7FF',
         }
       },
       boxShadow: {

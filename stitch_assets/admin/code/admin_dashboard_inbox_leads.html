@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Samarth Computers - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;700&amp;family=Anybody:wght@400;500;700&amp;family=Merriweather:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-surface": "#32313b", "inverse-primary": "#2cb9fb", "surface-bright": "#fcf8fe", "tertiary-container": "#b9e7f7", "on-tertiary-container": "#285663", "warning-amber": "#F59E0B", "inverse-on-surface": "#9e9ca2", "on-error": "#fff7f7", tertiary: "#396572", "on-primary-fixed-variant": "#003c55", "on-error-container": "#6e0523", "inverse-surface": "#0e0e12", "surface-container": "#f0ecf6", "surface-container-low": "#f6f2fa", "surface-container-high": "#eae6f1", "primary-container": "#2cb9fb", "on-primary": "#f5f9ff", "surface-dim": "#dcd8e4", "border-slate": "#E2E8F0", "surface-container-lowest": "#ffffff", primary: "#00668e", "on-tertiary-fixed-variant": "#33606d", "secondary-fixed": "#c7e7ff", "on-secondary-container": "#00577d", secondary: "#006690", "tertiary-fixed": "#b9e7f7", "outline-variant": "#b3b0bc", error: "#a8364b", "success-emerald": "#10B981", "surface-variant": "#e4e1ed", "surface-slate": "#F8FAFC", background: "#fcf8fe", "on-background": "#32313b", surface: "#fcf8fe", "error-rose": "#F43F5E", "on-primary-container": "#003248", "on-primary-fixed": "#001723", "primary-fixed-dim": "#00abec", "surface-tint": "#00668e", "on-secondary": "#f5f9ff", "on-tertiary-fixed": "#124350", "secondary-fixed-dim": "#a8dbff", "primary-fixed": "#2cb9fb", "secondary-container": "#c7e7ff", "on-surface-variant": "#5f5e68", "on-tertiary": "#f0fbff", "tertiary-fixed-dim": "#abd9e8", "on-secondary-fixed": "#004462", "surface-container-highest": "#e4e1ed", outline: "#7b7984", "on-secondary-fixed-variant": "#00628b", "error-container": "#f97386", "primary-dim": "#00597d", "error-dim": "#6b0221", "secondary-dim": "#00597f", "tertiary-dim": "#2c5966"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"stack-md": "1rem", gutter: "1.5rem", "stack-lg": "1.5rem", "margin-desktop": "2rem", "margin-mobile": "1rem", "container-max": "1440px", "stack-sm": "0.5rem"}, fontFamily: {"label-md": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"], "headline-lg": ["Inter"], headline: ["Bodoni Moda"], display: ["Bodoni Moda"], body: ["Anybody"], label: ["Merriweather"]}, fontSize: {"label-md": ["14px", {lineHeight: "20px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-sm": ["13px", {lineHeight: "18px", fontWeight: "400"}], "headline-md": ["18px", {lineHeight: "24px", fontWeight: "600"}], "headline-xl": ["24px", {lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["20px", {lineHeight: "28px", fontWeight: "600"}]}}}};</script>
+</head>
+<body class="bg-surface-slate text-on-surface font-body-md h-screen overflow-hidden flex flex-col antialiased selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface-container-lowest dark:bg-inverse-surface border-b border-border-slate dark:border-outline-variant shadow-sm shrink-0">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 text-primary hover:bg-surface-container-low rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-xl text-headline-xl text-primary dark:text-inverse-primary tracking-tight">
+                Samarth Computers
+            </div>
+</div>
+<div class="flex-1 max-w-xl mx-8 hidden md:block">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none">search</span>
+<input class="w-full bg-surface-container-lowest border border-border-slate rounded-full py-2 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow placeholder:text-secondary shadow-sm" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Notifications" class="p-2 text-on-secondary-container hover:bg-surface-container-low rounded-full transition-colors active:scale-95 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error-rose rounded-full"></span>
+</button>
+<button aria-label="Settings" class="p-2 text-on-secondary-container hover:bg-surface-container-low rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="ml-2 h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-label-md cursor-pointer hover:opacity-90 transition-opacity ring-2 ring-transparent hover:ring-primary-fixed-dim" title="Admin Profile">
+<img alt="Admin Profile" class="w-full h-full rounded-full object-cover" data-alt="A professional headshot of an administrative professional in a corporate setting. High-quality lighting, corporate modernism aesthetic, shallow depth of field, clear focused expression, indigo and slate background tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGM0ES1HrIp2ROvrKM5ezjEPvcPP8j4W5_y8inkI9IYY-fASX4qyDYREPwWjJ-IJxJmM7hL6zZ3kcsnAibl-1vzw3-TcIwDgV3404xHVEpuHkhBMu8KVu4h4QTHGpK5G6433GactMGQjziUxk3SeGx8T1AeU4QKvRXG1VQPaMvpKI0uG7NAQGfJc6ER0JBg1KJks0uJai2jolVEq36zKKy5KMcokpu8CqZaEKrGvgWuQbu8vaCtXnTfg"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-16 h-full w-full">
+<!-- SideNavBar -->
+<nav class="hidden md:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-[280px] flex-col py-stack-lg bg-surface-container-lowest dark:bg-inverse-surface border-r border-border-slate dark:border-outline-variant shadow-sm z-40 shrink-0 overflow-y-auto">
+<div class="px-6 mb-6">
+<h2 class="font-label-md text-label-md text-secondary tracking-wider uppercase mb-2">Operational Center</h2>
+<div class="font-headline-lg text-headline-lg text-primary flex items-center gap-2">
+                     Admin Dashboard
+                </div>
+</div>
+<div class="flex-1 flex flex-col gap-1 px-3">
+<!-- Inbox Leads (Active) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-primary dark:text-inverse-primary bg-surface-container dark:bg-surface-container-highest border-r-2 border-primary dark:border-inverse-primary font-label-md transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inbox</span>
+                    Inbox Leads
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">school</span>
+                    Courses
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">description</span>
+                    CSC Services
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                    Govt Services
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">schedule</span>
+                    Batch Timetable
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">newspaper</span>
+                    News &amp; Updates
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Faculty
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+                    Campus Photos
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</div>
+<div class="px-3 mt-4 border-t border-border-slate pt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:translate-x-1 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[280px] h-full overflow-y-auto w-full p-margin-mobile md:p-margin-desktop">
+<div class="max-w-container-max mx-auto space-y-gutter">
+<!-- Header Section -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Inbox Leads</h1>
+<p class="font-body-md text-body-md text-secondary mt-1 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-success-emerald inline-block"></span>
+                            12 New Leads Today
+                        </p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-border-slate rounded-lg text-secondary font-label-md text-label-md hover:bg-surface-slate transition-colors active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                            Refresh
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-surface-tint transition-colors active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                            New Lead
+                        </button>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-border-slate shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05)] flex flex-col md:flex-row gap-4 justify-between items-center">
+<div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm whitespace-nowrap">All</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-slate text-secondary border border-border-slate hover:bg-surface-container-low transition-colors font-label-sm text-label-sm whitespace-nowrap">New Lead</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-slate text-secondary border border-border-slate hover:bg-surface-container-low transition-colors font-label-sm text-label-sm whitespace-nowrap">In Process</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-slate text-secondary border border-border-slate hover:bg-surface-container-low transition-colors font-label-sm text-label-sm whitespace-nowrap">Completed</button>
+</div>
+<div class="relative w-full md:w-64 shrink-0">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[20px] pointer-events-none">search</span>
+<input class="w-full bg-surface-slate border border-border-slate rounded-lg py-1.5 pl-10 pr-4 text-body-sm font-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow placeholder:text-secondary" placeholder="Search leads..." type="text"/>
+</div>
+</div>
+<!-- High Density Data Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-border-slate shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05)] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-slate border-b border-border-slate font-label-sm text-label-sm text-secondary">
+<th class="px-4 py-3 font-medium">Date</th>
+<th class="px-4 py-3 font-medium">Name</th>
+<th class="px-4 py-3 font-medium">Service Requested</th>
+<th class="px-4 py-3 font-medium">Status</th>
+<th class="px-4 py-3 font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="border-b border-border-slate hover:bg-surface-container-low transition-colors group">
+<td class="px-4 py-3 whitespace-nowrap text-secondary">Oct 24, 2023</td>
+<td class="px-4 py-3 font-medium text-on-surface">Rahul Sharma</td>
+<td class="px-4 py-3">Advanced Excel Course</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-primary-container/10 text-primary-container ring-1 ring-inset ring-primary-container/20">New Lead</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error-rose transition-colors rounded" title="Delete"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-border-slate hover:bg-surface-container-low transition-colors group">
+<td class="px-4 py-3 whitespace-nowrap text-secondary">Oct 24, 2023</td>
+<td class="px-4 py-3 font-medium text-on-surface">Priya Patel</td>
+<td class="px-4 py-3">CSC - PAN Card Application</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-warning-amber/10 text-warning-amber ring-1 ring-inset ring-warning-amber/20">In Process</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error-rose transition-colors rounded" title="Delete"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-border-slate hover:bg-surface-container-low transition-colors group">
+<td class="px-4 py-3 whitespace-nowrap text-secondary">Oct 23, 2023</td>
+<td class="px-4 py-3 font-medium text-on-surface">Amit Kumar</td>
+<td class="px-4 py-3">Hardware Repair - Laptop Screen</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-success-emerald/10 text-success-emerald ring-1 ring-inset ring-success-emerald/20">Completed</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error-rose transition-colors rounded" title="Delete"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="border-b border-border-slate hover:bg-surface-container-low transition-colors group">
+<td class="px-4 py-3 whitespace-nowrap text-secondary">Oct 23, 2023</td>
+<td class="px-4 py-3 font-medium text-on-surface">Sneha Gupta</td>
+<td class="px-4 py-3">Tally Prime Certification</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-primary-container/10 text-primary-container ring-1 ring-inset ring-primary-container/20">New Lead</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-secondary hover:text-primary transition-colors rounded" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error-rose transition-colors rounded" title="Delete"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-4 py-3 border-t border-border-slate flex items-center justify-between bg-surface-container-lowest">
+<span class="font-body-sm text-body-sm text-secondary">Showing 1 to 4 of 12 entries</span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 rounded border border-border-slate text-secondary disabled:opacity-50 hover:bg-surface-slate transition-colors"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+<button class="px-3 py-1 rounded border border-primary bg-primary text-on-primary font-label-sm text-label-sm">1</button>
+<button class="px-3 py-1 rounded border border-border-slate text-secondary hover:bg-surface-slate transition-colors font-label-sm text-label-sm">2</button>
+<button class="px-3 py-1 rounded border border-border-slate text-secondary hover:bg-surface-slate transition-colors font-label-sm text-label-sm">3</button>
+<button class="px-2 py-1 rounded border border-border-slate text-secondary hover:bg-surface-slate transition-colors"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
