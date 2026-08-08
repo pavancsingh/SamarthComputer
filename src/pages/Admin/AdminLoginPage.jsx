@@ -7,8 +7,8 @@ import { useAuth, ADMIN_EMAIL } from '../../context/AuthContext';
  * Secure login portal for authorized single admin.
  */
 export default function AdminLoginPage({ lang = 'en', onSuccess }) {
-  const [email, setEmail] = useState('pawansingh3760@gmail.com');
-  const [password, setPassword] = useState('Pavan@1137');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,20 +30,6 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
     }
   };
 
-  const handleQuickLogin = async () => {
-    setEmail(ADMIN_EMAIL);
-    setPassword('Pavan@1137');
-    setIsSubmitting(true);
-    const result = await loginAdmin(ADMIN_EMAIL, 'Pavan@1137');
-    setIsSubmitting(false);
-
-    if (result.success) {
-      if (onSuccess) onSuccess();
-    } else {
-      setErrorMsg(result.message || 'Login failed.');
-    }
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-stitch-ivory px-4 py-16 text-stitch-slate-dark relative overflow-hidden">
       {/* Background Glow */}
@@ -62,29 +48,6 @@ export default function AdminLoginPage({ lang = 'en', onSuccess }) {
           <p className="text-xs text-slate-500 font-semibold">
             Authorized Admin Access Only
           </p>
-        </div>
-
-        {/* Quick Admin Access Preset Card */}
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
-          <div className="flex items-center justify-between font-bold text-stitch-slate-dark">
-            <span className="flex items-center gap-1.5 text-slate-700">
-              <KeyRound className="w-4 h-4 text-stitch-red" />
-              Master Admin Credentials
-            </span>
-            <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-extrabold">Active</span>
-          </div>
-          <div className="text-slate-600 font-mono text-[11px] space-y-1 bg-white p-2.5 rounded-xl border border-slate-200">
-            <div>Email: <strong className="text-slate-900">pawansingh3760@gmail.com</strong></div>
-            <div>Pass: <strong className="text-slate-900">Pavan@1137</strong></div>
-          </div>
-          <button
-            type="button"
-            onClick={handleQuickLogin}
-            className="w-full bg-stitch-red-light hover:bg-red-100 text-stitch-red font-extrabold text-xs py-2 rounded-xl border border-stitch-red-border/60 transition-all flex items-center justify-center gap-1.5 shadow-stitch-sm"
-          >
-            <ShieldCheck className="w-4 h-4 text-stitch-red" />
-            <span>1-Click Auto Login as Admin</span>
-          </button>
         </div>
 
         {/* Error Alert */}
