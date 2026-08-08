@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { sharedStore } from '../../repositories/sharedStore';
+import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
  * FacultyPage — Stitch Design System (04_meet_our_faculty.html)
  * Centered hero + 12-col bento: Lead Instructor (8 col) + Philosophy (4 col) + 2 instructors + Ask Mentor
+ * Direct Supabase DB integration.
  */
 
 const FALLBACK_FACULTY = [
@@ -40,29 +41,33 @@ const FALLBACK_FACULTY = [
 
 export default function FacultyPage({ lang = 'mr', onNavigate }) {
   const [faculty, setFaculty] = useState([]);
+  const [loading, setLoading] = useState(true);
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
-    try {
-      const data = sharedStore.getFaculty ? sharedStore.getFaculty() : null;
-      setFaculty(data && data.length > 0 ? data : FALLBACK_FACULTY);
-    } catch {
-      setFaculty(FALLBACK_FACULTY);
-    }
-    const unsubscribe = sharedStore.subscribe(() => {
-      try {
-        const data = sharedStore.getFaculty ? sharedStore.getFaculty() : null;
-        setFaculty(data && data.length > 0 ? data : FALLBACK_FACULTY);
-      } catch {
+    let isMounted = true;
+    AdminRepository.getAllFaculty().then((data) => {
+      if (isMounted) {
+        if (data && data.length > 0) {
+          setFaculty(data);
+        } else {
+          setFaculty(FALLBACK_FACULTY);
+        }
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (isMounted) {
         setFaculty(FALLBACK_FACULTY);
+        setLoading(false);
       }
     });
-    return unsubscribe;
+
+    return () => { isMounted = false; };
   }, []);
 
   const displayFaculty = faculty.length > 0 ? faculty : FALLBACK_FACULTY;
-  const lead = displayFaculty.find((f) => f.lead || f.isLead) || displayFaculty[0];
-  const others = displayFaculty.filter((f) => f.id !== (lead?.id));
+  const lead = displayFaculty.find((f) => f.lead || f.isLead || f.badge === 'Center Head') || displayFaculty[0];
+  const others = displayFaculty.filter((f) => (f.id || f.name) !== (lead?.id || lead?.name));
 
   return (
     <div className="bg-background min-h-screen pb-20 md:pb-0">
@@ -93,25 +98,25 @@ export default function FacultyPage({ lang = 'mr', onNavigate }) {
             <div className="md:col-span-8 bg-surface-container-lowest rounded-xl border border-surface-variant p-lg flex flex-col md:flex-row gap-lg group hover:shadow-[0_4px_20px_-2px_rgba(183,0,14,0.15)] hover:-translate-y-1 transition-all duration-300">
               <div className="w-full md:w-1/3 aspect-[3/4] relative rounded-lg overflow-hidden bg-surface-variant">
                 <img
-                  src={lead.image || lead.photoUrl || lead.photo_url}
-                  alt={isMarathi ? lead.nameMr : lead.nameEn}
+                  src={lead.image_url || lead.imageUrl || lead.image || lead.photoUrl || lead.photo_url}
+                  alt={lead.name || (isMarathi ? lead.nameMr : lead.nameEn)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
               <div className="w-full md:w-2/3 flex flex-col justify-center space-y-md">
                 <div>
                   <span className="inline-block px-sm py-xs bg-[#dae2fd] text-[#131b2e] rounded-full text-label-caps font-label-caps mb-sm">
-                    {isMarathi ? (lead.roleMr || 'केंद्र प्रमुख व प्रमुख मार्गदर्शक') : (lead.roleEn || 'Center Head & Lead Mentor')}
+                    {lead.badge || (isMarathi ? (lead.role_mr || lead.roleMr || 'केंद्र प्रमुख व प्रमुख मार्गदर्शक') : (lead.role_en || lead.roleEn || 'Center Head & Lead Mentor'))}
                   </span>
                   <h2 className="text-headline-lg font-headline-lg text-on-background">
-                    {isMarathi ? lead.nameMr : lead.nameEn}
+                    {lead.name || (isMarathi ? lead.nameMr : lead.nameEn)}
                   </h2>
                   <p className="text-primary font-label-bold mt-xs">
-                    {isMarathi ? (lead.expMr || lead.experienceMr) : (lead.expEn || lead.experienceEn)}
+                    {isMarathi ? (lead.role_mr || lead.roleMr || lead.exp_mr || lead.expMr) : (lead.role_en || lead.roleEn || lead.exp_en || lead.expEn)}
                   </p>
                 </div>
                 <p className="text-body-md font-body-md text-on-surface-variant">
-                  {isMarathi ? (lead.bioMr || lead.bio_mr || lead.overview) : (lead.bioEn || lead.bio_en || lead.overview)}
+                  {isMarathi ? (lead.spec_mr || lead.specMr || lead.exp_mr || lead.expMr || lead.bioMr) : (lead.spec_en || lead.specEn || lead.exp_en || lead.expEn || lead.bioEn)}
                 </p>
                 {lead.skills && lead.skills.length > 0 && (
                   <div className="flex flex-wrap gap-sm mt-md">
@@ -148,27 +153,27 @@ export default function FacultyPage({ lang = 'mr', onNavigate }) {
           </div>
 
           {/* Other Instructors */}
-          {others.slice(0, 2).map((f, idx) => (
+          {others.map((f, idx) => (
             <div
               key={f.id || idx}
               className="md:col-span-4 bg-surface-container-lowest rounded-xl border border-surface-variant p-md flex flex-col gap-md hover:shadow-[0_4px_20px_-2px_rgba(183,0,14,0.15)] hover:-translate-y-1 transition-all duration-300"
             >
               <div className="w-full aspect-square relative rounded-lg overflow-hidden bg-surface-variant">
                 <img
-                  src={f.image || f.photoUrl || f.photo_url}
-                  alt={isMarathi ? f.nameMr : f.nameEn}
+                  src={f.image_url || f.imageUrl || f.image || f.photoUrl || f.photo_url}
+                  alt={f.name || (isMarathi ? f.nameMr : f.nameEn)}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
                 <h3 className="text-headline-md font-headline-md text-on-background">
-                  {isMarathi ? f.nameMr : f.nameEn}
+                  {f.name || (isMarathi ? f.nameMr : f.nameEn)}
                 </h3>
                 <p className="text-primary font-label-bold mt-xs">
-                  {isMarathi ? (f.expMr || f.experienceMr) : (f.expEn || f.experienceEn)}
+                  {isMarathi ? (f.role_mr || f.roleMr || f.exp_mr || f.expMr) : (f.role_en || f.roleEn || f.exp_en || f.expEn)}
                 </p>
                 <p className="text-body-md font-body-md text-on-surface-variant mt-sm">
-                  {isMarathi ? (f.bioMr || f.bio_mr) : (f.bioEn || f.bio_en)}
+                  {isMarathi ? (f.spec_mr || f.specMr || f.exp_mr || f.expMr || f.bioMr) : (f.spec_en || f.specEn || f.exp_en || f.expEn || f.bioEn)}
                 </p>
               </div>
             </div>

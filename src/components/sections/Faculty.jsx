@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Award, GraduationCap, CheckCircle2, User } from 'lucide-react';
-import { sharedStore } from '../../repositories/sharedStore';
+import { GraduationCap, CheckCircle2 } from 'lucide-react';
 import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
  * Faculty Component - Google Stitch Design
- * Leadership & Instructors showcase: Dynamic rendering from Admin sharedStore.
+ * Leadership & Instructors showcase: Dynamic rendering directly from Supabase DB.
  */
 export default function Faculty({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
-  const [facultyList, setFacultyList] = useState(sharedStore.getFaculty());
+  const [facultyList, setFacultyList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     AdminRepository.getAllFaculty().then((res) => {
-      if (res && res.length > 0) setFacultyList(res);
+      if (isMounted) {
+        setFacultyList(res || []);
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (isMounted) setLoading(false);
     });
 
-    const unsubscribe = sharedStore.subscribe(() => {
-      setFacultyList(sharedStore.getFaculty());
-    });
-    return unsubscribe;
+    return () => { isMounted = false; };
   }, []);
+
+  if (loading || facultyList.length === 0) return null;
 
   return (
     <section className="py-20 bg-stitch-ivory border-b border-slate-200/80">
@@ -47,15 +52,20 @@ export default function Faculty({ lang = 'mr' }) {
         {/* Faculty Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {facultyList.map((item, idx) => {
+            const imgSrc = item.image_url || item.imageUrl;
+            const role = isMarathi ? (item.role_mr || item.roleMr || item.role_en || item.roleEn) : (item.role_en || item.roleEn || item.role_mr || item.roleMr);
+            const exp = isMarathi ? (item.exp_mr || item.expMr || item.exp_en || item.expEn) : (item.exp_en || item.expEn || item.exp_mr || item.expMr);
+            const spec = isMarathi ? (item.spec_mr || item.specMr || item.spec_en || item.specEn) : (item.spec_en || item.specEn || item.spec_mr || item.specMr);
+
             return (
               <div 
                 key={item.id || idx}
                 className="bg-white rounded-3xl border border-slate-200/90 p-8 space-y-5 shadow-stitch-md hover:shadow-stitch-lg transition-all group hover:-translate-y-1 relative overflow-hidden"
               >
                 <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-                  {item.imageUrl ? (
+                  {imgSrc ? (
                     <img 
-                      src={item.imageUrl} 
+                      src={imgSrc} 
                       alt={item.name} 
                       className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-stitch-sm group-hover:scale-105 transition-transform shrink-0"
                     />
@@ -73,20 +83,24 @@ export default function Faculty({ lang = 'mr' }) {
                       {item.name}
                     </h3>
                     <div className="text-xs text-stitch-red font-bold">
-                      {isMarathi ? item.roleMr : item.roleEn}
+                      {role}
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2 text-xs">
-                  <div className="flex items-center gap-2 text-stitch-emerald font-bold">
-                    <CheckCircle2 className="w-4 h-4 text-stitch-emerald shrink-0" />
-                    <span>{isMarathi ? item.expMr : item.expEn}</span>
-                  </div>
+                  {exp && (
+                    <div className="flex items-center gap-2 text-stitch-emerald font-bold">
+                      <CheckCircle2 className="w-4 h-4 text-stitch-emerald shrink-0" />
+                      <span>{exp}</span>
+                    </div>
+                  )}
 
-                  <p className="text-slate-500 leading-relaxed font-medium pt-1">
-                    {isMarathi ? item.specMr : item.specEn}
-                  </p>
+                  {spec && (
+                    <p className="text-slate-500 leading-relaxed font-medium pt-1">
+                      {spec}
+                    </p>
+                  )}
                 </div>
               </div>
             );
@@ -97,4 +111,3 @@ export default function Faculty({ lang = 'mr' }) {
     </section>
   );
 }
-
