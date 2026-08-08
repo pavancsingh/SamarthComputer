@@ -1,45 +1,27 @@
-import React from 'react';
-import { Users, Award, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Award, MessageCircle, GraduationCap } from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
+import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
  * FacultyPage Component - Google Stitch Design System
  * Instructors, Faculty profiles & certifications for Samarth Computers.
+ * Dynamically synchronized with Admin Store & Supabase DB.
  */
 export default function FacultyPage({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
+  const [facultyMembers, setFacultyMembers] = useState(sharedStore.getFaculty());
 
-  const facultyMembers = [
-    {
-      name: 'Prof. Prashant Patil',
-      roleMr: 'संस्थापक व मुख्य संगणक मार्गदर्शक (Center Director)',
-      roleEn: 'Center Director & Senior IT Faculty',
-      expMr: '१५+ वर्षांचा प्रदीर्घ अध्यापन अनुभव',
-      expEn: '15+ Years IT & Academic Experience',
-      specialtyMr: 'MS-CIT, Tally Prime, Tally ERP, Advance Excel',
-      specialtyEn: 'MS-CIT, Tally Prime, Advanced Excel, Hardware',
-      img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
-    },
-    {
-      name: 'Mrs. S. P. Patil',
-      roleMr: 'सीएससी & डिजिटल गव्हर्नन्स प्रमुख',
-      roleEn: 'CSC Services Specialist & Trainer',
-      expMr: '१०+ वर्षांचा शासकीय सेवा व अकाउंटिंग अनुभव',
-      expEn: '10+ Years Accounting & CSC Expert',
-      specialtyMr: 'MahaOnline Portal, E-Seva, Typing Speed Expert',
-      specialtyEn: 'MahaOnline, CSC Portals, Typing Certification',
-      img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-    },
-    {
-      name: 'Er. Rahul Deshmukh',
-      roleMr: 'वेब डेव्हलपमेंट व कोडिंग ट्रेनर',
-      roleEn: 'Web Development & Coding Instructor',
-      expMr: '६+ वर्षांचा सॉफ्टवेअर व पायथॉन अनुभव',
-      expEn: '6+ Years Software Development Experience',
-      specialtyMr: 'HTML, CSS, JavaScript, React, Python',
-      specialtyEn: 'Full-Stack Web Dev, Python, Graphic Design',
-      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    },
-  ];
+  useEffect(() => {
+    AdminRepository.getAllFaculty().then((res) => {
+      if (res && res.length > 0) setFacultyMembers(res);
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      setFacultyMembers(sharedStore.getFaculty());
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <div className="bg-stitch-ivory py-12 lg:py-20 min-h-screen">
@@ -67,21 +49,27 @@ export default function FacultyPage({ lang = 'mr' }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {facultyMembers.map((member, idx) => (
             <div 
-              key={idx} 
+              key={member.id || idx} 
               className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
               <div>
                 <div className="h-64 w-full bg-slate-100 relative overflow-hidden">
-                  <img 
-                    src={member.img} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                  />
+                  {member.imageUrl ? (
+                    <img 
+                      src={member.imageUrl} 
+                      alt={member.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-stitch-slate-dark text-white flex items-center justify-center">
+                      <GraduationCap className="w-16 h-16 text-stitch-amber" />
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-stitch-slate-dark/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4 text-white">
                     <div className="text-xl font-black">{member.name}</div>
-                    <div className="text-xs text-stitch-red-border font-bold">
-                      {isMarathi ? member.roleMr : member.roleEn}
+                    <div className="text-xs text-stitch-amber font-bold">
+                      {isMarathi ? (member.roleMr || member.roleEn) : (member.roleEn || member.roleMr)}
                     </div>
                   </div>
                 </div>
@@ -89,7 +77,7 @@ export default function FacultyPage({ lang = 'mr' }) {
                 <div className="p-6 space-y-4">
                   <div className="flex items-center gap-2 bg-emerald-50 text-stitch-emerald p-3 rounded-2xl border border-emerald-200 text-xs font-bold">
                     <Award className="w-4 h-4 shrink-0" />
-                    <span>{isMarathi ? member.expMr : member.expEn}</span>
+                    <span>{isMarathi ? (member.expMr || member.expEn) : (member.expEn || member.expMr)}</span>
                   </div>
 
                   <div className="space-y-1">
@@ -97,7 +85,7 @@ export default function FacultyPage({ lang = 'mr' }) {
                       {isMarathi ? 'विशेष प्राविण्य:' : 'Specialization:'}
                     </div>
                     <div className="text-xs text-slate-700 font-semibold">
-                      {isMarathi ? member.specialtyMr : member.specialtyEn}
+                      {isMarathi ? (member.specMr || member.specEn) : (member.specEn || member.specMr)}
                     </div>
                   </div>
                 </div>
