@@ -56,25 +56,6 @@ export default function ImageCropperModal({
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Sync prop changes
-  useEffect(() => {
-    if (activeFile) setCurrentFile(activeFile);
-  }, [activeFile]);
-
-  // Load Image element from file
-  useEffect(() => {
-    if (!currentFile) return;
-    const url = URL.createObjectURL(currentFile);
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      setImgElement(img);
-      handleResetAll();
-    };
-    img.src = url;
-    return () => URL.revokeObjectURL(url);
-  }, [currentFile]);
-
   const handleResetAll = () => {
     setZoom(1);
     setRotation(0);
@@ -88,6 +69,33 @@ export default function ImageCropperModal({
     setIsGrayscale(false);
     setShowCompare(false);
   };
+
+  // Sync prop changes
+  useEffect(() => {
+    if (activeFile) setCurrentFile(activeFile);
+  }, [activeFile]);
+
+  // Load Image element from file
+  useEffect(() => {
+    if (!currentFile) return;
+    const isRemoteUrl = typeof currentFile === 'string' && (currentFile.startsWith('http://') || currentFile.startsWith('https://'));
+    const url = typeof currentFile === 'string' ? currentFile : URL.createObjectURL(currentFile);
+    
+    const img = new Image();
+    if (isRemoteUrl) {
+      img.crossOrigin = 'anonymous';
+    }
+    img.onload = () => {
+      setImgElement(img);
+      handleResetAll();
+    };
+    img.src = url;
+    return () => {
+      if (typeof url === 'string' && url.startsWith('blob:')) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [currentFile]);
 
   // Determine current active numerical aspect ratio
   const activeAspectRatio = cropShape === '16-9' ? (16 / 9) : 1;
