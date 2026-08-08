@@ -1244,6 +1244,25 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {/* Stitch-styled Upload Dropzone Card */}
+                  <label className="bg-white border-2 border-dashed border-slate-300 hover:border-primary rounded-2xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center justify-center min-h-[220px] group text-center">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      {uploadingImage ? <Loader2 className="w-6 h-6 animate-spin text-primary" /> : <Plus className="w-6 h-6 text-primary" />}
+                    </div>
+                    <span className="font-extrabold text-sm text-slate-900 group-hover:text-primary">Create / Upload Photo</span>
+                    <span className="text-xs text-slate-400 mt-1 font-medium">Click to pick &amp; crop image</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={(e) => {
+                        setEditingItem({ titleEn: 'New Gallery Photo', descEn: 'Center event or activity photo', category: 'Campus', imageUrl: '' });
+                        setFormType('gallery');
+                        handleFileSelect(e, 'gallery', 1.5);
+                      }} 
+                      className="hidden" 
+                    />
+                  </label>
+
                   {siteGallery.map((item) => (
                     <div key={item.id} className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-all">
                       <div className="h-44 w-full overflow-hidden bg-slate-100 relative group">
