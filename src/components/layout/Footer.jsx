@@ -4,7 +4,7 @@ import React from 'react';
  * Footer Component — Stitch Design System
  * Dark footer matching Stitch screens: bg-on-background (#191c1e)
  * Brand in text-primary-fixed, links in text-surface-variant/80
- * Includes Admin Login button for portal access.
+ * Features a single clean Admin Portal Login button.
  */
 export default function Footer({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
@@ -14,7 +14,6 @@ export default function Footer({ lang = 'mr', onNavigate }) {
     { id: 'courses',   labelEn: 'Courses',        labelMr: 'कोर्सेस' },
     { id: 'faculty',   labelEn: 'Faculty',        labelMr: 'शिक्षक वृंद' },
     { id: 'contact',   labelEn: 'Contact',        labelMr: 'संपर्क' },
-    { id: 'admin',     labelEn: 'Admin Login 🔒', labelMr: 'एडमिन लॉगिन 🔒' },
   ];
 
   const legalLinks = [
@@ -49,11 +48,7 @@ export default function Footer({ lang = 'mr', onNavigate }) {
               key={link.id}
               type="button"
               onClick={() => onNavigate && onNavigate(link.id)}
-              className={`font-body-md transition-colors duration-200 text-left text-sm ${
-                link.id === 'admin'
-                  ? 'text-primary-fixed-dim hover:text-white font-label-bold flex items-center gap-1 mt-1'
-                  : 'text-surface-variant/80 hover:text-primary-fixed'
-              }`}
+              className="font-body-md text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-left text-sm"
             >
               {isMarathi ? link.labelMr : link.labelEn}
             </button>
@@ -74,7 +69,7 @@ export default function Footer({ lang = 'mr', onNavigate }) {
           ))}
         </div>
 
-        {/* Certifications & Admin Button */}
+        {/* Certifications & Single Admin Portal Login Button */}
         <div className="flex flex-col gap-sm">
           <h4 className="font-label-bold text-white mb-sm">Certifications</h4>
           <div className="text-sm text-surface-variant/80 space-y-1 font-body-md mb-md">
@@ -84,7 +79,7 @@ export default function Footer({ lang = 'mr', onNavigate }) {
             <div>📋 Center Code: 64220078</div>
           </div>
 
-          {/* Admin Login Button */}
+          {/* SINGLE Admin Login Button */}
           <button
             type="button"
             onClick={() => onNavigate && onNavigate('admin')}
@@ -98,17 +93,10 @@ export default function Footer({ lang = 'mr', onNavigate }) {
 
       {/* Copyright Bar */}
       <div className="w-full border-t border-surface-variant/20 py-sm">
-        <div className="max-w-7xl mx-auto px-gutter flex flex-col sm:flex-row justify-between items-center gap-sm">
+        <div className="max-w-7xl mx-auto px-gutter flex justify-center">
           <span className="font-body-md text-surface-variant/60 text-sm text-center">
             © 2024 Samarth Computers &amp; CSC Services, Khandala. All rights reserved.
           </span>
-          <button
-            type="button"
-            onClick={() => onNavigate && onNavigate('admin')}
-            className="text-xs text-surface-variant/40 hover:text-surface-variant/90 transition-colors underline"
-          >
-            {isMarathi ? 'अधिकारी प्रवेश' : 'Admin Access'}
-          </button>
         </div>
       </div>
     </footer>
