@@ -4,16 +4,17 @@ import React from 'react';
  * Footer Component — Stitch Design System
  * Dark footer matching Stitch screens: bg-on-background (#191c1e)
  * Brand in text-primary-fixed, links in text-surface-variant/80
- * Two-column layout: Brand+Copyright | Quick Links + Legal
+ * Includes Admin Login button for portal access.
  */
 export default function Footer({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
   const quickLinks = [
-    { id: 'about',   labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
-    { id: 'courses', labelEn: 'Courses',        labelMr: 'कोर्सेस' },
-    { id: 'faculty', labelEn: 'Faculty',        labelMr: 'शिक्षक वृंद' },
-    { id: 'contact', labelEn: 'Contact',        labelMr: 'संपर्क' },
+    { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
+    { id: 'courses',   labelEn: 'Courses',        labelMr: 'कोर्सेस' },
+    { id: 'faculty',   labelEn: 'Faculty',        labelMr: 'शिक्षक वृंद' },
+    { id: 'contact',   labelEn: 'Contact',        labelMr: 'संपर्क' },
+    { id: 'admin',     labelEn: 'Admin Login 🔒', labelMr: 'एडमिन लॉगिन 🔒' },
   ];
 
   const legalLinks = [
@@ -23,7 +24,7 @@ export default function Footer({ lang = 'mr', onNavigate }) {
   ];
 
   return (
-    <footer className="bg-on-background text-primary-fixed w-full hidden md:block">
+    <footer className="bg-on-background text-primary-fixed w-full pb-20 md:pb-0">
       <div className="w-full py-xl px-gutter max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-lg">
 
         {/* Brand + Description */}
@@ -48,7 +49,11 @@ export default function Footer({ lang = 'mr', onNavigate }) {
               key={link.id}
               type="button"
               onClick={() => onNavigate && onNavigate(link.id)}
-              className="font-body-md text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-left text-sm"
+              className={`font-body-md transition-colors duration-200 text-left text-sm ${
+                link.id === 'admin'
+                  ? 'text-primary-fixed-dim hover:text-white font-label-bold flex items-center gap-1 mt-1'
+                  : 'text-surface-variant/80 hover:text-primary-fixed'
+              }`}
             >
               {isMarathi ? link.labelMr : link.labelEn}
             </button>
@@ -69,24 +74,41 @@ export default function Footer({ lang = 'mr', onNavigate }) {
           ))}
         </div>
 
-        {/* CSC Info */}
+        {/* Certifications & Admin Button */}
         <div className="flex flex-col gap-sm">
           <h4 className="font-label-bold text-white mb-sm">Certifications</h4>
-          <div className="text-sm text-surface-variant/80 space-y-1 font-body-md">
+          <div className="text-sm text-surface-variant/80 space-y-1 font-body-md mb-md">
             <div>🏛️ MKCL Authorized Center</div>
             <div>🏛️ CSC / MahaOnline Center</div>
             <div>📋 ALC: 13210399 / 13210273</div>
             <div>📋 Center Code: 64220078</div>
           </div>
+
+          {/* Admin Login Button */}
+          <button
+            type="button"
+            onClick={() => onNavigate && onNavigate('admin')}
+            className="inline-flex items-center justify-center gap-xs px-md py-sm bg-primary/20 hover:bg-primary text-primary-fixed hover:text-white border border-primary/40 rounded-lg text-label-bold font-label-bold text-xs transition-all duration-200 shadow-sm btn-interactive"
+          >
+            <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+            <span>{isMarathi ? 'एडमिन पोर्टल लॉगिन' : 'Admin Portal Login'}</span>
+          </button>
         </div>
       </div>
 
       {/* Copyright Bar */}
       <div className="w-full border-t border-surface-variant/20 py-sm">
-        <div className="max-w-7xl mx-auto px-gutter flex justify-center">
+        <div className="max-w-7xl mx-auto px-gutter flex flex-col sm:flex-row justify-between items-center gap-sm">
           <span className="font-body-md text-surface-variant/60 text-sm text-center">
             © 2024 Samarth Computers &amp; CSC Services, Khandala. All rights reserved.
           </span>
+          <button
+            type="button"
+            onClick={() => onNavigate && onNavigate('admin')}
+            className="text-xs text-surface-variant/40 hover:text-surface-variant/90 transition-colors underline"
+          >
+            {isMarathi ? 'अधिकारी प्रवेश' : 'Admin Access'}
+          </button>
         </div>
       </div>
     </footer>
