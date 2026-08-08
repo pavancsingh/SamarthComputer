@@ -112,18 +112,23 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   };
 
   // Image Crop & Upload State
+  const cropStateRef = useRef(null);
   const [cropState, setCropState] = useState(null);
 
   const handleFileSelect = (e, folder = 'general', aspectRatio = 1, customCallback = null) => {
     const file = e.target.files[0];
     if (!file) return;
-    setCropState({ file, folder, aspectRatio, onComplete: customCallback });
+    const state = { file, folder, aspectRatio, onComplete: customCallback };
+    cropStateRef.current = state;
+    setCropState(state);
     e.target.value = '';
   };
 
   const handleCroppedUpload = async (croppedFile) => {
-    if (!cropState) return;
-    const { folder, onComplete } = cropState;
+    const currentCropState = cropStateRef.current || cropState;
+    if (!currentCropState) return;
+    const { folder, onComplete } = currentCropState;
+    cropStateRef.current = null;
     setCropState(null);
     setUploadingImage(true);
     const publicUrl = await StorageService.uploadImage(croppedFile, folder);
@@ -135,8 +140,9 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
       } else {
         setEditingItem((prev) => ({ ...prev, imageUrl: publicUrl, image_url: publicUrl }));
       }
+      setActionNotice({ type: 'success', text: 'Image uploaded to Supabase Storage successfully!' });
     } else {
-      alert('Failed to upload image to Supabase Storage bucket.');
+      setActionNotice({ type: 'error', text: 'Failed to upload image to Supabase Storage bucket.' });
     }
   };
 

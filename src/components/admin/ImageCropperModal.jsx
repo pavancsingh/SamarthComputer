@@ -202,6 +202,7 @@ export default function ImageCropperModal({
   useEffect(() => {
     if (!imgElement) return;
 
+    let activePreviewUrl = '';
     const outputCanvas = document.createElement('canvas');
     const targetW = 600;
     const targetH = 600 / activeAspectRatio;
@@ -245,12 +246,14 @@ export default function ImageCropperModal({
     outputCanvas.toBlob((blob) => {
       if (blob) {
         setEstimatedSizeKb(Math.round(blob.size / 1024));
-        const url = URL.createObjectURL(blob);
-        setPreviewUrl(url);
-        return () => URL.revokeObjectURL(url);
+        activePreviewUrl = URL.createObjectURL(blob);
+        setPreviewUrl(activePreviewUrl);
       }
     }, exportFormat, exportQuality);
 
+    return () => {
+      if (activePreviewUrl) URL.revokeObjectURL(activePreviewUrl);
+    };
   }, [imgElement, zoom, rotation, flipH, flipV, pan, cropShape, activeAspectRatio, brightness, contrast, saturation, isBlur, isGrayscale, showCompare, exportQuality, exportFormat]);
 
   // Pan Mouse Handlers
