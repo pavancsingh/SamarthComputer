@@ -407,11 +407,141 @@ export const AdminRepository = {
         syncedCount++;
       }
 
+      // 6. Sync Batches
+      const batches = sharedStore.getBatches();
+      for (const item of batches) {
+        const payload = {
+          category: item.category || 'morning',
+          time: item.time,
+          course_mr: item.courseMr || item.course_mr,
+          course_en: item.courseEn || item.course_en,
+          status_mr: item.statusMr || item.status_mr,
+          status_en: item.statusEn || item.status_en,
+          seats_mr: item.seatsMr || item.seats_mr,
+          seats_en: item.seatsEn || item.seats_en
+        };
+        if (item.id && !item.id.toString().startsWith('b-')) payload.id = item.id;
+        await supabase.from('batch_timetable').upsert([payload]);
+        syncedCount++;
+      }
+
+      // 7. Sync News
+      const news = sharedStore.getNews();
+      for (const item of news) {
+        const payload = {
+          title_mr: item.titleMr || item.title_mr,
+          title_en: item.titleEn || item.title_en,
+          category_mr: item.categoryMr || item.category_mr,
+          category_en: item.categoryEn || item.category_en,
+          date_str: item.dateStr || item.date_str,
+          desc_mr: item.descMr || item.desc_mr
+        };
+        if (item.id && !item.id.toString().startsWith('n-')) payload.id = item.id;
+        await supabase.from('news').upsert([payload]);
+        syncedCount++;
+      }
+
       return { success: true, count: syncedCount };
     } catch (err) {
       console.warn('Sync all to Supabase error:', err.message);
       return { success: false, error: err.message };
     }
+  },
+
+  // ================= BATCH TIMETABLE CRUD =================
+  async getAllBatches() {
+    try {
+      const { data, error } = await supabase.from('batch_timetable').select('*').order('created_at', { ascending: true });
+      if (!error && data && data.length > 0) {
+        sharedStore.syncBatchesFromRemote(data);
+        return data;
+      }
+    } catch (e) {
+      console.warn('Supabase batch fetch notice:', e.message);
+    }
+    return sharedStore.getBatches();
+  },
+
+  async saveBatchItem(itemData) {
+    sharedStore.saveBatchItem(itemData);
+    try {
+      const payload = {
+        category: itemData.category || 'morning',
+        time: itemData.time,
+        course_mr: itemData.courseMr || itemData.course_mr,
+        course_en: itemData.courseEn || itemData.course_en,
+        status_mr: itemData.statusMr || itemData.status_mr,
+        status_en: itemData.statusEn || itemData.status_en,
+        seats_mr: itemData.seatsMr || itemData.seats_mr,
+        seats_en: itemData.seatsEn || itemData.seats_en
+      };
+      if (itemData.id && !itemData.id.toString().startsWith('b-')) payload.id = itemData.id;
+
+      const { data, error } = await supabase.from('batch_timetable').upsert([payload]).select();
+      if (!error && data && data.length > 0) {
+        sharedStore.saveBatchItem({ ...itemData, id: data[0].id });
+      }
+    } catch (e) {
+      console.warn('Supabase batch sync notice:', e.message);
+    }
+    return { success: true };
+  },
+
+  async deleteBatchItem(id) {
+    sharedStore.deleteBatchItem(id);
+    try {
+      await supabase.from('batch_timetable').delete().eq('id', id);
+    } catch (e) {
+      console.warn('Supabase batch delete notice:', e.message);
+    }
+    return { success: true };
+  },
+
+  // ================= NEWS & ANNOUNCEMENTS CRUD =================
+  async getAllNews() {
+    try {
+      const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+      if (!error && data && data.length > 0) {
+        sharedStore.syncNewsFromRemote(data);
+        return data;
+      }
+    } catch (e) {
+      console.warn('Supabase news fetch notice:', e.message);
+    }
+    return sharedStore.getNews();
+  },
+
+  async saveNewsItem(itemData) {
+    sharedStore.saveNewsItem(itemData);
+    try {
+      const payload = {
+        title_mr: itemData.titleMr || itemData.title_mr,
+        title_en: itemData.titleEn || itemData.title_en,
+        category_mr: itemData.categoryMr || itemData.category_mr,
+        category_en: itemData.categoryEn || itemData.category_en,
+        date_str: itemData.dateStr || itemData.date_str,
+        desc_mr: itemData.descMr || itemData.desc_mr
+      };
+      if (itemData.id && !itemData.id.toString().startsWith('n-')) payload.id = itemData.id;
+
+      const { data, error } = await supabase.from('news').upsert([payload]).select();
+      if (!error && data && data.length > 0) {
+        sharedStore.saveNewsItem({ ...itemData, id: data[0].id });
+      }
+    } catch (e) {
+      console.warn('Supabase news sync notice:', e.message);
+    }
+    return { success: true };
+  },
+
+  async deleteNewsItem(id) {
+    sharedStore.deleteNewsItem(id);
+    try {
+      await supabase.from('news').delete().eq('id', id);
+    } catch (e) {
+      console.warn('Supabase news delete notice:', e.message);
+    }
+    return { success: true };
   }
 };
 

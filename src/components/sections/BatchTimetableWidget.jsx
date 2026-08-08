@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, CalendarCheck } from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
+import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
  * BatchTimetableWidget Component - Google Stitch Design
  * Interactive daily timetable schedule showing morning, afternoon, and evening batch timings.
+ * Subscribes dynamically to sharedStore & AdminRepository for live updates.
  */
 export default function BatchTimetableWidget({ lang = 'mr' }) {
   const [activeTab, setActiveTab] = useState('morning');
+  const [batchList, setBatchList] = useState(sharedStore.getBatches());
   const isMarathi = lang === 'mr';
 
-  const batches = {
-    morning: [
-      { time: '09:00 AM - 10:00 AM', course: 'MS-CIT (Basic & ERA)', seatsLeft: 4, total: 20 },
-      { time: '10:00 AM - 11:30 AM', course: 'Tally Prime + GST', seatsLeft: 2, total: 15 },
-      { time: '11:30 AM - 01:00 PM', course: 'Advance Excel & Web Dev', seatsLeft: 6, total: 20 },
-    ],
-    afternoon: [
-      { time: '01:00 PM - 02:00 PM', course: 'MS-CIT (School/College)', seatsLeft: 5, total: 15 },
-      { time: '02:00 PM - 04:00 PM', course: 'Advanced Excel & Analytics', seatsLeft: 8, total: 20 },
-    ],
-    evening: [
-      { time: '04:00 PM - 05:00 PM', course: 'MS-CIT (Working Pros)', seatsLeft: 3, total: 15 },
-      { time: '05:00 PM - 06:00 PM', course: 'Tally Prime & Web Design', seatsLeft: 6, total: 20 },
-    ]
-  };
+  useEffect(() => {
+    AdminRepository.getAllBatches().then((res) => {
+      if (res && res.length > 0) setBatchList(res);
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      setBatchList(sharedStore.getBatches());
+    });
+    return unsubscribe;
+  }, []);
+
+  const activeBatches = batchList.filter((b) => b.category === activeTab);
 
   return (
     <section className="py-16 bg-white border-b border-slate-200/80">
@@ -90,54 +91,43 @@ export default function BatchTimetableWidget({ lang = 'mr' }) {
 
         {/* Batch Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {batches[activeTab].map((item, idx) => {
-            const filled = item.total - item.seatsLeft;
-            const percentage = Math.round((filled / item.total) * 100);
-
-            return (
-              <div 
-                key={idx} 
-                className="bg-slate-50/70 border border-slate-200/80 rounded-3xl p-6 hover:bg-white hover:shadow-stitch-md transition-all border-l-4 border-l-stitch-amber flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="bg-white border border-slate-200 text-stitch-slate-dark font-extrabold text-xs px-3 py-1 rounded-xl shadow-stitch-sm">
-                      {item.time}
-                    </span>
-                    <span className="text-[10px] font-extrabold text-stitch-red bg-stitch-red-light border border-stitch-red-border px-2.5 py-0.5 rounded-full">
-                      {isMarathi ? `फक्त ${item.seatsLeft} जागा शिल्लक` : `Only ${item.seatsLeft} Seats Left`}
-                    </span>
-                  </div>
-
-                  <h3 className="font-black text-lg text-stitch-slate-dark mb-2">
-                    {item.course}
-                  </h3>
-
-                  {/* Progress Bar */}
-                  <div className="space-y-1.5 my-4">
-                    <div className="flex justify-between text-[11px] font-bold text-slate-500">
-                      <span>{isMarathi ? 'जागा भरल्या' : 'Seats Filled'}</span>
-                      <span>{filled} / {item.total}</span>
-                    </div>
-                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-stitch-amber to-amber-500 h-full rounded-full transition-all duration-500" 
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <a
-                  href="#inquiry-form"
-                  className="w-full mt-4 flex items-center justify-center gap-2 bg-white hover:bg-stitch-slate-dark text-stitch-slate-dark hover:text-white font-extrabold text-xs py-3 rounded-2xl border border-slate-300 shadow-stitch-sm transition-all"
+          {activeBatches.length === 0 ? (
+            <div className="col-span-3 text-center py-8 text-slate-500 font-semibold text-xs">
+              {isMarathi ? 'या वेळेत सध्या कोणतीही नवीन बॅच उपलब्ध नाही.' : 'No active batches currently listed for this time slot.'}
+            </div>
+          ) : (
+            activeBatches.map((item, idx) => {
+              return (
+                <div 
+                  key={item.id || idx} 
+                  className="bg-slate-50/70 border border-slate-200/80 rounded-3xl p-6 hover:bg-white hover:shadow-stitch-md transition-all border-l-4 border-l-stitch-amber flex flex-col justify-between"
                 >
-                  <CalendarCheck className="w-4 h-4 text-stitch-amber" />
-                  <span>{isMarathi ? 'ही वेळ आरक्षित करा' : 'Reserve This Batch'}</span>
-                </a>
-              </div>
-            );
-          })}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="bg-white border border-slate-200 text-stitch-slate-dark font-extrabold text-xs px-3 py-1 rounded-xl shadow-stitch-sm">
+                        {item.time}
+                      </span>
+                      <span className="text-[10px] font-extrabold text-stitch-red bg-stitch-red-light border border-stitch-red-border px-2.5 py-0.5 rounded-full">
+                        {isMarathi ? (item.seatsMr || item.statusMr || 'प्रवेश सुरू') : (item.seatsEn || item.statusEn || 'Admission Open')}
+                      </span>
+                    </div>
+
+                    <h3 className="font-black text-lg text-stitch-slate-dark mb-2">
+                      {isMarathi ? (item.courseMr || item.courseEn) : (item.courseEn || item.courseMr)}
+                    </h3>
+                  </div>
+
+                  <a
+                    href="#inquiry-form"
+                    className="w-full mt-4 flex items-center justify-center gap-2 bg-white hover:bg-stitch-slate-dark text-stitch-slate-dark hover:text-white font-extrabold text-xs py-3 rounded-2xl border border-slate-300 shadow-stitch-sm transition-all"
+                  >
+                    <CalendarCheck className="w-4 h-4 text-stitch-amber" />
+                    <span>{isMarathi ? 'ही वेळ आरक्षित करा' : 'Reserve This Batch'}</span>
+                  </a>
+                </div>
+              );
+            })
+          )}
         </div>
 
       </div>

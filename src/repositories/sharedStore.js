@@ -9,6 +9,20 @@ const STORAGE_KEY_INQUIRIES = 'samarth_store_inquiries';
 const STORAGE_KEY_GALLERY = 'samarth_store_gallery';
 const STORAGE_KEY_SETTINGS = 'samarth_store_settings';
 const STORAGE_KEY_FACULTY = 'samarth_store_faculty';
+const STORAGE_KEY_BATCHES = 'samarth_store_batches';
+const STORAGE_KEY_NEWS = 'samarth_store_news';
+
+const DEFAULT_BATCHES = [
+  { id: 'b-1', category: 'morning', time: '08:00 AM - 09:30 AM', courseEn: 'MS-CIT & Computer Basics', courseMr: 'MS-CIT व संगणक पायाभूत', statusEn: 'Admission Open', statusMr: 'प्रवेश सुरू', seatsEn: '5 Seats Left', seatsMr: '५ जागा शिल्लक' },
+  { id: 'b-2', category: 'morning', time: '09:30 AM - 11:00 AM', courseEn: 'Tally Prime & GST Accounting', courseMr: 'टॅली प्राइम व GST अकाउंटिंग', statusEn: 'Filling Fast', statusMr: 'जलद भरणारे', seatsEn: '3 Seats Left', seatsMr: '३ जागा शिल्लक' },
+  { id: 'b-3', category: 'afternoon', time: '01:00 PM - 02:30 PM', courseEn: 'GCC-TBC English & Marathi Typing', courseMr: 'GCC-TBC इंग्रजी व मराठी टायपिंग', statusEn: 'Admission Open', statusMr: 'प्रवेश सुरू', seatsEn: '8 Seats Left', seatsMr: '८ जागा शिल्लक' },
+  { id: 'b-4', category: 'evening', time: '05:00 PM - 06:30 PM', courseEn: 'MS-CIT Professional Evening Batch', courseMr: 'MS-CIT व्यावसायिक संध्याकाळ बॅच', statusEn: 'Admission Open', statusMr: 'प्रवेश सुरू', seatsEn: '6 Seats Left', seatsMr: '६ जागा शिल्लक' }
+];
+
+const DEFAULT_NEWS = [
+  { id: 'n-1', titleMr: 'MS-CIT नवीन बॅच प्रवेश सुरू 2026', titleEn: 'MS-CIT New Batch Admissions Open 2026', categoryMr: 'प्रवेश अपडेट', categoryEn: 'Admissions', dateStr: 'ऑगस्ट २०२६', descMr: 'नवीन बॅच सोमवारपासून सुरू होत आहे. मर्यादित जागा उपलब्ध.', descEn: 'New batch starting this Monday. Limited seats available on first-come-first-serve basis.' },
+  { id: 'n-2', titleMr: 'Tally Prime GST विशेष सवलत स्कॉलरशिप', titleEn: 'Tally Prime GST Special Discount Scholarship', categoryMr: 'स्कॉलरशिप', categoryEn: 'Scholarship', dateStr: '२०२६', descMr: 'वाणिज्य (Commerce) विद्यार्थ्यांसाठी विशेष सवलत योजना.', descEn: 'Special fee concession scheme for commerce students and job seekers.' }
+];
 
 const DEFAULT_FACULTY = [
   {
@@ -110,6 +124,8 @@ class SharedStore {
     this.siteGallery = loadStorage(STORAGE_KEY_GALLERY, DEFAULT_GALLERY);
     this.siteSettings = loadStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
     this.faculty = loadStorage(STORAGE_KEY_FACULTY, DEFAULT_FACULTY);
+    this.batches = loadStorage(STORAGE_KEY_BATCHES, DEFAULT_BATCHES);
+    this.news = loadStorage(STORAGE_KEY_NEWS, DEFAULT_NEWS);
     this.inquiries = loadStorage(STORAGE_KEY_INQUIRIES, []);
     this.listeners = [];
   }
@@ -239,6 +255,77 @@ class SharedStore {
       saveStorage(STORAGE_KEY_FACULTY, this.faculty);
       this.notify();
     }
+  }
+
+  syncBatchesFromRemote(remoteBatches) {
+    if (Array.isArray(remoteBatches) && remoteBatches.length > 0) {
+      this.batches = remoteBatches.map((item) => ({
+        id: item.id,
+        category: item.category || 'morning',
+        time: item.time,
+        courseMr: item.course_mr || item.courseMr,
+        courseEn: item.course_en || item.courseEn,
+        statusMr: item.status_mr || item.statusMr,
+        statusEn: item.status_en || item.statusEn,
+        seatsMr: item.seats_mr || item.seatsMr,
+        seatsEn: item.seats_en || item.seatsEn
+      }));
+      saveStorage(STORAGE_KEY_BATCHES, this.batches);
+      this.notify();
+    }
+  }
+
+  syncNewsFromRemote(remoteNews) {
+    if (Array.isArray(remoteNews) && remoteNews.length > 0) {
+      this.news = remoteNews.map((item) => ({
+        id: item.id,
+        titleMr: item.title_mr || item.titleMr,
+        titleEn: item.title_en || item.titleEn,
+        categoryMr: item.category_mr || item.categoryMr,
+        categoryEn: item.category_en || item.categoryEn,
+        dateStr: item.date_str || item.dateStr,
+        descMr: item.desc_mr || item.descMr,
+        descEn: item.desc_en || item.descEn
+      }));
+      saveStorage(STORAGE_KEY_NEWS, this.news);
+      this.notify();
+    }
+  }
+
+  // --- Batches Management ---
+  getBatches() { return this.batches; }
+  saveBatchItem(item) {
+    const idx = this.batches.findIndex((b) => b.id === item.id);
+    if (idx >= 0) {
+      this.batches[idx] = { ...this.batches[idx], ...item };
+    } else {
+      this.batches.unshift({ id: `b-${Date.now()}`, ...item });
+    }
+    saveStorage(STORAGE_KEY_BATCHES, this.batches);
+    this.notify();
+  }
+  deleteBatchItem(id) {
+    this.batches = this.batches.filter((b) => b.id !== id);
+    saveStorage(STORAGE_KEY_BATCHES, this.batches);
+    this.notify();
+  }
+
+  // --- News & Announcements Management ---
+  getNews() { return this.news; }
+  saveNewsItem(item) {
+    const idx = this.news.findIndex((n) => n.id === item.id);
+    if (idx >= 0) {
+      this.news[idx] = { ...this.news[idx], ...item };
+    } else {
+      this.news.unshift({ id: `n-${Date.now()}`, ...item });
+    }
+    saveStorage(STORAGE_KEY_NEWS, this.news);
+    this.notify();
+  }
+  deleteNewsItem(id) {
+    this.news = this.news.filter((n) => n.id !== id);
+    saveStorage(STORAGE_KEY_NEWS, this.news);
+    this.notify();
   }
 
   // --- Faculty Management ---

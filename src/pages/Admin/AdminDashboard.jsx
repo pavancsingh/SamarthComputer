@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, Plus, Trash2, Edit3, Save, X, LogOut, CheckCircle2, 
   BookOpen, FileText, Users, RefreshCw, Sparkles, Filter, Building2,
-  Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup
+  Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup,
+  Clock, Megaphone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
@@ -37,12 +38,14 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   const [govtServices, setGovtServices] = useState([]);
   const [siteGallery, setSiteGallery] = useState([]);
   const [facultyList, setFacultyList] = useState([]);
+  const [batchesList, setBatchesList] = useState([]);
+  const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Active Edit Form state
   const [editingItem, setEditingItem] = useState(null);
   const [formType, setFormType] = useState(null); 
-  // Types: 'course' | 'csc' | 'govt' | 'gallery' | 'faculty'
+  // Types: 'course' | 'csc' | 'govt' | 'gallery' | 'faculty' | 'batch' | 'news'
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const [siteSettings, setSiteSettings] = useState(sharedStore.getSiteSettings());
@@ -70,6 +73,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     const govtData = await AdminRepository.getAllGovtServices();
     const galleryData = await AdminRepository.getAllSiteGallery();
     const facultyData = await AdminRepository.getAllFaculty();
+    const batchData = await AdminRepository.getAllBatches();
+    const newsData = await AdminRepository.getAllNews();
 
     setInquiries(inqData || []);
     setCourses(courseData || []);
@@ -77,6 +82,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     setGovtServices(govtData || []);
     setSiteGallery(galleryData || []);
     setFacultyList(facultyData || []);
+    setBatchesList(batchData || []);
+    setNewsList(newsData || []);
     setLoading(false);
   }
 
@@ -188,6 +195,36 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   const handleDeleteFaculty = async (id) => {
     if (window.confirm('Are you sure you want to delete this faculty member?')) {
       await AdminRepository.deleteFacultyItem(id);
+      loadAllData();
+    }
+  };
+
+  const handleSaveBatch = async (e) => {
+    e.preventDefault();
+    await AdminRepository.saveBatchItem(editingItem);
+    setEditingItem(null);
+    setFormType(null);
+    loadAllData();
+  };
+
+  const handleDeleteBatch = async (id) => {
+    if (window.confirm('Are you sure you want to delete this batch timetable slot?')) {
+      await AdminRepository.deleteBatchItem(id);
+      loadAllData();
+    }
+  };
+
+  const handleSaveNews = async (e) => {
+    e.preventDefault();
+    await AdminRepository.saveNewsItem(editingItem);
+    setEditingItem(null);
+    setFormType(null);
+    loadAllData();
+  };
+
+  const handleDeleteNews = async (id) => {
+    if (window.confirm('Are you sure you want to delete this news announcement?')) {
+      await AdminRepository.deleteNewsItem(id);
       loadAllData();
     }
   };
@@ -304,6 +341,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             { id: 'courses', label: `📚 Courses (${courses.length})`, icon: BookOpen },
             { id: 'csc', label: `📜 CSC (${cscServices.length})`, icon: FileText },
             { id: 'govt', label: `🏛️ Govt (${govtServices.length})`, icon: Building2 },
+            { id: 'batches', label: `⏰ Batch Timetable (${batchesList.length})`, icon: Clock },
+            { id: 'news', label: `📢 Programs & Updates (${newsList.length})`, icon: Megaphone },
             { id: 'faculty', label: `👨‍🏫 Faculty (${facultyList.length})`, icon: GraduationCap },
             { id: 'gallery', label: `🖼️ Campus Photos (${siteGallery.length})`, icon: Camera },
             { id: 'settings', label: '⚙️ Logo & Hero Image', icon: Image }
@@ -722,6 +761,138 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   <div className="text-xs text-slate-600 space-y-1">
                     <p className="font-semibold text-emerald-700">Experience: {fac.expEn || fac.expMr}</p>
                     <p className="text-slate-500 font-medium">{fac.specEn || fac.specMr}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 7: BATCH TIMETABLE 2026 */}
+        {tab === 'batches' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-stitch-amber" />
+                <span>Daily Batch Timetable 2026 Schedule</span>
+              </h2>
+
+              <button
+                onClick={() => {
+                  setEditingItem({
+                    category: 'morning',
+                    time: '09:00 AM - 10:30 AM',
+                    courseEn: '',
+                    courseMr: '',
+                    statusEn: 'Admission Open',
+                    statusMr: 'प्रवेश सुरू',
+                    seatsEn: '5 Seats Left',
+                    seatsMr: '५ जागा शिल्लक'
+                  });
+                  setFormType('batch');
+                }}
+                className="bg-stitch-amber hover:bg-amber-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md transition-all hover:scale-105"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add New Batch Timing</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {batchesList.map((b) => (
+                <div key={b.id} className="bg-white border border-slate-200 rounded-3xl p-5 shadow-stitch-sm space-y-3 relative flex flex-col justify-between border-l-4 border-l-stitch-amber">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="bg-amber-100 text-amber-900 font-extrabold text-[10px] uppercase px-2.5 py-0.5 rounded-full">
+                        {b.category}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => { setEditingItem(b); setFormType('batch'); }}
+                          className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100"
+                          title="Edit Batch"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBatch(b.id)}
+                          className="p-1.5 rounded-lg text-red-500 hover:bg-red-50"
+                          title="Delete Batch"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <h3 className="font-black text-base text-slate-900 mt-2">{b.time}</h3>
+                    <p className="font-bold text-xs text-stitch-red">{b.courseEn || b.courseMr}</p>
+                    <p className="text-[11px] text-slate-500 font-medium">{b.seatsEn || b.statusEn}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8: PROGRAMS & NEWS UPDATES */}
+        {tab === 'news' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                <Megaphone className="w-5 h-5 text-stitch-red" />
+                <span>Programs, Admission Alerts & News Updates</span>
+              </h2>
+
+              <button
+                onClick={() => {
+                  setEditingItem({
+                    titleEn: '',
+                    titleMr: '',
+                    categoryEn: 'Admissions',
+                    categoryMr: 'प्रवेश अपडेट',
+                    dateStr: '२०२६',
+                    descEn: '',
+                    descMr: ''
+                  });
+                  setFormType('news');
+                }}
+                className="bg-stitch-red hover:bg-stitch-red-dark text-white font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md transition-all hover:scale-105"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add News Announcement</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {newsList.map((n) => (
+                <div key={n.id} className="bg-white border border-slate-200 rounded-3xl p-5 shadow-stitch-sm space-y-3 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                      <span className="bg-red-50 text-stitch-red font-bold text-[10px] px-2.5 py-0.5 rounded-md border border-red-200">
+                        {n.categoryEn || n.categoryMr}
+                      </span>
+                      <span>{n.dateStr || '२०२६'}</span>
+                    </div>
+
+                    <h3 className="font-bold text-sm text-slate-900">{n.titleEn || n.titleMr}</h3>
+                    <p className="text-xs text-slate-600 line-clamp-2 mt-1">{n.descEn || n.descMr}</p>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button
+                      onClick={() => { setEditingItem(n); setFormType('news'); }}
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs px-3 py-1 rounded-xl flex items-center gap-1"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteNews(n.id)}
+                      className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-3 py-1 rounded-xl flex items-center gap-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete</span>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -1158,6 +1329,156 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
                 <button type="submit" className="w-full bg-stitch-red hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">
                   Save & Sync Faculty Record
+                </button>
+              </form>
+            )}
+
+            {/* Batch Form */}
+            {formType === 'batch' && (
+              <form onSubmit={handleSaveBatch} className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Time Slot Category:</label>
+                  <select
+                    value={editingItem.category || 'morning'}
+                    onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  >
+                    <option value="morning">🌅 Morning Batch</option>
+                    <option value="afternoon">☀️ Afternoon Batch</option>
+                    <option value="evening">🌙 Evening Batch</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Batch Time (e.g. 09:00 AM - 10:30 AM):</label>
+                  <input
+                    type="text"
+                    value={editingItem.time || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, time: e.target.value })}
+                    required
+                    placeholder="09:00 AM - 10:30 AM"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course / Topic (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.courseEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, courseEn: e.target.value })}
+                      placeholder="MS-CIT & Computer Basics"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course / Topic (मराठी):</label>
+                    <input
+                      type="text"
+                      value={editingItem.courseMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, courseMr: e.target.value })}
+                      placeholder="MS-CIT व संगणक पायाभूत"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Seats / Status (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.seatsEn || editingItem.statusEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, seatsEn: e.target.value, statusEn: e.target.value })}
+                      placeholder="5 Seats Left"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Seats / Status (मराठी):</label>
+                    <input
+                      type="text"
+                      value={editingItem.seatsMr || editingItem.statusMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, seatsMr: e.target.value, statusMr: e.target.value })}
+                      placeholder="५ जागा शिल्लक"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="w-full bg-stitch-amber hover:bg-amber-600 text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">
+                  Save & Sync Batch Timetable
+                </button>
+              </form>
+            )}
+
+            {/* News Form */}
+            {formType === 'news' && (
+              <form onSubmit={handleSaveNews} className="space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value })}
+                      required
+                      placeholder="MS-CIT New Batch Admission 2026"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (मराठी):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleMr: e.target.value })}
+                      placeholder="MS-CIT नवीन बॅच प्रवेश सुरू २०२६"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Category (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.categoryEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, categoryEn: e.target.value })}
+                      placeholder="Admissions / Exam Alerts"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Date / Month Tag:</label>
+                    <input
+                      type="text"
+                      value={editingItem.dateStr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, dateStr: e.target.value })}
+                      placeholder="ऑगस्ट २०२६"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Description (English):</label>
+                  <textarea
+                    rows={2}
+                    value={editingItem.descEn || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, descEn: e.target.value })}
+                    placeholder="New batch starting this Monday..."
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Description (मराठी):</label>
+                  <textarea
+                    rows={2}
+                    value={editingItem.descMr || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, descMr: e.target.value })}
+                    placeholder="नवीन बॅच सोमवारपासून सुरू होत आहे..."
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+                <button type="submit" className="w-full bg-stitch-red hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">
+                  Save & Sync News Announcement
                 </button>
               </form>
             )}

@@ -450,3 +450,22 @@ ALTER TABLE public.faculties ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public Read Faculties" ON public.faculties FOR SELECT USING (true);
 CREATE POLICY "Admin All Faculties" ON public.faculties FOR ALL USING (auth.role() = 'authenticated');
 
+-- 12. Batch Timetable 2026 Table
+CREATE TABLE IF NOT EXISTS public.batch_timetable (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category TEXT DEFAULT 'morning',
+  time TEXT NOT NULL,
+  course_mr TEXT,
+  course_en TEXT,
+  status_mr TEXT,
+  status_en TEXT,
+  seats_mr TEXT,
+  seats_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.batch_timetable ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public Read Batches" ON public.batch_timetable FOR SELECT USING (true);
+CREATE POLICY "Admin All Batches" ON public.batch_timetable FOR ALL USING (auth.role() = 'authenticated');
+
+

@@ -1,39 +1,27 @@
-import React from 'react';
-import { Calendar, Tag, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, ArrowRight } from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
+import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
  * News Component
  * Admission alerts, MS-CIT exam timetables, and local career news.
+ * Dynamic subscription to sharedStore & AdminRepository.
  */
 export default function News({ lang = 'mr' }) {
+  const [articles, setArticles] = useState(sharedStore.getNews());
   const isMarathi = lang === 'mr';
 
-  const articles = [
-    {
-      date: "१५ ऑगस्ट २०२६",
-      titleMr: "MS-CIT नवीन बॅच प्रवेश खंडाळा केंद्रात सुरू - मर्यादित जागा",
-      titleEn: "MS-CIT New Batch Admissions Open in Khandala Center",
-      categoryMr: "प्रवेश अपडेट",
-      categoryEn: "Admissions",
-      descMr: "नवीन बॅच सोमवारपासून सुरू होत आहे. प्रथम येणाऱ्यास प्राधान्य देण्यात येईल."
-    },
-    {
-      date: "२० ऑगस्ट २०२६",
-      titleMr: "GCC-TBC टायपिंग परीक्षा हॉल तिकीट व सराव मॉक टेस्ट",
-      titleEn: "GCC-TBC Typing Exam Timetable & Mock Test Series",
-      categoryMr: "परीक्षा अपडेट",
-      categoryEn: "Exam Alerts",
-      descMr: "टायपिंग परीक्षेचे वेळापत्रक प्रसिद्ध झाले आहे. लॅबमध्ये सराव चाचण्या सुरू आहेत."
-    },
-    {
-      date: "२५ ऑगस्ट २०२६",
-      titleMr: "उत्पन्न दाखला व राजपत्र ऑनलाइन अर्जासाठी आवश्यक कागदपत्रे",
-      titleEn: "Documents Checklist for Income Certificate & Gazette 2026",
-      categoryMr: "शासकीय सेवा",
-      categoryEn: "Govt Portal",
-      descMr: "नवीन नियमानुसार उत्पन्नाचा दाखला काढण्यासाठी लागणारी कागदपत्रे तपासा."
-    }
-  ];
+  useEffect(() => {
+    AdminRepository.getAllNews().then((res) => {
+      if (res && res.length > 0) setArticles(res);
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      setArticles(sharedStore.getNews());
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <section className="py-20 bg-white border-b border-slate-200/80">
@@ -56,23 +44,23 @@ export default function News({ lang = 'mr' }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {articles.map((item, idx) => (
             <div 
-              key={idx}
+              key={item.id || idx}
               className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4 hover:shadow-lg transition-all flex flex-col justify-between group"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs text-slate-500">
                   <span className="bg-primary/10 text-primary font-bold px-2.5 py-0.5 rounded-md">
-                    {isMarathi ? item.categoryMr : item.categoryEn}
+                    {isMarathi ? (item.categoryMr || item.categoryEn) : (item.categoryEn || item.categoryMr)}
                   </span>
-                  <span>{item.date}</span>
+                  <span>{item.dateStr || '२०२६'}</span>
                 </div>
 
                 <h3 className={`font-bold text-base text-slate-900 group-hover:text-primary transition-colors ${isMarathi ? 'marathi-text' : ''}`}>
-                  {isMarathi ? item.titleMr : item.titleEn}
+                  {isMarathi ? (item.titleMr || item.titleEn) : (item.titleEn || item.titleMr)}
                 </h3>
 
                 <p className={`text-xs text-slate-600 leading-relaxed ${isMarathi ? 'marathi-text' : ''}`}>
-                  {item.descMr}
+                  {isMarathi ? (item.descMr || item.descEn) : (item.descEn || item.descMr)}
                 </p>
               </div>
 
