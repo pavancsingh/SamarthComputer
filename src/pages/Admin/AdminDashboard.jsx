@@ -1838,8 +1838,10 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
       {/* Image Cropper Modal */}
       {cropState && (
         <ImageCropperModal
+          imageFile={cropState.file}
           file={cropState.file}
           aspectRatio={cropState.aspectRatio || 1}
+          onClose={() => setCropState(null)}
           onCancel={() => setCropState(null)}
           onCropComplete={handleCroppedUpload}
         />

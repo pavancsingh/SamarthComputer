@@ -5,7 +5,10 @@ import { Crop, ZoomIn, ZoomOut, RotateCw, Check, X, Move } from 'lucide-react';
  * ImageCropperModal Component - Handcrafted Canvas Cropper
  * Allows Admin to zoom, pan, rotate, and crop photos before uploading to Supabase.
  */
-export default function ImageCropperModal({ imageFile, aspectRatio = 1, onCropComplete, onClose }) {
+export default function ImageCropperModal({ imageFile, file, aspectRatio = 1, onCropComplete, onClose, onCancel }) {
+  const activeFile = imageFile || file;
+  const handleClose = onClose || onCancel || (() => {});
+
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -16,8 +19,8 @@ export default function ImageCropperModal({ imageFile, aspectRatio = 1, onCropCo
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (!imageFile) return;
-    const url = URL.createObjectURL(imageFile);
+    if (!activeFile) return;
+    const url = URL.createObjectURL(activeFile);
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
@@ -28,7 +31,7 @@ export default function ImageCropperModal({ imageFile, aspectRatio = 1, onCropCo
     };
     img.src = url;
     return () => URL.revokeObjectURL(url);
-  }, [imageFile]);
+  }, [activeFile]);
 
   // Render main cropper canvas preview
   useEffect(() => {
@@ -158,7 +161,7 @@ export default function ImageCropperModal({ imageFile, aspectRatio = 1, onCropCo
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -218,7 +221,7 @@ export default function ImageCropperModal({ imageFile, aspectRatio = 1, onCropCo
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 font-bold text-xs shadow-sm transition-all"
               >
                 Cancel
