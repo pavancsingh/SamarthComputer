@@ -3,12 +3,13 @@ import {
   ShieldCheck, Plus, Trash2, Edit3, Save, X, LogOut, CheckCircle2, 
   BookOpen, FileText, Users, RefreshCw, Sparkles, Filter, Building2,
   Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup,
-  Clock, Megaphone
+  Clock, Megaphone, Crop
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
 import { sharedStore } from '../../repositories/sharedStore';
 import { StorageService } from '../../services/StorageService';
+import ImageCropperModal from '../../components/admin/ImageCropperModal';
 
 /**
  * AdminDashboard Component
@@ -89,23 +90,42 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
 
 
-  // Image Upload Handler using Supabase Storage
-  const handleFileChange = async (e, folder = 'general') => {
+  // Image Crop & Upload State
+  const [cropState, setCropState] = useState(null); // { file, folder, aspectRatio, onComplete }
+
+  const handleFileSelect = (e, folder = 'general', aspectRatio = 1, customCallback = null) => {
     const file = e.target.files[0];
     if (!file) return;
+    setCropState({
+      file,
+      folder,
+      aspectRatio,
+      onComplete: customCallback
+    });
+    e.target.value = '';
+  };
 
+  const handleCroppedUpload = async (croppedFile) => {
+    if (!cropState) return;
+    const { folder, onComplete } = cropState;
+    setCropState(null);
     setUploadingImage(true);
-    const publicUrl = await StorageService.uploadImage(file, folder);
+
+    const publicUrl = await StorageService.uploadImage(croppedFile, folder);
     setUploadingImage(false);
 
     if (publicUrl) {
-      setEditingItem((prev) => ({
-        ...prev,
-        imageUrl: publicUrl,
-        image_url: publicUrl
-      }));
+      if (onComplete) {
+        onComplete(publicUrl);
+      } else {
+        setEditingItem((prev) => ({
+          ...prev,
+          imageUrl: publicUrl,
+          image_url: publicUrl
+        }));
+      }
     } else {
-      alert('Failed to upload image. Please try selecting a smaller file.');
+      alert('Failed to upload image to Supabase Storage bucket.');
     }
   };
 
@@ -917,19 +937,12 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 <label className="block text-sm font-extrabold text-slate-900">1. Header Brand Logo Image:</label>
                 <div className="flex items-center gap-3">
                   <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
-                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                    <span>{uploadingImage ? 'Uploading Logo...' : 'Upload Logo Image'}</span>
+                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Crop className="w-4 h-4 text-stitch-red" />}
+                    <span>{uploadingImage ? 'Uploading Logo...' : 'Upload & Crop Logo'}</span>
                     <input 
                       type="file" 
                       accept="image/*" 
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        setUploadingImage(true);
-                        const url = await StorageService.uploadImage(file, 'logo');
-                        setUploadingImage(false);
-                        if (url) setSiteSettings((prev) => ({ ...prev, logoUrl: url }));
-                      }} 
+                      onChange={(e) => handleFileSelect(e, 'logo', 1, (url) => setSiteSettings((prev) => ({ ...prev, logoUrl: url })))} 
                       className="hidden" 
                     />
                   </label>
@@ -954,19 +967,12 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 <label className="block text-sm font-extrabold text-slate-900">2. Hero Section Background Banner Image:</label>
                 <div className="flex items-center gap-3">
                   <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
-                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                    <span>{uploadingImage ? 'Uploading Banner...' : 'Upload Hero Image'}</span>
+                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Crop className="w-4 h-4 text-stitch-amber" />}
+                    <span>{uploadingImage ? 'Uploading Banner...' : 'Upload & Crop Banner'}</span>
                     <input 
                       type="file" 
                       accept="image/*" 
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        setUploadingImage(true);
-                        const url = await StorageService.uploadImage(file, 'banners');
-                        setUploadingImage(false);
-                        if (url) setSiteSettings((prev) => ({ ...prev, heroBgUrl: url }));
-                      }} 
+                      onChange={(e) => handleFileSelect(e, 'banners', 16 / 9, (url) => setSiteSettings((prev) => ({ ...prev, heroBgUrl: url })))} 
                       className="hidden" 
                     />
                   </label>
@@ -1298,17 +1304,23 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   />
                 </div>
 
-                {/* Upload Image Component */}
+                {/* Upload Image Component with Cropper */}
                 <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <label className="block text-xs font-bold text-slate-700">Upload Faculty Photo to Storage Bucket:</label>
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-700">Upload & Crop Faculty Photo:</label>
+                    <span className="text-[10px] font-bold text-stitch-red bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <Crop className="w-3 h-3 text-stitch-red" />
+                      Interactive 1:1 Cropper Enabled
+                    </span>
+                  </div>
                   <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                      <span>{uploadingImage ? 'Uploading...' : 'Choose Photo'}</span>
+                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all">
+                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Crop className="w-4 h-4 text-stitch-red" />}
+                      <span>{uploadingImage ? 'Uploading...' : 'Choose & Crop Photo'}</span>
                       <input 
                         type="file" 
                         accept="image/*" 
-                        onChange={(e) => handleFileChange(e, 'faculty')} 
+                        onChange={(e) => handleFileSelect(e, 'faculty', 1)} 
                         className="hidden" 
                       />
                     </label>
@@ -1487,6 +1499,16 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
           </div>
         </div>
+      )}
+
+      {/* Image Cropper Modal */}
+      {cropState && (
+        <ImageCropperModal
+          imageFile={cropState.file}
+          aspectRatio={cropState.aspectRatio}
+          onCropComplete={handleCroppedUpload}
+          onClose={() => setCropState(null)}
+        />
       )}
 
     </div>
