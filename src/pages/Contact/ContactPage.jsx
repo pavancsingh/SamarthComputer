@@ -1,69 +1,285 @@
 import React, { useState } from 'react';
-import { Sparkles, UserCheck } from 'lucide-react';
-import ContactForm from '../../components/sections/ContactForm';
-import GoogleMap from '../../components/sections/GoogleMap';
-import CounselingModal from '../../components/forms/CounselingModal';
+import { InquiryRepository } from '../../repositories/InquiryRepository';
 
 /**
- * ContactPage Component - Google Stitch Design System
- * Admissions & Inquiry Hub featuring multi-tab lead capture, 1-on-1 counseling booking,
- * NAP (Name, Address, Phone) details, bus stand landmark directions, and Google Maps location.
+ * ContactPage — Stitch Design System (14_contact_us.html)
+ * Centered hero heading + 2-col grid: 7-col glass form with tabs | 5-col info card + map
  */
+
+const TABS = [
+  { id: 'admission', labelEn: 'Admission Inquiry', labelMr: 'प्रवेश चौकशी' },
+  { id: 'csc',       labelEn: 'CSC Service',       labelMr: 'CSC सेवा' },
+  { id: 'general',   labelEn: 'General Feedback',  labelMr: 'सामान्य प्रतिक्रिया' },
+];
+
 export default function ContactPage({ lang = 'mr' }) {
-  const [isCounselingOpen, setIsCounselingOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('admission');
+  const [form, setForm] = useState({ name: '', phone: '', course: '', service: '', contact: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const isMarathi = lang === 'mr';
 
+  const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await InquiryRepository.submitInquiry({ ...form, type: activeTab, lang });
+    } catch {}
+    setLoading(false);
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
+    setForm({ name: '', phone: '', course: '', service: '', contact: '', message: '' });
+  };
+
+  const inputClass = 'form-input w-full rounded-lg border border-slate-200 px-md py-sm bg-surface-container-lowest text-body-md font-body-md focus:outline-none focus:ring-2 focus:ring-primary';
+
   return (
-    <div className="bg-stitch-ivory min-h-screen pb-24 text-stitch-slate-dark">
-      
-      {/* Hero Header */}
-      <section className="bg-stitch-slate-dark text-white py-16 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="inline-flex items-center gap-1.5 bg-stitch-amber text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-stitch-sm">
-            <Sparkles className="w-4 h-4 text-slate-950" />
-            <span>{isMarathi ? 'प्रवेश & संपर्क हेल्पडेस्क' : 'Admissions & Inquiry Desk'}</span>
-          </span>
+    <div className="bg-background min-h-screen pb-20 md:pb-0" id="contact">
+      <main className="max-w-7xl mx-auto px-4 md:px-gutter py-xl space-y-xl">
 
-          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'समर्थ कॉम्प्युटर्स खंडाळा येथे संपर्क साधा' : 'Get in Touch with Samarth Computers Khandala'}
+        {/* ── Hero Heading ── */}
+        <div className="text-center space-y-md">
+          <h1 className="font-display-hero-mobile text-display-hero-mobile md:font-display-hero md:text-display-hero text-text-primary">
+            {isMarathi ? 'आमच्याशी संपर्क साधा' : 'Get in Touch'}
           </h1>
-
-          <p className={`text-slate-300 text-sm sm:text-base font-medium max-w-2xl mx-auto ${isMarathi ? 'marathi-text' : ''}`}>
+          <p className="font-body-lg text-body-lg text-secondary max-w-xl mx-auto">
             {isMarathi
-              ? 'क्लास प्रवेश, सीएससी शासकीय सेवा किंवा लॅपटॉप दुरुस्तीबाबत कोणत्याही चौकशीसाठी थेट भेट द्या किंवा ऑनलाईन अर्ज करा.'
-              : 'Visit our center near Khandala Bus Stand or submit your course/CSC service inquiry online.'}
+              ? 'तुमची चौकशी सादर करा किंवा खंडाळा बस स्टँडजवळ आमच्या केंद्राला भेट द्या.'
+              : 'Submit your inquiry online or visit our center near Khandala Bus Stand.'}
           </p>
+        </div>
 
-          <div className="pt-4 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setIsCounselingOpen(true)}
-              className="bg-stitch-amber hover:bg-amber-400 text-slate-950 font-black text-xs px-6 py-3.5 rounded-2xl shadow-stitch-glow transition-all hover:scale-105 flex items-center gap-2"
-            >
-              <UserCheck className="w-4 h-4 text-slate-950" />
-              <span>{isMarathi ? '🗣️ १-ऑन-१ मोफत करिअर समुपदेशन बुक करा' : 'Book 1-on-1 Free Counseling'}</span>
-            </button>
+        {/* ── 2-col Layout ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+
+          {/* LEFT: Glass Form (7 cols) */}
+          <div className="lg:col-span-7 glass-panel rounded-xl p-lg space-y-lg" id="inquiry-form">
+            {/* Tabs */}
+            <div className="flex gap-xs border-b border-slate-100 overflow-x-auto hide-scrollbar">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-md py-sm text-label-bold font-label-bold whitespace-nowrap transition-colors ${
+                    activeTab === tab.id
+                      ? 'text-primary border-b-2 border-primary'
+                      : 'text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  {isMarathi ? tab.labelMr : tab.labelEn}
+                </button>
+              ))}
+            </div>
+
+            {submitted ? (
+              <div className="flex flex-col items-center justify-center text-center py-xl gap-md">
+                <span className="material-symbols-outlined fill text-stitch-emerald text-6xl">check_circle</span>
+                <h3 className="text-headline-md font-headline-md text-on-background">
+                  {isMarathi ? 'धन्यवाद! आम्ही लवकरच संपर्क करू.' : 'Thank you! We\'ll be in touch shortly.'}
+                </h3>
+              </div>
+            ) : (
+              <form className="space-y-md" onSubmit={handleSubmit}>
+
+                {/* Admission Tab */}
+                {activeTab === 'admission' && (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                      <div>
+                        <label className="block text-label-bold font-label-bold text-text-primary mb-xs">
+                          {isMarathi ? 'पूर्ण नाव' : 'Full Name / पूर्ण नाव'}
+                        </label>
+                        <input name="name" type="text" value={form.name} onChange={handleChange}
+                          placeholder={isMarathi ? 'तुमचे पूर्ण नाव' : 'Enter your full name'}
+                          className={inputClass} required />
+                      </div>
+                      <div>
+                        <label className="block text-label-bold font-label-bold text-text-primary mb-xs">
+                          {isMarathi ? 'फोन नंबर' : 'Phone Number / फोन नंबर'}
+                        </label>
+                        <input name="phone" type="tel" value={form.phone} onChange={handleChange}
+                          placeholder="+91"
+                          className={inputClass} required />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-label-bold font-label-bold text-text-primary mb-xs">
+                        {isMarathi ? 'अभ्यासक्रम' : 'Course of Interest / अभ्यासक्रम'}
+                      </label>
+                      <select name="course" value={form.course} onChange={handleChange} className={inputClass}>
+                        <option value="">Select a course...</option>
+                        <option>MS-CIT</option>
+                        <option>Tally Prime</option>
+                        <option>Advanced Excel</option>
+                        <option>Web Development</option>
+                        <option>KLiC Courses</option>
+                        <option>DTP & Graphic Design</option>
+                        <option>English & Marathi Typing</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-label-bold font-label-bold text-text-primary mb-xs">
+                        {isMarathi ? 'संदेश (ऐच्छिक)' : 'Message (Optional)'}
+                      </label>
+                      <textarea name="message" value={form.message} onChange={handleChange}
+                        rows={4} placeholder="How can we help you?"
+                        className={inputClass} />
+                    </div>
+                    <button type="submit" disabled={loading}
+                      className="w-full bg-primary text-white font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-stitch-red-dark transition-colors flex items-center justify-center gap-xs btn-interactive disabled:opacity-60">
+                      {loading ? 'Submitting...' : (isMarathi ? 'चौकशी सादर करा' : 'Submit Inquiry')}
+                      {!loading && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
+                    </button>
+                  </>
+                )}
+
+                {/* CSC Tab */}
+                {activeTab === 'csc' && (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                      <div>
+                        <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Name</label>
+                        <input name="name" type="text" value={form.name} onChange={handleChange}
+                          placeholder="Your name" className={inputClass} required />
+                      </div>
+                      <div>
+                        <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Aadhar / Phone</label>
+                        <input name="phone" type="text" value={form.phone} onChange={handleChange}
+                          placeholder="Contact info" className={inputClass} required />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Required Service</label>
+                      <select name="service" value={form.service} onChange={handleChange} className={inputClass}>
+                        <option value="">Select service...</option>
+                        <option>PAN Card Services</option>
+                        <option>Aadhaar Updates</option>
+                        <option>Voter ID</option>
+                        <option>Passport Application</option>
+                        <option>Insurance</option>
+                        <option>Other E-Seva</option>
+                      </select>
+                    </div>
+                    <button type="submit" disabled={loading}
+                      className="w-full bg-stitch-slate-card text-white font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-black transition-colors btn-interactive disabled:opacity-60">
+                      {loading ? 'Submitting...' : (isMarathi ? 'सेवा विनंती करा' : 'Request Service')}
+                    </button>
+                  </>
+                )}
+
+                {/* General Tab */}
+                {activeTab === 'general' && (
+                  <>
+                    <div>
+                      <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Email or Phone</label>
+                      <input name="contact" type="text" value={form.contact} onChange={handleChange}
+                        placeholder="Contact detail" className={inputClass} required />
+                    </div>
+                    <div>
+                      <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Feedback / Inquiry</label>
+                      <textarea name="message" value={form.message} onChange={handleChange}
+                        rows={5} placeholder="Your message here..."
+                        className={inputClass} />
+                    </div>
+                    <button type="submit" disabled={loading}
+                      className="w-full border border-slate-200 text-text-primary font-label-bold text-label-bold py-md rounded-lg shadow-sm hover:bg-surface-container transition-colors btn-interactive disabled:opacity-60">
+                      {loading ? 'Sending...' : (isMarathi ? 'संदेश पाठवा' : 'Send Message')}
+                    </button>
+                  </>
+                )}
+              </form>
+            )}
+          </div>
+
+          {/* RIGHT: Contact Info + Map (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-gutter">
+            {/* Info Card */}
+            <div className="bg-white rounded-xl border border-slate-200/50 p-lg shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300">
+              <h3 className="text-headline-md font-headline-md text-text-primary mb-md">
+                {isMarathi ? 'संपर्क माहिती' : 'Contact Information'}
+              </h3>
+              <div className="space-y-md">
+                {/* Address */}
+                <div className="flex items-start gap-md">
+                  <div className="p-sm bg-stitch-red-light text-primary rounded-lg flex-shrink-0">
+                    <span className="material-symbols-outlined fill">location_on</span>
+                  </div>
+                  <div>
+                    <p className="text-label-bold font-label-bold text-text-primary">Main Office</p>
+                    <p className="text-body-md font-body-md text-secondary mt-xs">
+                      Near Rajendra Vidhalya, Khandala,<br />Ta. Khandala, Dist. Satara - 412802
+                    </p>
+                  </div>
+                </div>
+                {/* Hours */}
+                <div className="flex items-start gap-md">
+                  <div className="p-sm bg-surface-container text-stitch-slate-card rounded-lg flex-shrink-0">
+                    <span className="material-symbols-outlined fill">schedule</span>
+                  </div>
+                  <div>
+                    <p className="text-label-bold font-label-bold text-text-primary">Office Hours</p>
+                    <p className="text-body-md font-body-md text-secondary mt-xs">
+                      Monday - Saturday: 9:00 AM - 7:00 PM<br />Sunday: Closed
+                    </p>
+                  </div>
+                </div>
+                {/* Phone */}
+                <div className="flex items-start gap-md">
+                  <div className="p-sm bg-stitch-red-light text-primary rounded-lg flex-shrink-0">
+                    <span className="material-symbols-outlined fill">call</span>
+                  </div>
+                  <div>
+                    <p className="text-label-bold font-label-bold text-text-primary">Phone</p>
+                    <a href="tel:+919552345061" className="text-body-md font-body-md text-primary font-medium mt-xs hover:underline block">
+                      +91 95523 45061
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* WhatsApp CTA */}
+              <div className="mt-lg pt-lg border-t border-slate-100">
+                <a
+                  href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-sm w-full bg-[#25D366]/10 text-[#075E54] hover:bg-[#25D366]/20 py-sm px-md rounded-lg transition-colors font-label-bold text-label-bold"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                  {isMarathi ? 'व्हाट्सॲपवर चॅट करा' : 'Chat on WhatsApp'}
+                </a>
+              </div>
+            </div>
+
+            {/* Map */}
+            <div className="bg-surface-container rounded-xl overflow-hidden h-[300px] relative shadow-stitch-md border border-slate-200/50">
+              <iframe
+                title="Samarth Computers Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3789.0946052295697!2d74.06488181504043!3d18.04649018799785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2f7bf9d34c6f1%3A0xadf7d5d7d5e8e8e8!2sKhandala%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+                className="w-full h-full border-0 opacity-80"
+                loading="lazy"
+                allowFullScreen
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent flex items-end p-md pointer-events-none">
+                <a
+                  href="https://maps.google.com/?q=Khandala,+Maharashtra"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white/90 backdrop-blur text-text-primary px-sm py-xs rounded text-label-caps font-label-caps flex items-center gap-xs pointer-events-auto hover:bg-white transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[16px] text-primary fill">pin_drop</span>
+                  View on Google Maps
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* Main Multi-Tab Lead Form Section */}
-      <section className="pt-12">
-        <ContactForm lang={lang} />
-      </section>
-
-      {/* Google Map & Landmark Section */}
-      <section className="pt-12">
-        <GoogleMap lang={lang} />
-      </section>
-
-      {/* Counseling Modal */}
-      <CounselingModal
-        isOpen={isCounselingOpen}
-        onClose={() => setIsCounselingOpen(false)}
-        lang={lang}
-      />
+      </main>
     </div>
   );
 }
-

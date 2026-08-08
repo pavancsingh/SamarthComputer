@@ -52,6 +52,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   const [formType, setFormType] = useState(null); 
   // Types: 'inquiry' | 'course' | 'csc' | 'govt' | 'gallery' | 'faculty' | 'batch' | 'news'
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actionNotice, setActionNotice] = useState(null); // { type: 'success' | 'error', text: '' }
 
   const [siteSettings, setSiteSettings] = useState(sharedStore.getSiteSettings());
 
@@ -64,10 +66,16 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     return unsubscribe;
   }, []);
 
-  const handleSaveSettings = (e) => {
+  const handleSaveSettings = async (e) => {
     e.preventDefault();
-    sharedStore.saveSiteSettings(siteSettings);
-    alert('Site Logo & Hero Background Image settings saved successfully!');
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveSiteSettings(siteSettings);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Site Logo & Hero Background Image settings saved successfully to Supabase DB!' });
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save settings: ${res.error}` });
+    }
   };
 
   async function loadAllData() {
@@ -133,119 +141,249 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
   // --- Handlers ---
   const handleInquiryStatus = async (id, status) => {
-    await AdminRepository.updateInquiryStatus(id, status);
-    loadAllData();
+    setIsSubmitting(true);
+    const res = await AdminRepository.updateInquiryStatus(id, status);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Lead status updated in Supabase!' });
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to update status: ${res.error}` });
+    }
   };
 
   const handleDeleteInquiry = async (id) => {
     if (window.confirm('Are you sure you want to delete this lead inquiry?')) {
-      await AdminRepository.deleteInquiry(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteInquiry(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Lead inquiry deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete lead: ${res.error}` });
+      }
     }
   };
 
   const handleSaveCourse = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveCourse(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    if (!editingItem?.title || !editingItem.title.trim()) {
+      setActionNotice({ type: 'error', text: 'Please enter a valid course title.' });
+      return;
+    }
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveCourse(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: `Course "${editingItem.title}" saved successfully to Supabase DB!` });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save course to Supabase DB: ${res.error}` });
+    }
   };
 
   const handleDeleteCourse = async (id) => {
     if (window.confirm('Are you sure you want to delete this course?')) {
-      await AdminRepository.deleteCourse(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteCourse(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Course deleted successfully from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete course: ${res.error}` });
+      }
     }
   };
 
   const handleSaveCSC = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveCSCService(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    const title = editingItem?.titleEn || editingItem?.titleMr || editingItem?.title_en || editingItem?.title_mr;
+    if (!title || !title.trim()) {
+      setActionNotice({ type: 'error', text: 'Please enter a service title.' });
+      return;
+    }
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveCSCService(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'CSC Service saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save CSC service: ${res.error}` });
+    }
   };
 
   const handleDeleteCSC = async (id) => {
     if (window.confirm('Are you sure you want to delete this CSC service?')) {
-      await AdminRepository.deleteCSCService(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteCSCService(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'CSC Service deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete CSC service: ${res.error}` });
+      }
     }
   };
 
   const handleSaveGovt = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveGovtService(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    const title = editingItem?.titleEn || editingItem?.titleMr || editingItem?.title_en || editingItem?.title_mr;
+    if (!title || !title.trim()) {
+      setActionNotice({ type: 'error', text: 'Please enter a government service title.' });
+      return;
+    }
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveGovtService(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Government service saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save Government service: ${res.error}` });
+    }
   };
 
   const handleDeleteGovt = async (id) => {
     if (window.confirm('Are you sure you want to delete this Government service?')) {
-      await AdminRepository.deleteGovtService(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteGovtService(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Government service deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete Government service: ${res.error}` });
+      }
     }
   };
 
   const handleSaveGalleryItem = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveSiteGalleryItem(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveSiteGalleryItem(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Gallery photo saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save gallery item: ${res.error}` });
+    }
   };
 
   const handleDeleteGalleryItem = async (id) => {
     if (window.confirm('Are you sure you want to delete this gallery photo?')) {
-      await AdminRepository.deleteSiteGalleryItem(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteSiteGalleryItem(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Gallery photo deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete gallery photo: ${res.error}` });
+      }
     }
   };
 
   const handleSaveFaculty = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveFacultyItem(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    if (!editingItem?.name || !editingItem.name.trim()) {
+      setActionNotice({ type: 'error', text: 'Please enter faculty member name.' });
+      return;
+    }
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveFacultyItem(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Faculty member saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save faculty member: ${res.error}` });
+    }
   };
 
   const handleDeleteFaculty = async (id) => {
     if (window.confirm('Are you sure you want to delete this faculty member?')) {
-      await AdminRepository.deleteFacultyItem(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteFacultyItem(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Faculty member deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete faculty member: ${res.error}` });
+      }
     }
   };
 
   const handleSaveBatch = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveBatchItem(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveBatchItem(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'Batch slot saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save batch slot: ${res.error}` });
+    }
   };
 
   const handleDeleteBatch = async (id) => {
     if (window.confirm('Are you sure you want to delete this batch timetable slot?')) {
-      await AdminRepository.deleteBatchItem(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteBatchItem(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'Batch slot deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete batch slot: ${res.error}` });
+      }
     }
   };
 
   const handleSaveNews = async (e) => {
     e.preventDefault();
-    await AdminRepository.saveNewsItem(editingItem);
-    setEditingItem(null);
-    setFormType(null);
-    loadAllData();
+    setIsSubmitting(true);
+    const res = await AdminRepository.saveNewsItem(editingItem);
+    setIsSubmitting(false);
+    if (res.success) {
+      setActionNotice({ type: 'success', text: 'News announcement saved successfully to Supabase DB!' });
+      setEditingItem(null);
+      setFormType(null);
+      loadAllData();
+    } else {
+      setActionNotice({ type: 'error', text: `Failed to save news item: ${res.error}` });
+    }
   };
 
   const handleDeleteNews = async (id) => {
     if (window.confirm('Are you sure you want to delete this news announcement?')) {
-      await AdminRepository.deleteNewsItem(id);
-      loadAllData();
+      setIsSubmitting(true);
+      const res = await AdminRepository.deleteNewsItem(id);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({ type: 'success', text: 'News item deleted from Supabase DB!' });
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to delete news item: ${res.error}` });
+      }
     }
   };
 
@@ -417,6 +555,22 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
         <main className="flex-1 md:ml-[280px] h-full overflow-y-auto w-full p-4 md:p-8">
           <div className="max-w-7xl mx-auto space-y-6 pb-16">
             
+            {actionNotice && (
+              <div className={`p-4 rounded-2xl text-xs font-bold flex justify-between items-center shadow-sm ${
+                actionNotice.type === 'success' 
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                  : 'bg-rose-50 text-rose-800 border border-rose-200'
+              }`}>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className={`w-4 h-4 ${actionNotice.type === 'success' ? 'text-emerald-600' : 'text-rose-600'}`} />
+                  <span>{actionNotice.text}</span>
+                </div>
+                <button onClick={() => setActionNotice(null)} className="font-extrabold hover:underline px-2 py-1">
+                  Dismiss
+                </button>
+              </div>
+            )}
+
             {/* MODULE 1: INBOX LEADS */}
             {tab === 'inquiries' && (
               <div className="space-y-6">

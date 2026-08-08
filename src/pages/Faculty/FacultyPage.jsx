@@ -1,112 +1,201 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Award, MessageCircle, GraduationCap } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { sharedStore } from '../../repositories/sharedStore';
-import { AdminRepository } from '../../repositories/AdminRepository';
 
 /**
- * FacultyPage Component - Google Stitch Design System
- * Instructors, Faculty profiles & certifications for Samarth Computers.
- * Dynamically synchronized with Admin Store & Supabase DB.
+ * FacultyPage — Stitch Design System (04_meet_our_faculty.html)
+ * Centered hero + 12-col bento: Lead Instructor (8 col) + Philosophy (4 col) + 2 instructors + Ask Mentor
  */
-export default function FacultyPage({ lang = 'mr' }) {
+
+const FALLBACK_FACULTY = [
+  {
+    id: 'f1', nameEn: 'Rajesh Deshmukh', nameMr: 'राजेश देशमुख',
+    roleEn: 'Center Head & Lead Mentor', roleMr: 'केंद्र प्रमुख व प्रमुख मार्गदर्शक',
+    expEn: '15+ Years Experience • MKCL Certified', expMr: '१५+ वर्षांचा अनुभव • MKCL प्रमाणित',
+    bioEn: 'Specializing in advanced software development and networking. Has guided over 5,000 students through rigorous curriculum designed to meet actual industry demands.',
+    bioMr: 'प्रगत सॉफ्टवेअर विकास आणि नेटवर्किंगमध्ये तज्ञ. उद्योगाच्या मागण्या पूर्ण करण्यासाठी तयार केलेल्या कठोर अभ्यासक्रमातून 5,000+ विद्यार्थ्यांना मार्गदर्शन केले.',
+    skills: ['MS-CIT', 'Tally Prime', 'Network Security'],
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+    lead: true,
+  },
+  {
+    id: 'f2', nameEn: 'Sneha Patil', nameMr: 'स्नेहा पाटील',
+    roleEn: 'Web Technologies Instructor', roleMr: 'वेब तंत्रज्ञान प्रशिक्षक',
+    expEn: 'Web Technologies • 5 Years Exp', expMr: 'वेब तंत्रज्ञान • ५ वर्षांचा अनुभव',
+    bioEn: 'Expert in modern frontend frameworks and UI/UX principles. Govt. Certified Trainer.',
+    bioMr: 'आधुनिक फ्रंटएंड फ्रेमवर्क आणि UI/UX तत्त्वांमध्ये तज्ञ. शासकीय प्रमाणित प्रशिक्षक.',
+    image: 'https://images.unsplash.com/photo-1494790108755-2616b331d351?auto=format&fit=crop&w=400&q=80',
+    lead: false,
+  },
+  {
+    id: 'f3', nameEn: 'Amit Kulkarni', nameMr: 'अमित कुलकर्णी',
+    roleEn: 'Data Management Specialist', roleMr: 'डेटा व्यवस्थापन तज्ञ',
+    expEn: 'Data Management • 8 Years Exp', expMr: 'डेटा व्यवस्थापन • ८ वर्षांचा अनुभव',
+    bioEn: 'Specialist in Database Administration and Tally Prime. MKCL Expert Faculty.',
+    bioMr: 'डेटाबेस प्रशासन आणि Tally Prime मध्ये तज्ञ. MKCL तज्ञ शिक्षक.',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
+    lead: false,
+  },
+];
+
+export default function FacultyPage({ lang = 'mr', onNavigate }) {
+  const [faculty, setFaculty] = useState([]);
   const isMarathi = lang === 'mr';
-  const [facultyMembers, setFacultyMembers] = useState(sharedStore.getFaculty());
 
   useEffect(() => {
-    AdminRepository.getAllFaculty().then((res) => {
-      if (res && res.length > 0) setFacultyMembers(res);
-    });
-
+    try {
+      const data = sharedStore.getFaculty ? sharedStore.getFaculty() : null;
+      setFaculty(data && data.length > 0 ? data : FALLBACK_FACULTY);
+    } catch {
+      setFaculty(FALLBACK_FACULTY);
+    }
     const unsubscribe = sharedStore.subscribe(() => {
-      setFacultyMembers(sharedStore.getFaculty());
+      try {
+        const data = sharedStore.getFaculty ? sharedStore.getFaculty() : null;
+        setFaculty(data && data.length > 0 ? data : FALLBACK_FACULTY);
+      } catch {
+        setFaculty(FALLBACK_FACULTY);
+      }
     });
     return unsubscribe;
   }, []);
 
+  const displayFaculty = faculty.length > 0 ? faculty : FALLBACK_FACULTY;
+  const lead = displayFaculty.find((f) => f.lead || f.isLead) || displayFaculty[0];
+  const others = displayFaculty.filter((f) => f.id !== (lead?.id));
+
   return (
-    <div className="bg-stitch-ivory py-12 lg:py-20 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        
-        {/* Header */}
-        <div className="text-center max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 bg-stitch-red-light border border-stitch-red-border px-4 py-1.5 rounded-full text-xs font-bold text-stitch-red shadow-stitch-sm">
-            <Users className="w-4 h-4 text-stitch-red" />
-            <span>{isMarathi ? 'अनुभवी मार्गदर्शक व शिक्षक वृंद' : 'Expert Certified Instructors'}</span>
+    <div className="bg-background min-h-screen pb-20 md:pb-0">
+      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-8 py-xl flex flex-col gap-2xl">
+
+        {/* ── Hero ── */}
+        <section className="text-center max-w-3xl mx-auto space-y-md">
+          <motion.h1
+            className="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-on-background"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            {isMarathi ? 'तुमच्या डिजिटल भविष्यासाठी तज्ञ मार्गदर्शन' : 'Expert Guidance for Your Digital Future'}
+          </motion.h1>
+          <p className="text-body-lg font-body-lg text-on-surface-variant">
+            {isMarathi
+              ? 'व्यावहारिक, उद्योग-सुसंगत मार्गदर्शनाद्वारे शिक्षण आणि रोजगारातील अंतर भरून काढणारे आमचे प्रमाणित प्रशिक्षक भेटा.'
+              : 'Meet our certified instructors bridging the gap between education and employment through practical, industry-aligned mentorship.'}
+          </p>
+        </section>
+
+        {/* ── Faculty Bento Grid ── */}
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-md md:gap-lg">
+
+          {/* Lead Instructor — 8 cols */}
+          {lead && (
+            <div className="md:col-span-8 bg-surface-container-lowest rounded-xl border border-surface-variant p-lg flex flex-col md:flex-row gap-lg group hover:shadow-[0_4px_20px_-2px_rgba(183,0,14,0.15)] hover:-translate-y-1 transition-all duration-300">
+              <div className="w-full md:w-1/3 aspect-[3/4] relative rounded-lg overflow-hidden bg-surface-variant">
+                <img
+                  src={lead.image || lead.photoUrl || lead.photo_url}
+                  alt={isMarathi ? lead.nameMr : lead.nameEn}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="w-full md:w-2/3 flex flex-col justify-center space-y-md">
+                <div>
+                  <span className="inline-block px-sm py-xs bg-[#dae2fd] text-[#131b2e] rounded-full text-label-caps font-label-caps mb-sm">
+                    {isMarathi ? (lead.roleMr || 'केंद्र प्रमुख व प्रमुख मार्गदर्शक') : (lead.roleEn || 'Center Head & Lead Mentor')}
+                  </span>
+                  <h2 className="text-headline-lg font-headline-lg text-on-background">
+                    {isMarathi ? lead.nameMr : lead.nameEn}
+                  </h2>
+                  <p className="text-primary font-label-bold mt-xs">
+                    {isMarathi ? (lead.expMr || lead.experienceMr) : (lead.expEn || lead.experienceEn)}
+                  </p>
+                </div>
+                <p className="text-body-md font-body-md text-on-surface-variant">
+                  {isMarathi ? (lead.bioMr || lead.bio_mr || lead.overview) : (lead.bioEn || lead.bio_en || lead.overview)}
+                </p>
+                {lead.skills && lead.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-sm mt-md">
+                    {lead.skills.map((skill, i) => (
+                      <span key={i} className="px-sm py-xs border border-surface-variant rounded-md text-label-bold font-label-bold text-secondary">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Teaching Philosophy Card — 4 cols */}
+          <div className="md:col-span-4 bg-primary rounded-xl p-lg text-on-primary flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary-container rounded-full blur-3xl opacity-50" />
+            <div className="relative z-10 space-y-md">
+              <span className="material-symbols-outlined text-4xl mb-sm fill block">lightbulb</span>
+              <h3 className="text-headline-md font-headline-md">
+                {isMarathi ? 'आमचे तत्त्वज्ञान' : 'Our Philosophy'}
+              </h3>
+              <p className="text-body-md font-body-md text-on-primary/90">
+                {isMarathi
+                  ? '"पारंपरिक शिक्षण आणि आधुनिक रोजगारातील अंतर भरून काढणे."'
+                  : '"Bridging the gap between traditional education and modern employment."'}
+              </p>
+              <p className="text-body-md font-body-md text-on-primary/80 mt-md">
+                {isMarathi
+                  ? 'आम्ही हात-ऑन, प्रोजेक्ट-आधारित शिक्षणावर विश्वास ठेवतो. सिद्धांत केवळ तेव्हाच चांगला असतो जेव्हा तो वास्तविक-जगाच्या तंत्रज्ञान वातावरणात व्यावहारिकपणे लागू केला जातो.'
+                  : 'We believe in hands-on, project-based learning. Theory is only as good as its practical application in a real-world tech environment.'}
+              </p>
+            </div>
           </div>
 
-          <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'आमचे तज्ज्ञ शिक्षक (Faculty)' : 'Meet Our Expert Faculty'}
-          </h1>
-
-          <p className={`text-slate-600 text-base sm:text-lg font-medium max-w-2xl mx-auto leading-relaxed ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi
-              ? 'प्रत्येक विद्यार्थ्याला १-ऑन-१ प्रॅक्टिकल मदत करणारे अनुभवी आणि प्रमाणित शिक्षक.'
-              : 'Our dedicated team of certified IT instructors and industry experts dedicated to student success.'}
-          </p>
-        </div>
-
-        {/* Faculty Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {facultyMembers.map((member, idx) => (
-            <div 
-              key={member.id || idx} 
-              className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+          {/* Other Instructors */}
+          {others.slice(0, 2).map((f, idx) => (
+            <div
+              key={f.id || idx}
+              className="md:col-span-4 bg-surface-container-lowest rounded-xl border border-surface-variant p-md flex flex-col gap-md hover:shadow-[0_4px_20px_-2px_rgba(183,0,14,0.15)] hover:-translate-y-1 transition-all duration-300"
             >
-              <div>
-                <div className="h-64 w-full bg-slate-100 relative overflow-hidden">
-                  {member.imageUrl ? (
-                    <img 
-                      src={member.imageUrl} 
-                      alt={member.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-stitch-slate-dark text-white flex items-center justify-center">
-                      <GraduationCap className="w-16 h-16 text-stitch-amber" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-stitch-slate-dark/80 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <div className="text-xl font-black">{member.name}</div>
-                    <div className="text-xs text-stitch-amber font-bold">
-                      {isMarathi ? (member.roleMr || member.roleEn) : (member.roleEn || member.roleMr)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center gap-2 bg-emerald-50 text-stitch-emerald p-3 rounded-2xl border border-emerald-200 text-xs font-bold">
-                    <Award className="w-4 h-4 shrink-0" />
-                    <span>{isMarathi ? (member.expMr || member.expEn) : (member.expEn || member.expMr)}</span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                      {isMarathi ? 'विशेष प्राविण्य:' : 'Specialization:'}
-                    </div>
-                    <div className="text-xs text-slate-700 font-semibold">
-                      {isMarathi ? (member.specMr || member.specEn) : (member.specEn || member.specMr)}
-                    </div>
-                  </div>
-                </div>
+              <div className="w-full aspect-square relative rounded-lg overflow-hidden bg-surface-variant">
+                <img
+                  src={f.image || f.photoUrl || f.photo_url}
+                  alt={isMarathi ? f.nameMr : f.nameEn}
+                  className="w-full h-full object-cover"
+                />
               </div>
-
-              <div className="p-6 pt-0">
-                <a
-                  href="https://wa.me/919552345061"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-slate-100 hover:bg-stitch-slate-card hover:text-white text-stitch-slate-dark font-extrabold text-xs rounded-2xl border border-slate-200 transition-all flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4 text-stitch-whatsapp" />
-                  <span>{isMarathi ? 'मार्गदर्शकांशी संपर्क करा' : 'Contact Instructor'}</span>
-                </a>
+              <div>
+                <h3 className="text-headline-md font-headline-md text-on-background">
+                  {isMarathi ? f.nameMr : f.nameEn}
+                </h3>
+                <p className="text-primary font-label-bold mt-xs">
+                  {isMarathi ? (f.expMr || f.experienceMr) : (f.expEn || f.experienceEn)}
+                </p>
+                <p className="text-body-md font-body-md text-on-surface-variant mt-sm">
+                  {isMarathi ? (f.bioMr || f.bio_mr) : (f.bioEn || f.bio_en)}
+                </p>
               </div>
             </div>
           ))}
-        </div>
 
-      </div>
+          {/* Ask a Mentor CTA */}
+          <div className="md:col-span-4 bg-surface-container-low rounded-xl border border-surface-variant p-lg flex flex-col justify-center items-center text-center space-y-md">
+            <span className="material-symbols-outlined text-secondary text-5xl">forum</span>
+            <h3 className="text-headline-md font-headline-md text-on-background">
+              {isMarathi ? 'मार्गदर्शन हवे आहे?' : 'Need Guidance?'}
+            </h3>
+            <p className="text-body-md font-body-md text-on-surface-variant">
+              {isMarathi
+                ? 'कोणता कोर्स तुमच्या करिअरच्या उद्दिष्टांसाठी योग्य आहे हे माहित नाही? आमच्या मार्गदर्शकांशी थेट संवाद करा.'
+                : "Not sure which course fits your career goals? Talk directly to our mentors."}
+            </p>
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate('contact')}
+              className="w-full py-md rounded bg-surface-container-highest text-on-surface font-label-bold hover:bg-primary hover:text-on-primary transition-colors border border-surface-variant hover:border-primary shadow-sm mt-md"
+            >
+              {isMarathi ? 'मार्गदर्शकास विचारा' : 'Ask a Mentor'}
+            </button>
+          </div>
+        </section>
+
+      </main>
     </div>
   );
 }

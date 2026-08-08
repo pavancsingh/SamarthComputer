@@ -1,174 +1,253 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Search, FileText, MessageCircle } from 'lucide-react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
 import DocChecklistModal from '../../components/forms/DocChecklistModal';
 
 /**
- * CSCPage Component - Google Stitch Design System
- * Full CSC & MahaOnline Government Services portal with live search, service category filters,
- * document checklist drawers, and fast application triggers.
+ * CSCPage — Stitch Design System (01_csc_services.html)
+ * Light bg + ambient glows + hero split layout + services bento grid
+ * PAN Card: featured md:col-span-2 md:row-span-2
  */
-export default function CSCPage({ lang = 'mr' }) {
+
+const FALLBACK_SERVICES = [
+  {
+    id: 'pan', titleEn: 'PAN Card Services', titleMr: 'पॅन कार्ड सेवा',
+    icon: 'id_card', iconBg: 'bg-stitch-red-light', iconColor: 'text-primary',
+    descEn: 'New applications, corrections, and linking with Aadhaar processed swiftly.',
+    descMr: 'नवीन अर्ज, दुरुस्ती आणि आधारशी जोडणी.',
+    badge: 'Fast Track', badgeColor: 'text-stitch-emerald bg-stitch-emerald/10',
+    featured: true,
+  },
+  {
+    id: 'aadhaar', titleEn: 'Aadhaar Updates', titleMr: 'आधार अपडेट',
+    icon: 'fingerprint', iconBg: 'bg-secondary-container', iconColor: 'text-tertiary-container',
+    descEn: 'Address, phone, and detail corrections.',
+    descMr: 'पत्ता, फोन आणि तपशील दुरुस्ती.',
+    featured: false,
+  },
+  {
+    id: 'voterid', titleEn: 'Voter ID', titleMr: 'मतदार ओळखपत्र',
+    icon: 'how_to_vote', iconBg: 'bg-surface-container-high', iconColor: 'text-secondary',
+    descEn: 'Registration and modifications.',
+    descMr: 'नोंदणी आणि बदल.',
+    featured: false,
+  },
+  {
+    id: 'insurance', titleEn: 'Vehicle & Life Insurance', titleMr: 'वाहन व जीवन विमा',
+    icon: 'health_and_safety', iconBg: 'bg-stitch-red-light', iconColor: 'text-primary',
+    descEn: 'Compare and renew policies from top providers instantly.',
+    descMr: 'शीर्ष प्रदात्यांकडून तात्काळ पॉलिसी तुलना आणि नूतनीकरण.',
+    featured: false, wide: true,
+  },
+];
+
+export default function CSCPage({ lang = 'mr', onNavigate }) {
   const [services, setServices] = useState([]);
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
-    async function loadCSC() {
-      const data = await InquiryRepository.getCSCServices(filter);
-      setServices(data);
+    async function load() {
+      try {
+        const data = await InquiryRepository.getCSCServices('all');
+        setServices(data && data.length > 0 ? data : FALLBACK_SERVICES);
+      } catch {
+        setServices(FALLBACK_SERVICES);
+      }
     }
-    loadCSC();
-  }, [filter]);
+    load();
+  }, []);
 
-  const filteredServices = services.filter((s) => 
-    s.titleMr.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.titleEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.overviewEn.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const openDocModal = (service) => {
-    setSelectedService(service);
-    setIsModalOpen(true);
-  };
+  const displayServices = services.length > 0 ? services : FALLBACK_SERVICES;
 
   return (
-    <div className="bg-stitch-ivory min-h-screen pb-24 text-stitch-slate-dark">
-      
-      {/* Header Banner */}
-      <section className="bg-stitch-slate-dark text-white py-16 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-stitch-emerald font-extrabold text-xs px-4 py-1.5 rounded-full border border-emerald-200 shadow-stitch-sm">
-            <Shield className="w-4 h-4 text-stitch-emerald" />
-            <span>{isMarathi ? 'महाऑनलाइन सीएससी केंद्र खंडाळा' : 'MahaOnline CSC Government Center Khandala'}</span>
-          </span>
+    <div className="bg-background min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
+      {/* Ambient Background Glow */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-stitch-red-light rounded-full mix-blend-multiply filter blur-[140px] opacity-70" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary-container rounded-full mix-blend-multiply filter blur-[140px] opacity-70" />
+      </div>
 
-          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'ऑनलाइन सेवा (Online Services)' : 'Online Services'}
-          </h1>
+      <main className="w-full max-w-7xl mx-auto px-md md:px-gutter lg:px-lg pb-2xl pt-xl">
 
-          <p className={`text-slate-300 text-sm sm:text-base font-medium max-w-2xl mx-auto ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi
-              ? 'अचूक ऑनलाइन फॉर्म भरणी, शासकीय फी पावती आणि १००% डिजिटल स्वाक्षरीचे दाखले. कागदपत्रे आणा आणि काम करून घ्या.'
-              : 'Accurate government portal processing, official fee receipts, and digitally signed certificates.'}
-          </p>
-        </div>
-      </section>
-
-      {/* Filter Bar & Search Container */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
-        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-stitch-md border border-slate-200/90 flex flex-col md:flex-row items-center justify-between gap-4">
-          
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            {[
-              { id: 'all', labelMr: 'सर्व सेवा', labelEn: 'All Services' },
-              { id: 'identity', labelMr: 'ओळखपत्र व पॅन', labelEn: 'Identity & PAN' },
-              { id: 'certificates', labelMr: 'दाखले व उतारे', labelEn: 'Certificates' },
-              { id: 'business', labelMr: 'व्यवसाय परवाने', labelEn: 'Business Licenses' }
-            ].map((btn) => (
+        {/* Hero Section — flex row */}
+        <section className="mb-2xl flex flex-col md:flex-row items-center gap-xl">
+          {/* Left: Text */}
+          <div className="flex-1 space-y-md">
+            <span className="inline-block px-sm py-xs bg-secondary-container text-on-secondary-container text-label-caps font-label-caps rounded-full">
+              Government Services
+            </span>
+            <h1 className="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary">
+              {isMarathi ? (
+                <>
+                  विश्वसनीय CSC &<br />
+                  <span className="text-primary">महा-ई-सेवा</span> केंद्र
+                </>
+              ) : (
+                <>
+                  Trusted CSC &<br />
+                  <span className="text-primary">Maha-E-Seva</span> Center
+                </>
+              )}
+            </h1>
+            <p className="text-body-lg font-body-lg text-secondary max-w-2xl">
+              {isMarathi
+                ? 'विश्वासार्ह, जलद आणि सुरक्षित शासकीय दस्तऐवज प्रक्रियेसाठी एकमेव ठिकाण.'
+                : 'Your one-stop destination for reliable, fast, and secure government document processing. We bridge the gap between citizens and essential services with professional assistance.'}
+            </p>
+            <div className="flex gap-md pt-sm">
               <button
-                key={btn.id}
-                onClick={() => setFilter(btn.id)}
-                className={`px-4 py-2.5 rounded-full text-xs font-black transition-all shadow-stitch-sm ${
-                  filter === btn.id
-                    ? 'bg-stitch-red text-white'
-                    : 'bg-slate-100 text-stitch-slate-dark hover:bg-slate-200'
-                }`}
+                type="button"
+                onClick={() => onNavigate && onNavigate('contact')}
+                className="px-lg py-md bg-primary text-on-primary text-label-bold font-label-bold rounded-lg shadow-sm hover:bg-stitch-red-dark transition-colors border border-primary/20 flex items-center gap-sm btn-interactive"
               >
-                <span className={isMarathi ? 'marathi-text' : ''}>
-                  {isMarathi ? btn.labelMr : btn.labelEn}
-                </span>
+                <span>{isMarathi ? 'अपॉइंटमेंट बुक करा' : 'Book Appointment'}</span>
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
+            </div>
+          </div>
+
+          {/* Right: Hero Image */}
+          <div className="flex-1 relative w-full h-[400px] rounded-xl overflow-hidden glass-panel shadow-lg">
+            <div
+              className="bg-cover bg-center w-full h-full"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=800&q=80')`,
+              }}
+            />
+          </div>
+        </section>
+
+        {/* Services Bento Grid */}
+        <section className="mb-2xl space-y-lg">
+          <div className="text-center space-y-sm">
+            <h2 className="text-headline-lg font-headline-lg text-text-primary">
+              {isMarathi ? 'आवश्यक सेवा' : 'Essential Services'}
+            </h2>
+            <p className="text-body-md font-body-md text-secondary">
+              {isMarathi
+                ? 'तुमच्या बोटांच्या टोकावर सर्व डिजिटल शासन समाधाने.'
+                : 'Comprehensive digital governance solutions at your fingertips.'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-md auto-rows-[200px]">
+            {/* Featured — PAN Card: col-span-2 row-span-2 */}
+            {displayServices.slice(0, 1).map((s) => (
+              <div
+                key={s.id}
+                className="glass-panel p-lg rounded-xl md:col-span-2 md:row-span-2 stitch-card-hover flex flex-col justify-between group cursor-pointer"
+                onClick={() => { setSelectedService(s); setIsModalOpen(true); }}
+              >
+                <div className="flex justify-between items-start">
+                  <div className={`w-12 h-12 ${s.iconBg || 'bg-stitch-red-light'} rounded-lg flex items-center justify-center ${s.iconColor || 'text-primary'}`}>
+                    <span className="material-symbols-outlined fill">{s.icon || 'id_card'}</span>
+                  </div>
+                  {s.badge && (
+                    <span className={`text-label-caps font-label-caps px-sm py-xs rounded ${s.badgeColor || 'text-stitch-emerald bg-stitch-emerald/10'}`}>
+                      {s.badge}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-headline-md font-headline-md text-text-primary mb-xs group-hover:text-primary transition-colors">
+                    {isMarathi ? (s.titleMr || s.title_en) : (s.titleEn || s.title_en)}
+                  </h3>
+                  <p className="text-body-md font-body-md text-secondary">
+                    {isMarathi ? (s.descMr || s.overviewMr || s.overview_en) : (s.descEn || s.overviewEn || s.overview_en)}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            {/* Aadhaar */}
+            {displayServices.slice(1, 2).map((s) => (
+              <div
+                key={s.id}
+                className="glass-panel p-md rounded-xl md:col-span-1 md:row-span-1 stitch-card-hover flex flex-col justify-between group cursor-pointer"
+                onClick={() => { setSelectedService(s); setIsModalOpen(true); }}
+              >
+                <div className={`w-10 h-10 ${s.iconBg || 'bg-secondary-container'} rounded-lg flex items-center justify-center ${s.iconColor || 'text-tertiary-container'} mb-sm`}>
+                  <span className="material-symbols-outlined fill">{s.icon || 'fingerprint'}</span>
+                </div>
+                <div>
+                  <h3 className="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">
+                    {isMarathi ? (s.titleMr || s.title_en) : (s.titleEn || s.title_en)}
+                  </h3>
+                  <p className="text-body-md font-body-md text-secondary text-sm">
+                    {isMarathi ? (s.descMr || s.overviewMr) : (s.descEn || s.overviewEn)}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            {/* Voter ID */}
+            {displayServices.slice(2, 3).map((s) => (
+              <div
+                key={s.id}
+                className="glass-panel p-md rounded-xl md:col-span-1 md:row-span-1 stitch-card-hover flex flex-col justify-between group cursor-pointer"
+                onClick={() => { setSelectedService(s); setIsModalOpen(true); }}
+              >
+                <div className={`w-10 h-10 ${s.iconBg || 'bg-surface-container-high'} rounded-lg flex items-center justify-center ${s.iconColor || 'text-secondary'} mb-sm`}>
+                  <span className="material-symbols-outlined fill">{s.icon || 'how_to_vote'}</span>
+                </div>
+                <div>
+                  <h3 className="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">
+                    {isMarathi ? (s.titleMr || s.title_en) : (s.titleEn || s.title_en)}
+                  </h3>
+                  <p className="text-body-md font-body-md text-secondary text-sm">
+                    {isMarathi ? (s.descMr || s.overviewMr) : (s.descEn || s.overviewEn)}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            {/* Insurance — wide card */}
+            {displayServices.slice(3, 4).map((s) => (
+              <div
+                key={s.id}
+                className="glass-panel p-md rounded-xl md:col-span-2 md:row-span-1 stitch-card-hover flex flex-col justify-between group cursor-pointer"
+                onClick={() => { setSelectedService(s); setIsModalOpen(true); }}
+              >
+                <div className="flex items-center gap-md mb-sm">
+                  <div className={`w-10 h-10 ${s.iconBg || 'bg-stitch-red-light'} rounded-lg flex items-center justify-center ${s.iconColor || 'text-primary'}`}>
+                    <span className="material-symbols-outlined fill">{s.icon || 'health_and_safety'}</span>
+                  </div>
+                  <h3 className="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">
+                    {isMarathi ? (s.titleMr || s.title_en) : (s.titleEn || s.title_en)}
+                  </h3>
+                </div>
+                <p className="text-body-md font-body-md text-secondary">
+                  {isMarathi ? (s.descMr || s.overviewMr) : (s.descEn || s.overviewEn)}
+                </p>
+              </div>
+            ))}
+
+            {/* Additional services */}
+            {displayServices.slice(4).map((s, idx) => (
+              <div
+                key={s.id || idx}
+                className="glass-panel p-md rounded-xl stitch-card-hover flex flex-col justify-between group cursor-pointer"
+                onClick={() => { setSelectedService(s); setIsModalOpen(true); }}
+              >
+                <div className={`w-10 h-10 ${s.iconBg || 'bg-surface-container-high'} rounded-lg flex items-center justify-center ${s.iconColor || 'text-secondary'} mb-sm`}>
+                  <span className="material-symbols-outlined fill">{s.icon || 'assignment'}</span>
+                </div>
+                <div>
+                  <h3 className="text-body-lg font-headline-md text-text-primary group-hover:text-primary transition-colors">
+                    {isMarathi ? (s.titleMr || s.title_en) : (s.titleEn || s.title_en)}
+                  </h3>
+                  <p className="text-body-md font-body-md text-secondary text-sm">
+                    {isMarathi ? (s.descMr || s.overviewMr) : (s.descEn || s.overviewEn)}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
+        </section>
+      </main>
 
-          {/* Search Box */}
-          <div className="relative w-full md:w-72">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={isMarathi ? 'सेवेचे नाव शोधा (उदा. पॅन, गॅझेट)...' : 'Search service (e.g. PAN, Income)...'}
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:outline-none focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-          </div>
-
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredServices.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-3xl border border-slate-200/90 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1 p-6"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="bg-stitch-red-light text-stitch-red border border-stitch-red-border font-extrabold text-[10px] uppercase px-3 py-1 rounded-full">
-                    {item.badge}
-                  </span>
-                  <span className="text-[11px] font-extrabold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                    ⏱️ {isMarathi ? item.timelineMr : item.timelineEn}
-                  </span>
-                </div>
-
-                <h2 className={`font-black text-lg text-stitch-slate-dark group-hover:text-stitch-red transition-colors ${isMarathi ? 'marathi-text' : ''}`}>
-                  {isMarathi ? item.titleMr : item.titleEn}
-                </h2>
-
-                <p className={`text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium ${isMarathi ? 'marathi-text' : ''}`}>
-                  {isMarathi ? item.overviewMr : item.overviewEn}
-                </p>
-
-                {/* Document List Preview */}
-                <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-1.5">
-                  <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                    {isMarathi ? 'आवश्यक कागदपत्रे:' : 'Required Documents:'}
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(isMarathi ? item.requiredDocsMr : item.requiredDocsEn).slice(0, 3).map((d, dIdx) => (
-                      <span key={dIdx} className="bg-white border border-slate-200/80 text-slate-700 text-[10px] font-semibold px-2.5 py-0.5 rounded-lg shadow-stitch-sm">
-                        ✓ {d}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-6 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => openDocModal(item)}
-                  className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-stitch-slate-dark font-extrabold text-xs py-3 rounded-2xl border border-slate-200 shadow-stitch-sm transition-all"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>{isMarathi ? 'कागदपत्र यादी' : 'Doc Checklist'}</span>
-                </button>
-
-                <a
-                  href={`https://wa.me/919552345061?text=I%20want%20to%20apply%20for%20${encodeURIComponent(item.titleEn)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 bg-stitch-slate-dark hover:bg-stitch-whatsapp text-white hover:text-slate-950 font-extrabold text-xs py-3 rounded-2xl shadow-stitch-sm transition-all hover:scale-105"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 text-stitch-whatsapp" />
-                  <span>{isMarathi ? 'अर्ज करा' : 'Apply Now'}</span>
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Document Checklist Modal */}
+      {/* Doc Checklist Modal */}
       <DocChecklistModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -178,4 +257,3 @@ export default function CSCPage({ lang = 'mr' }) {
     </div>
   );
 }
-

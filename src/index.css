@@ -1,47 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Mukta:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* ─── Fonts ─────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700;800&display=swap');
 
+/* Material Symbols Outlined — for Stitch icons */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Stitch CSS Custom Properties ─────────────────────────────── */
 :root {
-  /* Google Stitch Color Palette */
-  --stitch-red: #DC2626;
-  --stitch-red-dark: #B91C1C;
-  --stitch-red-light: #FEF2F2;
-  --stitch-red-border: #FECACA;
-  
-  --stitch-navy: #0B132B;
-  --stitch-slate-dark: #0F172A;
-  --stitch-slate-card: #182238;
-  
-  --stitch-ivory: #FAFAFA;
-  --stitch-surface: #FFFFFF;
-  --stitch-border: #E2E8F0;
-  --stitch-border-strong: #CBD5E1;
-  
-  --stitch-text-dark: #0F172A;
-  --stitch-text-muted: #64748B;
-  --stitch-text-light: #94A3B8;
+  /* Primary palette (Stitch exact) */
+  --primary: #b7000e;
+  --primary-dark: #991B1B;
+  --primary-light: #FEF2F2;
+  --primary-border: #FCA5A5;
 
-  --stitch-emerald: #10B981;
+  /* Surface tokens */
+  --surface: #f7f9fb;
+  --surface-container: #eceef0;
+  --surface-container-low: #f2f4f6;
+  --surface-container-high: #e6e8ea;
+  --surface-container-highest: #e0e3e5;
+  --surface-container-lowest: #ffffff;
+
+  /* Text */
+  --text-primary: #1E293B;
+  --text-secondary: #565e74;
+
+  /* Stitch semantic colors */
+  --stitch-red: #b7000e;
+  --stitch-red-dark: #991B1B;
+  --stitch-red-light: #FEF2F2;
+  --stitch-red-border: #FCA5A5;
+  --stitch-slate-card: #1E293B;
+  --stitch-slate-dark: #1E293B;
+  --stitch-ivory: #FAFAF9;
+  --stitch-emerald: #059669;
   --stitch-amber: #F59E0B;
-  --stitch-indigo: #6366F1;
+  --stitch-indigo: #483ede;
   --stitch-whatsapp: #25D366;
 
-  /* Typography */
-  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-  --font-marathi: 'Mukta', 'Noto Sans Devanagari', sans-serif;
+  /* Shadows */
+  --shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 40px -8px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 30px -5px rgba(183, 0, 14, 0.25);
 
-  /* Elevation & Shadows */
-  --stitch-shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
-  --stitch-shadow-md: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
-  --stitch-shadow-lg: 0 16px 40px -8px rgba(15, 23, 42, 0.12);
-  --stitch-shadow-glow: 0 0 25px -5px rgba(220, 38, 38, 0.25);
-  --stitch-glass: backdrop-filter: blur(16px);
+  /* Font families */
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-marathi: 'Noto Sans Devanagari', 'Mukta', sans-serif;
 }
 
-* {
+/* ─── Base Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html {
@@ -51,23 +67,17 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--stitch-ivory);
-  color: var(--stitch-text-dark);
+  background-color: var(--surface);
+  color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Devanagari / Marathi Text Override */
-.marathi-text {
-  font-family: var(--font-marathi);
-  line-height: 1.65;
-}
-
-/* Headings */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--stitch-text-dark);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -83,23 +93,53 @@ button {
   font-family: inherit;
 }
 
-/* Custom Stitch Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #F1F5F9;
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+/* ─── Material Symbols ───────────────────────────────────────────── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Utility Glassmorphism Cards */
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ─── Stitch Glass Panel ─────────────────────────────────────────── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.glass-panel-dark {
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+/* ─── Stitch Card Hover ──────────────────────────────────────────── */
+.stitch-card-hover {
+  transition: all 0.3s ease;
+}
+
+.stitch-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(183, 0, 14, 0.1), 0 8px 10px -6px rgba(183, 0, 14, 0.1);
+}
+
+/* ─── Stitch Glass Card (legacy) ─────────────────────────────────── */
 .stitch-glass-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
@@ -112,3 +152,131 @@ button {
   border: 1px solid rgba(51, 65, 85, 0.6);
 }
 
+/* ─── Ambient Background Glow Orbs ──────────────────────────────── */
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glow-red {
+  background: #FEF2F2;
+}
+
+.glow-blue {
+  background: #dae2fd;
+}
+
+.glow-orb-red {
+  background: #b7000e;
+  opacity: 0.12;
+  filter: blur(120px);
+}
+
+.glow-orb-slate {
+  background: #565e74;
+  opacity: 0.12;
+  filter: blur(120px);
+}
+
+/* ─── Marathi / Devanagari Text ──────────────────────────────────── */
+.marathi-text {
+  font-family: var(--font-marathi);
+  line-height: 1.7;
+}
+
+/* ─── Utility: Hide Scrollbar (for chips) ────────────────────────── */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Custom Stitch Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f2f4f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #bec6e0;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #916f6b;
+}
+
+/* ─── Stitch Interactive Micro-animation ─────────────────────────── */
+.btn-interactive {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.btn-interactive:active {
+  transform: scale(0.98);
+}
+
+.card-interactive {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-4px);
+  border-color: rgba(183, 0, 14, 0.3);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Marquee (Trust Strip) ──────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Reveal on Scroll ───────────────────────────────────────────── */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Progress Bar Animated ─────────────────────────────────────── */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to { width: var(--fill-width); }
+}
+.progress-animated {
+  animation: progress-fill 1s ease-out forwards;
+}
+
+/* ─── Pulse Indicator ────────────────────────────────────────────── */
+.pulse-dot {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ─── Page-specific bottom padding for mobile nav ────────────────── */
+.page-content {
+  padding-bottom: 80px;
+}
+@media (min-width: 768px) {
+  .page-content {
+    padding-bottom: 0;
+  }
+}

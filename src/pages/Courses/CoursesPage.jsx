@@ -1,216 +1,322 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Search, Clock, Award, Check, FileText, Sparkles } from 'lucide-react';
 import { CourseRepository } from '../../repositories/CourseRepository';
 import { sharedStore } from '../../repositories/sharedStore';
 import AdmissionModal from '../../components/forms/AdmissionModal';
 import SyllabusModal from '../../components/forms/SyllabusModal';
 
 /**
- * CoursesPage Component - Google Stitch Design System
- * Complete Courses Catalog Listing view with category filter pills, search bar, and enrollment triggers.
+ * CoursesPage — Stitch Design System (07_all_courses.html)
+ * Light bg + ambient glows + hero with search bar + category chips + bento course grid + CTA section
  */
-export default function CoursesPage({ lang = 'mr' }) {
+
+const COURSE_CHIPS = [
+  { id: 'all',         labelEn: 'All Courses',       labelMr: 'सर्व कोर्सेस' },
+  { id: 'foundation',  labelEn: 'Foundation',         labelMr: 'पायाभूत' },
+  { id: 'accounting',  labelEn: 'Accounting',          labelMr: 'अकाउंटिंग' },
+  { id: 'development', labelEn: 'Development',         labelMr: 'डेव्हलपमेंट' },
+  { id: 'govt',        labelEn: 'Government Services', labelMr: 'शासकीय' },
+  { id: 'typing',      labelEn: 'Typing',             labelMr: 'टायपिंग' },
+];
+
+const FALLBACK_COURSES = [
+  {
+    slug: 'mscit', title: 'MS-CIT', tag: 'Foundation', tagColor: 'bg-stitch-indigo/10 text-tertiary border border-tertiary-fixed-dim',
+    subtitleEn: 'Maharashtra State Certificate in Information Technology. The most popular IT literacy course covering fundamental computer concepts, office productivity tools, and internet skills essential for modern workplaces.',
+    durationEn: '2 Months', seatsLabel: 'Admissions Open', seatsColor: 'bg-stitch-emerald/10 text-stitch-emerald',
+    featured: true,
+    features: ['Practical Focus', 'MKCL Certified'],
+  },
+  {
+    slug: 'tally', title: 'Tally Prime with GST', tag: 'Accounting', tagColor: 'bg-surface-container-highest text-on-surface',
+    subtitleEn: 'Master computerized accounting, inventory management, and GST taxation using the latest Tally Prime software.',
+    durationEn: '3 Months', seatsLabel: 'Batch filling',
+    featured: false,
+  },
+  {
+    slug: 'webdev', title: 'Full Stack Web Dev', tag: 'Development', tagColor: 'bg-surface-container-highest text-on-surface',
+    subtitleEn: 'Build modern, responsive websites from scratch using HTML, CSS, JavaScript, and backend frameworks.',
+    durationEn: '6 Months', seatsLabel: 'Project-based',
+    featured: false,
+  },
+  {
+    slug: 'klic', title: 'KLiC Courses', tag: 'Govt Certified', tagColor: 'bg-stitch-red-light text-primary border border-stitch-red-border',
+    subtitleEn: 'MKCL KLiC short-term skill development courses for quick government-certified qualifications.',
+    durationEn: '1–3 Months', seatsLabel: 'Multiple batches',
+    featured: false,
+  },
+  {
+    slug: 'dtp', title: 'DTP & Graphic Design', tag: 'Creative', tagColor: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+    subtitleEn: 'Desktop Publishing with CorelDRAW, Photoshop and InDesign for print and digital media production.',
+    durationEn: '3 Months', seatsLabel: 'Seats Available',
+    featured: false,
+  },
+  {
+    slug: 'typing', title: 'English & Marathi Typing', tag: 'Skill', tagColor: 'bg-secondary-container text-on-secondary-container',
+    subtitleEn: 'Government exam typing preparation with accuracy training and speed certification.',
+    durationEn: '2 Months', seatsLabel: 'Open Enrollment',
+    featured: false,
+  },
+];
+
+export default function CoursesPage({ lang = 'mr', onNavigate }) {
   const [courses, setCourses] = useState([]);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCourseForModal, setSelectedCourseForModal] = useState(null);
-  const [isAdmissionModalOpen, setIsAdmissionModalOpen] = useState(false);
-  const [isSyllabusModalOpen, setIsSyllabusModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isAdmissionOpen, setIsAdmissionOpen] = useState(false);
+  const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
-    async function loadCourses() {
-      const data = await CourseRepository.getCourses(filter);
-      setCourses(data);
+    async function load() {
+      try {
+        const data = await CourseRepository.getCourses(filter === 'all' ? 'all' : filter);
+        setCourses(data && data.length > 0 ? data : FALLBACK_COURSES);
+      } catch {
+        setCourses(FALLBACK_COURSES);
+      }
     }
-    loadCourses();
-
-    const unsubscribe = sharedStore.subscribe(() => {
-      loadCourses();
-    });
+    load();
+    const unsubscribe = sharedStore.subscribe(load);
     return unsubscribe;
   }, [filter]);
 
-  const filteredCourses = courses.filter((c) => 
-    (c.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (c.overviewEn || c.overview_en || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = courses.filter((c) => {
+    const q = searchTerm.toLowerCase();
+    return !q ||
+      (c.title || '').toLowerCase().includes(q) ||
+      (c.subtitleEn || c.subtitle_en || c.overviewEn || '').toLowerCase().includes(q);
+  });
 
-  const openAdmission = (courseId) => {
-    setSelectedCourseForModal(courseId);
-    setIsAdmissionModalOpen(true);
-  };
-
-  const openSyllabus = (courseObj) => {
-    setSelectedCourseForModal(courseObj);
-    setIsSyllabusModalOpen(true);
-  };
+  const displayCourses = filtered.length > 0 ? filtered : FALLBACK_COURSES;
 
   return (
-    <div className="bg-stitch-ivory min-h-screen pb-20">
-      
-      {/* Hero Banner Header */}
-      <section className="bg-stitch-slate-dark text-white py-16 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="inline-flex items-center gap-1.5 bg-stitch-amber text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-stitch-sm">
-            <BookOpen className="w-4 h-4 text-slate-950" />
-            <span>{isMarathi ? 'अभ्यासक्रम कॅटलॉग २०२६' : 'Course Catalog 2026'}</span>
+    <div className="bg-background min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
+      {/* Ambient Background */}
+      <div className="ambient-glow glow-orb-red w-[600px] h-[600px] top-[-200px] left-[-200px]" />
+      <div className="ambient-glow glow-orb-slate w-[500px] h-[500px] top-[40%] right-[-100px]" style={{ opacity: 0.1 }} />
+
+      <main className="relative z-10 pb-2xl">
+        {/* Hero Section */}
+        <section className="max-w-7xl mx-auto px-4 md:px-gutter pt-xl pb-2xl flex flex-col items-center text-center">
+          {/* Badge */}
+          <span className="bg-stitch-red-light text-primary border border-stitch-red-border px-md py-xs rounded-full font-label-caps text-label-caps mb-lg inline-flex items-center gap-xs">
+            <span className="material-symbols-outlined text-[16px] fill">school</span>
+            {isMarathi ? 'आमचे अभ्यासक्रम' : 'Explore Our Programs'}
           </span>
 
-          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'महाराष्ट्र शासन व MKCL मान्यताप्राप्त संगणक कोर्सेस' : 'Govt & MKCL Recognized Computer Courses'}
+          <h1 className="font-display-hero-mobile text-display-hero-mobile md:font-display-hero md:text-display-hero text-text-primary mb-md max-w-4xl">
+            {isMarathi ? 'डिजिटल जगात प्रभुत्व मिळवा' : 'Master the Digital World'}
           </h1>
 
-          <p className={`text-slate-300 text-sm sm:text-base font-medium max-w-2xl mx-auto ${isMarathi ? 'marathi-text' : ''}`}>
+          <p className="font-body-lg text-body-lg text-secondary max-w-2xl mb-xl">
             {isMarathi
-              ? '१-ऑन-१ प्रॅक्टिकल लॅब, अनुभवी शिक्षक, हप्त्याने फी भरण्याची सोय आणि १००% परीक्षा व नोकरी मार्गदर्शन.'
-              : 'Hands-on practical computer lab, expert instructors, easy instalment payment options, and 100% placement guidance.'}
+              ? 'पायाभूत डिजिटल साक्षरतेपासून प्रगत सॉफ्टवेअर विकासापर्यंत उद्योग-तयार कौशल्ये आत्मसात करा.'
+              : 'From foundational digital literacy to advanced software development, equip yourself with industry-ready skills.'}
           </p>
-        </div>
-      </section>
 
-      {/* Filter Bar & Search Container */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
-        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-stitch-md border border-slate-200/90 flex flex-col md:flex-row items-center justify-between gap-4">
-          
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            {[
-              { id: 'all', labelMr: 'सर्व कोर्सेस', labelEn: 'All Courses' },
-              { id: 'govt', labelMr: 'शासकीय मान्यताप्राप्त', labelEn: 'Govt Certified' },
-              { id: 'job', labelMr: 'नोकरी-ओरिएंटेड', labelEn: 'Job-Oriented' }
-            ].map((btn) => (
+          {/* Search & Filter Bar */}
+          <div className="w-full max-w-3xl bg-white p-sm rounded-xl border border-surface-variant/50 shadow-md flex flex-col md:flex-row gap-sm">
+            <div className="relative flex-grow">
+              <span className="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-secondary text-[20px]">
+                search
+              </span>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={isMarathi ? 'कोर्स शोधा (उदा. Tally, MS-CIT)...' : 'Search courses (e.g. Tally, MS-CIT)...'}
+                className="w-full pl-xl pr-sm py-md bg-surface-container-lowest border-none rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md text-text-primary placeholder:text-on-secondary-container"
+              />
+            </div>
+            <div className="flex gap-sm">
               <button
-                key={btn.id}
-                onClick={() => setFilter(btn.id)}
-                className={`px-4 py-2.5 rounded-full text-xs font-black transition-all shadow-stitch-sm ${
-                  filter === btn.id
-                    ? 'bg-stitch-red text-white'
-                    : 'bg-slate-100 text-stitch-slate-dark hover:bg-slate-200'
+                type="button"
+                className="bg-surface-container-low text-text-primary px-md py-md rounded-lg font-label-bold text-label-bold flex items-center gap-xs hover:bg-surface-container-highest transition-colors flex-1 md:flex-none justify-center"
+                onClick={() => setSearchTerm('')}
+              >
+                <span className="material-symbols-outlined text-[20px]">filter_list</span>
+                Filters
+              </button>
+              <button
+                type="button"
+                className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold text-label-bold btn-interactive flex-1 md:flex-none"
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Category Chips */}
+        <section className="max-w-7xl mx-auto px-4 md:px-gutter mb-xl overflow-x-auto hide-scrollbar">
+          <div className="flex gap-sm pb-sm min-w-max">
+            {COURSE_CHIPS.map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => setFilter(chip.id)}
+                className={`font-label-bold text-label-bold px-lg py-sm rounded-full border transition-colors btn-interactive ${
+                  filter === chip.id
+                    ? 'bg-primary-container text-on-primary-container border-primary'
+                    : 'bg-white text-secondary hover:bg-surface border border-surface-variant'
                 }`}
               >
-                <span className={isMarathi ? 'marathi-text' : ''}>
-                  {isMarathi ? btn.labelMr : btn.labelEn}
-                </span>
+                {isMarathi ? chip.labelMr : chip.labelEn}
               </button>
             ))}
           </div>
+        </section>
 
-          {/* Search Box */}
-          <div className="relative w-full md:w-72">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={isMarathi ? 'कोर्सचे नाव शोधा...' : 'Search course name...'}
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:outline-none focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+        {/* Course Grid — Stitch Bento */}
+        <section className="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+            {displayCourses.map((course, idx) => {
+              const isFeatured = idx === 0;
+              const tag = course.tag || 'Course';
+              const tagColor = course.tagColor || 'bg-surface-container-highest text-on-surface';
+              const desc = (isMarathi
+                ? course.subtitleMr || course.subtitle_mr || course.overviewMr
+                : course.subtitleEn || course.subtitle_en || course.overviewEn
+              ) || course.subtitleEn || '';
+              const duration = (isMarathi ? course.durationMr || course.duration_mr : course.durationEn || course.duration_en) || course.durationEn || '2 Months';
+              const seatsLabel = course.seatsLabel || '';
+
+              if (isFeatured) {
+                return (
+                  <div
+                    key={course.id || course.slug || idx}
+                    className="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover md:col-span-2 lg:col-span-2 relative overflow-hidden"
+                  >
+                    {/* Corner accent */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-bl-full -z-0" />
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="flex justify-between items-start mb-md">
+                        <span className={`font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
+                          {tag}
+                        </span>
+                        <span className="bg-stitch-emerald/10 text-stitch-emerald font-label-caps text-label-caps px-md py-xs rounded-full flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                          Admissions Open
+                        </span>
+                      </div>
+                      <h3 className="font-headline-md text-headline-md text-text-primary mb-xs">{course.title}</h3>
+                      <p className="font-body-md text-body-md text-secondary mb-lg flex-grow max-w-xl line-clamp-3">{desc}</p>
+                      <div className="flex flex-wrap gap-md mb-lg text-sm text-on-secondary-container">
+                        <div className="flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[18px]">schedule</span>
+                          {duration}
+                        </div>
+                        <div className="flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[18px]">laptop_mac</span>
+                          Practical Focus
+                        </div>
+                        <div className="flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
+                          MKCL Certified
+                        </div>
+                      </div>
+                      <div className="flex gap-sm mt-auto">
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedCourse(course.id || course.slug); setIsAdmissionOpen(true); }}
+                          className="bg-primary text-on-primary font-label-bold text-label-bold px-lg py-sm rounded btn-interactive flex-1 md:flex-none shadow-sm"
+                        >
+                          {isMarathi ? 'प्रवेश घ्या' : 'Enroll Now'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedCourse(course); setIsSyllabusOpen(true); }}
+                          className="bg-white text-stitch-slate-card border border-surface-variant font-label-bold text-label-bold px-lg py-sm rounded btn-interactive hover:bg-slate-50 flex-1 md:flex-none"
+                        >
+                          {isMarathi ? 'सिलॅबस पहा' : 'Syllabus'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  key={course.id || course.slug || idx}
+                  className="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover"
+                >
+                  <div className="flex justify-between items-start mb-md">
+                    <span className={`font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
+                      {tag}
+                    </span>
+                  </div>
+                  <h3 className="font-headline-md text-headline-md text-text-primary mb-xs">{course.title}</h3>
+                  <p className="font-body-md text-body-md text-secondary mb-lg flex-grow line-clamp-3">{desc}</p>
+                  <div className="flex gap-sm mt-auto flex-col w-full">
+                    <div className="flex justify-between text-sm text-secondary mb-sm border-b border-surface-variant/50 pb-sm">
+                      <span className="flex items-center gap-xs">
+                        <span className="material-symbols-outlined text-[16px]">timer</span>
+                        {duration}
+                      </span>
+                      {seatsLabel && (
+                        <span className="flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[16px]">group</span>
+                          {seatsLabel}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { setSelectedCourse(course.id || course.slug); setIsAdmissionOpen(true); }}
+                      className="w-full bg-white text-primary border border-primary/30 font-label-bold text-label-bold px-lg py-sm rounded btn-interactive hover:bg-stitch-red-light"
+                    >
+                      {isMarathi ? 'अधिक माहिती' : 'View Details'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        </section>
 
-        </div>
-      </section>
-
-      {/* Course Cards Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCourses.map((c) => (
-            <div
-              key={c.id || c.slug}
-              className="bg-white rounded-3xl border border-slate-200/90 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1"
-            >
-              {(c.image_url || c.imageUrl) && (
-                <div className="h-44 w-full overflow-hidden bg-slate-100 relative">
-                  <img 
-                    src={c.image_url || c.imageUrl} 
-                    alt={c.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                  />
-                </div>
-              )}
-
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="bg-amber-50 text-stitch-amber border border-amber-200 font-black text-[10px] uppercase px-3 py-1 rounded-full">
-                    {c.tag || 'न्यू'}
-                  </span>
-                </div>
-
-                <h2 className="font-black text-xl text-stitch-slate-dark group-hover:text-stitch-red transition-colors">
-                  {c.title}
-                </h2>
-
-                <p className={`text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium ${isMarathi ? 'marathi-text' : ''}`}>
-                  {isMarathi ? (c.subtitleMr || c.subtitle_mr) : (c.subtitleEn || c.subtitle_en)}
-                </p>
-
-                <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 border-y border-slate-100 py-3 font-semibold">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-stitch-red shrink-0" />
-                    <span>{isMarathi ? (c.durationMr || c.duration_mr) : (c.durationEn || c.duration_en)}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-stitch-amber shrink-0" />
-                    <span className="truncate">{isMarathi ? (c.certificationMr || c.certification_mr || 'MKCL') : (c.certificationEn || c.certification_en || 'MKCL')}</span>
-                  </div>
-                </div>
-
-                {/* Modules Summary */}
-                <div className="space-y-1.5 pt-1">
-                  <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                    {isMarathi ? 'मुख्य विषय:' : 'Core Modules:'}
-                  </div>
-                  <ul className="space-y-1 text-xs text-slate-600 font-medium">
-                    {((isMarathi ? c.modulesMr : c.modulesEn) || []).slice(0, 3).map((m, mIdx) => (
-                      <li key={mIdx} className="flex items-start gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-stitch-emerald shrink-0 mt-0.5" />
-                        <span className="truncate">{m.name || m}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="p-6 pt-0 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => openSyllabus(c)}
-                  className="flex items-center justify-center gap-1 bg-slate-100 hover:bg-slate-200 text-stitch-slate-dark font-extrabold text-xs py-3 rounded-2xl border border-slate-200 shadow-stitch-sm transition-all"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>{isMarathi ? 'सिलॅबस PDF' : 'Syllabus PDF'}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => openAdmission(c.id || c.slug)}
-                  className="flex items-center justify-center gap-1 bg-gradient-to-r from-stitch-red to-stitch-red-dark hover:from-stitch-red-dark hover:to-red-800 text-white font-extrabold text-xs py-3 rounded-2xl shadow-stitch-sm transition-all hover:scale-105"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>{isMarathi ? 'प्रवेश घ्या' : 'Book Demo'}</span>
-                </button>
-              </div>
+        {/* CTA Section */}
+        <section className="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
+          <div className="bg-stitch-slate-card rounded-xl p-xl flex flex-col md:flex-row items-center justify-between gap-xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+            <div className="relative z-10 max-w-2xl text-center md:text-left">
+              <h2 className="font-headline-lg text-headline-lg text-on-secondary mb-md">
+                {isMarathi ? 'कोणता कोर्स योग्य आहे हे ठरवत नाही?' : "Not sure which course is right for you?"}
+              </h2>
+              <p className="font-body-md text-body-md text-secondary-fixed-dim">
+                {isMarathi
+                  ? 'आमचे तज्ञ समुपदेशक तुम्हाला तुमच्या कौशल्यांनुसार योग्य करिअर मार्ग शोधण्यात मदत करतील.'
+                  : 'Our expert counselors can help you chart a career path based on your current skills and future goals. Book a free consultation today.'}
+              </p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="relative z-10 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('contact')}
+                className="bg-primary text-on-primary font-label-bold text-label-bold px-xl py-md rounded-lg btn-interactive shadow-lg flex items-center gap-sm"
+              >
+                <span className="material-symbols-outlined text-[20px]">support_agent</span>
+                {isMarathi ? 'मोफत समुपदेशन बुक करा' : 'Book Counseling'}
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* Modals */}
       <AdmissionModal
-        isOpen={isAdmissionModalOpen}
-        onClose={() => setIsAdmissionModalOpen(false)}
-        defaultCourse={selectedCourseForModal || 'mscit'}
+        isOpen={isAdmissionOpen}
+        onClose={() => setIsAdmissionOpen(false)}
+        defaultCourse={selectedCourse || 'mscit'}
         lang={lang}
       />
-
       <SyllabusModal
-        isOpen={isSyllabusModalOpen}
-        onClose={() => setIsSyllabusModalOpen(false)}
-        courseTitle={selectedCourseForModal ? String(selectedCourseForModal).toUpperCase() : 'MS-CIT'}
+        isOpen={isSyllabusOpen}
+        onClose={() => setIsSyllabusOpen(false)}
+        courseTitle={selectedCourse ? String(selectedCourse.title || selectedCourse).toUpperCase() : 'MS-CIT'}
         lang={lang}
       />
     </div>
   );
 }
-

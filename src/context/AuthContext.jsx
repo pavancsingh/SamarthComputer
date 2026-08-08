@@ -66,7 +66,16 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutTime, setLockoutTime] = useState(0);
+
   const loginAdmin = async (emailInput, passwordInput) => {
+    const now = Date.now();
+    if (lockoutTime > now) {
+      const remainingSec = Math.ceil((lockoutTime - now) / 1000);
+      return { success: false, message: `Too many failed attempts. Please wait ${remainingSec} seconds.` };
+    }
+
     const cleanEmail = (emailInput || '').trim().toLowerCase();
     const cleanPass = (passwordInput || '').trim();
 
@@ -76,6 +85,13 @@ export function AuthProvider({ children }) {
                          cleanEmail.includes('samarth');
 
     if (!isMatchUser && cleanEmail !== '') {
+      const newAttempts = failedAttempts + 1;
+      setFailedAttempts(newAttempts);
+      if (newAttempts >= 5) {
+        setLockoutTime(now + 60000); // 60s lockout
+        setFailedAttempts(0);
+        return { success: false, message: 'Too many invalid attempts. Rate limit triggered for 60 seconds.' };
+      }
       return { success: false, message: 'Unrecognized Admin Email/Username. Access Denied.' };
     }
 
@@ -90,6 +106,7 @@ export function AuthProvider({ children }) {
         if (!error && data?.user) {
           setUser(data.user);
           setIsAdmin(true);
+          setFailedAttempts(0);
           localStorage.setItem('samarth_admin_session', 'true');
           return { success: true };
         }
@@ -102,15 +119,24 @@ export function AuthProvider({ children }) {
     const validPasswords = ['Pavan@1137', 'pavan@1137', 'samarth123', 'admin123', 'admin', 'Pavan@3760'];
     const passMatch = validPasswords.includes(cleanPass) || cleanPass.toLowerCase() === 'pavan@1137';
 
-    if (passMatch || cleanPass.length >= 4) {
+    if (passMatch) {
       const mockUser = { email: ADMIN_EMAIL, name: 'Samarth Master Admin', id: 'admin-master' };
       setUser(mockUser);
       setIsAdmin(true);
+      setFailedAttempts(0);
       localStorage.setItem('samarth_admin_session', 'true');
       return { success: true };
     }
 
-    return { success: false, message: 'Invalid Admin Password.' };
+    const newAttempts = failedAttempts + 1;
+    setFailedAttempts(newAttempts);
+    if (newAttempts >= 5) {
+      setLockoutTime(now + 60000); // 60s lockout
+      setFailedAttempts(0);
+      return { success: false, message: 'Too many invalid attempts. Account locked for 60 seconds.' };
+    }
+
+    return { success: false, message: `Invalid Admin Password. (${5 - newAttempts} attempts remaining)` };
   };
 
   const logoutAdmin = async () => {

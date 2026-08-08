@@ -10,14 +10,16 @@ import ContactPage from './pages/Contact/ContactPage';
 import AboutPage from './pages/About/AboutPage';
 import FacultyPage from './pages/Faculty/FacultyPage';
 import GalleryPage from './pages/Gallery/GalleryPage';
+import StudentVerificationPage from './pages/Student/StudentVerificationPage';
 import AdminLoginPage from './pages/Admin/AdminLoginPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import SmoothScroll from './components/common/SmoothScroll';
+import BatchTimetableWidget from './components/sections/BatchTimetableWidget';
 import './styles/tailwind.css';
 
 function MainApp() {
   const [lang, setLang] = useState('mr');
-  const [currentView, setCurrentView] = useState('home'); // 'home' | 'courses' | 'details' | 'csc' | 'govt' | 'repair' | 'about' | 'faculty' | 'gallery' | 'contact' | 'admin'
+  const [currentView, setCurrentView] = useState('home'); // home|courses|details|csc|govt|about|faculty|gallery|contact|timetable|admin
   const [selectedSlug, setSelectedSlug] = useState('mscit');
   const { isAdmin } = useAuth();
 
@@ -52,6 +54,12 @@ function MainApp() {
       {currentView === 'faculty' && <FacultyPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'gallery' && <GalleryPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'contact' && <ContactPage lang={lang} onNavigate={handleNavigate} />}
+      {currentView === 'timetable' && (
+        <div className="min-h-screen bg-background pt-lg pb-20 md:pb-0">
+          <BatchTimetableWidget lang={lang} fullPage />
+        </div>
+      )}
+      {currentView === 'verification' && <StudentVerificationPage lang={lang} />}
 
       {/* Admin Protected View */}
       {currentView === 'admin' && (

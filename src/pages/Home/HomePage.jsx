@@ -24,11 +24,11 @@ import AIAssistantWidget from '../../components/common/AIAssistantWidget';
  * HomePage Component
  * Master Homepage container rendering all Module 2 section components in exact sequential order.
  */
-export default function HomePage({ lang = 'mr' }) {
+export default function HomePage({ lang = 'mr', onNavigate }) {
   return (
     <div className="homepage-wrapper">
       {/* 1. Hero Section */}
-      <HeroSection lang={lang} />
+      <HeroSection lang={lang} onNavigate={onNavigate} />
 
       {/* 2. Official Trust & Recognition Strip */}
       <TrustStrip lang={lang} />
@@ -37,7 +37,7 @@ export default function HomePage({ lang = 'mr' }) {
       <StatsCounter lang={lang} />
 
       {/* 4. Computer Courses Showcase */}
-      <CoursesSection lang={lang} />
+      <CoursesSection lang={lang} onNavigate={onNavigate} />
 
       {/* 5. Why Choose Samarth Computers */}
       <WhyChooseUs lang={lang} />
