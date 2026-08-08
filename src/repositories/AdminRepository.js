@@ -1,29 +1,24 @@
-import { sharedStore } from './sharedStore';
 import { supabase } from '../lib/supabase';
 
 /**
- * AdminRepository — Supabase Database Integration with Graceful Local Fallback
- * Ensures all CRUD operations (create, update, delete) succeed smoothly in both online (Supabase)
- * and offline/fallback (sharedStore) environments without interrupting admin workflow.
+ * AdminRepository — Direct Supabase Integration (Single Source of Truth)
+ * Handles CRUD operations directly with Supabase PostgreSQL database.
+ * If a database operation fails, returns exact error message.
  */
 export const AdminRepository = {
 
   // ================= COURSES CRUD =================
   async getAllCourses() {
-    try {
-      const { data, error } = await supabase
-        .from('courses')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncCoursesFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase fetch courses notice:', e.message);
+    if (error) {
+      console.error('Supabase fetch courses error:', error.message);
+      return [];
     }
-    return sharedStore.getCourses();
+    return data || [];
   },
 
   async saveCourse(courseData) {
@@ -55,46 +50,35 @@ export const AdminRepository = {
       payload.id = courseData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('courses').upsert([payload]).select();
-      if (error) console.warn('Supabase course save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveCourse({ ...courseData, ...savedItem, id: savedItem.id || courseData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase course save exception:', e.message);
-      sharedStore.saveCourse(courseData);
-      return { success: true };
+    const { data, error } = await supabase.from('courses').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase course save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteCourse(id) {
-    try {
-      const { error } = await supabase.from('courses').delete().or(`id.eq.${id},slug.eq.${id}`);
-      if (error) console.warn('Supabase course delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase course delete exception:', e.message);
+    const { error } = await supabase.from('courses').delete().or(`id.eq.${id},slug.eq.${id}`);
+    if (error) {
+      console.error('Supabase course delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteCourse(id);
     return { success: true };
   },
 
   // ================= CSC SERVICES CRUD =================
   async getAllCSCServices() {
-    try {
-      const { data, error } = await supabase
-        .from('csc_services')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('csc_services')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncCSCServicesFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase fetch CSC notice:', e.message);
+    if (error) {
+      console.error('Supabase fetch CSC error:', error.message);
+      return [];
     }
-    return sharedStore.getCSCServices();
+    return data || [];
   },
 
   async saveCSCService(serviceData) {
@@ -121,46 +105,35 @@ export const AdminRepository = {
       payload.id = serviceData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('csc_services').upsert([payload]).select();
-      if (error) console.warn('Supabase CSC save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveCSCService({ ...serviceData, ...savedItem, id: savedItem.id || serviceData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase CSC save exception:', e.message);
-      sharedStore.saveCSCService(serviceData);
-      return { success: true };
+    const { data, error } = await supabase.from('csc_services').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase CSC save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteCSCService(id) {
-    try {
-      const { error } = await supabase.from('csc_services').delete().or(`id.eq.${id},slug.eq.${id}`);
-      if (error) console.warn('Supabase CSC delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase CSC delete exception:', e.message);
+    const { error } = await supabase.from('csc_services').delete().or(`id.eq.${id},slug.eq.${id}`);
+    if (error) {
+      console.error('Supabase CSC delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteCSCService(id);
     return { success: true };
   },
 
   // ================= GOVT SERVICES CRUD =================
   async getAllGovtServices() {
-    try {
-      const { data, error } = await supabase
-        .from('govt_services')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('govt_services')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncGovtServicesFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase fetch Govt services notice:', e.message);
+    if (error) {
+      console.error('Supabase fetch Govt services error:', error.message);
+      return [];
     }
-    return sharedStore.getGovtServices();
+    return data || [];
   },
 
   async saveGovtService(serviceData) {
@@ -185,46 +158,35 @@ export const AdminRepository = {
       payload.id = serviceData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('govt_services').upsert([payload]).select();
-      if (error) console.warn('Supabase Govt save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveGovtService({ ...serviceData, ...savedItem, id: savedItem.id || serviceData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase Govt save exception:', e.message);
-      sharedStore.saveGovtService(serviceData);
-      return { success: true };
+    const { data, error } = await supabase.from('govt_services').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase Govt save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteGovtService(id) {
-    try {
-      const { error } = await supabase.from('govt_services').delete().or(`id.eq.${id},slug.eq.${id}`);
-      if (error) console.warn('Supabase Govt delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase Govt delete exception:', e.message);
+    const { error } = await supabase.from('govt_services').delete().or(`id.eq.${id},slug.eq.${id}`);
+    if (error) {
+      console.error('Supabase Govt delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteGovtService(id);
     return { success: true };
   },
 
   // ================= INQUIRIES & LEADS MANAGEMENT =================
   async getAllInquiries() {
-    try {
-      const { data, error } = await supabase
-        .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('inquiries')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncInquiriesFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase fetch inquiries notice:', e.message);
+    if (error) {
+      console.error('Supabase fetch inquiries error:', error.message);
+      return [];
     }
-    return sharedStore.getInquiries();
+    return data || [];
   },
 
   async saveInquiry(inquiryData) {
@@ -237,57 +199,44 @@ export const AdminRepository = {
       status: inquiryData.status || 'New Lead'
     };
 
-    try {
-      const { data, error } = await supabase.from('inquiries').insert([payload]).select();
-      if (error) console.warn('Supabase inquiry save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.addInquiry({ ...inquiryData, ...savedItem });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase inquiry save exception:', e.message);
-      sharedStore.addInquiry(inquiryData);
-      return { success: true };
+    const { data, error } = await supabase.from('inquiries').insert([payload]).select();
+    if (error) {
+      console.error('Supabase inquiry save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async updateInquiryStatus(id, newStatus) {
-    try {
-      const { error } = await supabase.from('inquiries').update({ status: newStatus }).eq('id', id);
-      if (error) console.warn('Supabase inquiry update notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase inquiry update exception:', e.message);
+    const { error } = await supabase.from('inquiries').update({ status: newStatus }).eq('id', id);
+    if (error) {
+      console.error('Supabase inquiry update error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.updateInquiryStatus(id, newStatus);
     return { success: true };
   },
 
   async deleteInquiry(id) {
-    try {
-      const { error } = await supabase.from('inquiries').delete().eq('id', id);
-      if (error) console.warn('Supabase inquiry delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase inquiry delete exception:', e.message);
+    const { error } = await supabase.from('inquiries').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase inquiry delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteInquiry(id);
     return { success: true };
   },
 
   // ================= SITE GALLERY CRUD =================
   async getAllSiteGallery() {
-    try {
-      const { data, error } = await supabase
-        .from('site_gallery')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('site_gallery')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncGalleryFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase gallery fetch notice:', e.message);
+    if (error) {
+      console.error('Supabase gallery fetch error:', error.message);
+      return [];
     }
-    return sharedStore.getSiteGallery();
+    return data || [];
   },
 
   async saveSiteGalleryItem(itemData) {
@@ -304,46 +253,35 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('site_gallery').upsert([payload]).select();
-      if (error) console.warn('Supabase gallery save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveSiteGalleryItem({ ...itemData, ...savedItem, id: savedItem.id || itemData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase gallery save exception:', e.message);
-      sharedStore.saveSiteGalleryItem(itemData);
-      return { success: true };
+    const { data, error } = await supabase.from('site_gallery').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase gallery save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteSiteGalleryItem(id) {
-    try {
-      const { error } = await supabase.from('site_gallery').delete().eq('id', id);
-      if (error) console.warn('Supabase gallery delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase gallery delete exception:', e.message);
+    const { error } = await supabase.from('site_gallery').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase gallery delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteSiteGalleryItem(id);
     return { success: true };
   },
 
   // ================= FACULTY MANAGEMENT CRUD =================
   async getAllFaculty() {
-    try {
-      const { data, error } = await supabase
-        .from('faculties')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('faculties')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncFacultyFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase faculty fetch notice:', e.message);
+    if (error) {
+      console.error('Supabase faculty fetch error:', error.message);
+      return [];
     }
-    return sharedStore.getFaculty();
+    return data || [];
   },
 
   async saveFacultyItem(itemData) {
@@ -363,46 +301,35 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('faculties').upsert([payload]).select();
-      if (error) console.warn('Supabase faculty save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveFacultyItem({ ...itemData, ...savedItem, id: savedItem.id || itemData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase faculty save exception:', e.message);
-      sharedStore.saveFacultyItem(itemData);
-      return { success: true };
+    const { data, error } = await supabase.from('faculties').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase faculty save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteFacultyItem(id) {
-    try {
-      const { error } = await supabase.from('faculties').delete().eq('id', id);
-      if (error) console.warn('Supabase faculty delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase faculty delete exception:', e.message);
+    const { error } = await supabase.from('faculties').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase faculty delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteFacultyItem(id);
     return { success: true };
   },
 
   // ================= BATCH TIMETABLE CRUD =================
   async getAllBatches() {
-    try {
-      const { data, error } = await supabase
-        .from('batch_timetable')
-        .select('*')
-        .order('created_at', { ascending: true });
+    const { data, error } = await supabase
+      .from('batch_timetable')
+      .select('*')
+      .order('created_at', { ascending: true });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncBatchesFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase batch fetch notice:', e.message);
+    if (error) {
+      console.error('Supabase batch fetch error:', error.message);
+      return [];
     }
-    return sharedStore.getBatches();
+    return data || [];
   },
 
   async saveBatchItem(itemData) {
@@ -421,46 +348,35 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('batch_timetable').upsert([payload]).select();
-      if (error) console.warn('Supabase batch save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveBatchItem({ ...itemData, ...savedItem, id: savedItem.id || itemData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase batch save exception:', e.message);
-      sharedStore.saveBatchItem(itemData);
-      return { success: true };
+    const { data, error } = await supabase.from('batch_timetable').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase batch save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteBatchItem(id) {
-    try {
-      const { error } = await supabase.from('batch_timetable').delete().eq('id', id);
-      if (error) console.warn('Supabase batch delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase batch delete exception:', e.message);
+    const { error } = await supabase.from('batch_timetable').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase batch delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteBatchItem(id);
     return { success: true };
   },
 
   // ================= NEWS & ANNOUNCEMENTS CRUD =================
   async getAllNews() {
-    try {
-      const { data, error } = await supabase
-        .from('news')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        sharedStore.syncNewsFromRemote(data);
-        return data;
-      }
-    } catch (e) {
-      console.warn('Supabase news fetch notice:', e.message);
+    if (error) {
+      console.error('Supabase news fetch error:', error.message);
+      return [];
     }
-    return sharedStore.getNews();
+    return data || [];
   },
 
   async saveNewsItem(itemData) {
@@ -478,53 +394,40 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    try {
-      const { data, error } = await supabase.from('news').upsert([payload]).select();
-      if (error) console.warn('Supabase news save notice:', error.message);
-      const savedItem = data && data[0] ? data[0] : payload;
-      sharedStore.saveNewsItem({ ...itemData, ...savedItem, id: savedItem.id || itemData.id });
-      return { success: true, data: savedItem };
-    } catch (e) {
-      console.warn('Supabase news save exception:', e.message);
-      sharedStore.saveNewsItem(itemData);
-      return { success: true };
+    const { data, error } = await supabase.from('news').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase news save error:', error.message);
+      return { success: false, error: error.message };
     }
+    return { success: true, data: data?.[0] };
   },
 
   async deleteNewsItem(id) {
-    try {
-      const { error } = await supabase.from('news').delete().eq('id', id);
-      if (error) console.warn('Supabase news delete notice:', error.message);
-    } catch (e) {
-      console.warn('Supabase news delete exception:', e.message);
+    const { error } = await supabase.from('news').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase news delete error:', error.message);
+      return { success: false, error: error.message };
     }
-    sharedStore.deleteNewsItem(id);
     return { success: true };
   },
 
   // ================= SITE SETTINGS CRUD =================
   async getSiteSettings() {
-    try {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('*')
-        .eq('id', 'main_settings')
-        .maybeSingle();
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('*')
+      .eq('id', 'main_settings')
+      .maybeSingle();
 
-      if (!error && data) {
-        const settings = {
-          logoUrl: data.logo_url,
-          heroBgUrl: data.hero_bg_url,
-          heroTitleMr: data.hero_title_mr,
-          heroTitleEn: data.hero_title_en
-        };
-        sharedStore.saveSiteSettings(settings);
-        return settings;
-      }
-    } catch (e) {
-      console.warn('Supabase settings fetch notice:', e.message);
+    if (!error && data) {
+      return {
+        logoUrl: data.logo_url,
+        heroBgUrl: data.hero_bg_url,
+        heroTitleMr: data.hero_title_mr,
+        heroTitleEn: data.hero_title_en
+      };
     }
-    return sharedStore.getSiteSettings();
+    return { logoUrl: '', heroBgUrl: '', heroTitleMr: '', heroTitleEn: '' };
   },
 
   async saveSiteSettings(settings) {
@@ -536,89 +439,11 @@ export const AdminRepository = {
       hero_title_en: settings.heroTitleEn || null
     };
 
-    try {
-      const { data, error } = await supabase.from('site_settings').upsert([payload]).select();
-      if (error) console.warn('Supabase settings save notice:', error.message);
-      sharedStore.saveSiteSettings(settings);
-      return { success: true, data };
-    } catch (e) {
-      console.warn('Supabase settings save exception:', e.message);
-      sharedStore.saveSiteSettings(settings);
-      return { success: true };
+    const { data, error } = await supabase.from('site_settings').upsert([payload]).select();
+    if (error) {
+      console.error('Supabase settings save error:', error.message);
+      return { success: false, error: error.message };
     }
-  },
-
-  // ================= BULK SUPABASE SYNC =================
-  async syncAllLocalDataToSupabase() {
-    let syncedCount = 0;
-    try {
-      const courses = sharedStore.getCourses();
-      for (const c of courses) {
-        const payload = {
-          slug: c.slug || `course-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          title: c.title,
-          subtitle_mr: c.subtitleMr || c.subtitle_mr,
-          subtitle_en: c.subtitleEn || c.subtitle_en,
-          category: c.category || 'govt',
-          tag: c.tag || 'न्यू',
-          duration_mr: c.durationMr || c.duration_mr,
-          duration_en: c.durationEn || c.duration_en,
-          fee_mr: c.feeMr || c.fee_mr,
-          fee_en: c.feeEn || c.fee_en,
-          certification_mr: c.certificationMr || c.certification_mr,
-          certification_en: c.certificationEn || c.certification_en,
-          eligibility_mr: c.eligibilityMr || c.eligibility_mr,
-          eligibility_en: c.eligibilityEn || c.eligibility_en,
-          overview_mr: c.overviewMr || c.overview_mr,
-          overview_en: c.overviewEn || c.overview_en,
-          image_url: c.imageUrl || c.image_url
-        };
-        await supabase.from('courses').upsert([payload], { onConflict: 'slug' });
-        syncedCount++;
-      }
-
-      const csc = sharedStore.getCSCServices();
-      for (const item of csc) {
-        const payload = {
-          slug: item.slug || `csc-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          title_mr: item.titleMr || item.title_mr || item.titleEn,
-          title_en: item.titleEn || item.title_en,
-          category: item.category || 'identity',
-          badge: item.badge || 'शासकीय सेवा',
-          timeline_mr: item.timelineMr || item.timeline_mr,
-          timeline_en: item.timelineEn || item.timeline_en,
-          govt_fee_mr: item.govtFeeMr || item.govt_fee_mr,
-          govt_fee_en: item.govtFeeEn || item.govt_fee_en,
-          overview_mr: item.overviewMr || item.overview_mr,
-          overview_en: item.overviewEn || item.overview_en,
-          image_url: item.imageUrl || item.image_url
-        };
-        await supabase.from('csc_services').upsert([payload], { onConflict: 'slug' });
-        syncedCount++;
-      }
-
-      const govt = sharedStore.getGovtServices();
-      for (const item of govt) {
-        const payload = {
-          slug: item.slug || `govt-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          title_mr: item.titleMr || item.title_mr || item.titleEn,
-          title_en: item.titleEn || item.title_en,
-          category: item.category || 'revenue',
-          badge: item.badge || 'तहसीलदार प्रमाणपत्र',
-          timeline_mr: item.timelineMr || item.timeline_mr,
-          timeline_en: item.timelineEn || item.timeline_en,
-          govt_fee_mr: item.govtFeeMr || item.govt_fee_mr,
-          govt_fee_en: item.govtFeeEn || item.govt_fee_en,
-          overview_mr: item.overviewMr || item.overview_mr,
-          overview_en: item.overviewEn || item.overview_en,
-          image_url: item.imageUrl || item.image_url
-        };
-        await supabase.from('govt_services').upsert([payload], { onConflict: 'slug' });
-        syncedCount++;
-      }
-    } catch (e) {
-      console.warn('Supabase sync notice:', e.message);
-    }
-    return { success: true, count: syncedCount };
+    return { success: true, data };
   }
 };

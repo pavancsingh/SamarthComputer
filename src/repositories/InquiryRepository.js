@@ -1,13 +1,12 @@
-import { sharedStore } from './sharedStore';
 import { supabase } from '../lib/supabase';
 
 /**
  * InquiryRepository
- * Data Access Layer for CSC & Government Portal services and lead submissions with Supabase DB & sharedStore support.
+ * Data Access Layer for CSC & Government Portal services and lead submissions with direct Supabase DB access.
  */
 export const InquiryRepository = {
   /**
-   * Fetch all CSC services with optional category filtering.
+   * Fetch all CSC services with optional category filtering from Supabase DB.
    */
   async getCSCServices(category = 'all') {
     try {
@@ -16,35 +15,33 @@ export const InquiryRepository = {
         query = query.eq('category', category);
       }
       const { data, error } = await query;
-      if (!error && data && data.length > 0) {
-        sharedStore.syncCSCServicesFromRemote(data);
-        return data.map((s) => ({
-          ...s,
-          titleMr: s.title_mr || s.titleMr,
-          titleEn: s.title_en || s.titleEn,
-          timelineMr: s.timeline_mr || s.timelineMr,
-          timelineEn: s.timeline_en || s.timelineEn,
-          govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
-          govtFeeEn: s.govt_fee_en || s.govtFeeEn,
-          overviewMr: s.overview_mr || s.overviewMr,
-          overviewEn: s.overview_en || s.overviewEn,
-          requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
-          requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
-          stepsMr: s.steps_mr || s.stepsMr || [],
-          stepsEn: s.steps_en || s.stepsEn || []
-        }));
+      if (error) {
+        console.error('Supabase CSC service fetch error:', error.message);
+        return [];
       }
+      return (data || []).map((s) => ({
+        ...s,
+        titleMr: s.title_mr || s.titleMr,
+        titleEn: s.title_en || s.titleEn,
+        timelineMr: s.timeline_mr || s.timelineMr,
+        timelineEn: s.timeline_en || s.timelineEn,
+        govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
+        govtFeeEn: s.govt_fee_en || s.govtFeeEn,
+        overviewMr: s.overview_mr || s.overviewMr,
+        overviewEn: s.overview_en || s.overviewEn,
+        requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
+        requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
+        stepsMr: s.steps_mr || s.stepsMr || [],
+        stepsEn: s.steps_en || s.stepsEn || []
+      }));
     } catch (e) {
-      console.warn('Supabase CSC service fetch notice:', e.message);
+      console.error('Supabase CSC service fetch exception:', e.message);
+      return [];
     }
-
-    const all = sharedStore.getCSCServices();
-    if (category === 'all') return all;
-    return all.filter((s) => s.category === category);
   },
 
   /**
-   * Fetch all Government Portal Services (Revenue, Transport, Ration Card).
+   * Fetch all Government Portal Services from Supabase DB.
    */
   async getGovtServices(category = 'all') {
     try {
@@ -53,35 +50,33 @@ export const InquiryRepository = {
         query = query.eq('category', category);
       }
       const { data, error } = await query;
-      if (!error && data && data.length > 0) {
-        sharedStore.syncGovtServicesFromRemote(data);
-        return data.map((g) => ({
-          ...g,
-          titleMr: g.title_mr || g.titleMr,
-          titleEn: g.title_en || g.titleEn,
-          timelineMr: g.timeline_mr || g.timelineMr,
-          timelineEn: g.timeline_en || g.timelineEn,
-          govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
-          govtFeeEn: g.govt_fee_en || g.govtFeeEn,
-          overviewMr: g.overview_mr || g.overviewMr,
-          overviewEn: g.overview_en || g.overviewEn,
-          requirementsMr: g.requirements_mr || g.requirementsMr || [],
-          requirementsEn: g.requirements_en || g.requirementsEn || [],
-          stepsMr: g.steps_mr || g.stepsMr || [],
-          stepsEn: g.steps_en || g.stepsEn || []
-        }));
+      if (error) {
+        console.error('Supabase Govt service fetch error:', error.message);
+        return [];
       }
+      return (data || []).map((g) => ({
+        ...g,
+        titleMr: g.title_mr || g.titleMr,
+        titleEn: g.title_en || g.titleEn,
+        timelineMr: g.timeline_mr || g.timelineMr,
+        timelineEn: g.timeline_en || g.timelineEn,
+        govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
+        govtFeeEn: g.govt_fee_en || g.govtFeeEn,
+        overviewMr: g.overview_mr || g.overviewMr,
+        overviewEn: g.overview_en || g.overviewEn,
+        requirementsMr: g.requirements_mr || g.requirementsMr || [],
+        requirementsEn: g.requirements_en || g.requirementsEn || [],
+        stepsMr: g.steps_mr || g.stepsMr || [],
+        stepsEn: g.steps_en || g.stepsEn || []
+      }));
     } catch (e) {
-      console.warn('Supabase Govt service fetch notice:', e.message);
+      console.error('Supabase Govt service fetch exception:', e.message);
+      return [];
     }
-
-    const all = sharedStore.getGovtServices();
-    if (category === 'all') return all;
-    return all.filter((g) => g.category === category);
   },
 
   /**
-   * Fetch single CSC service by slug.
+   * Fetch single CSC service by slug from Supabase DB.
    */
   async getCSCServiceBySlug(slug) {
     try {
@@ -104,24 +99,15 @@ export const InquiryRepository = {
         };
       }
     } catch (e) {
-      console.warn('Supabase CSC service detail notice:', e.message);
+      console.error('Supabase CSC service detail exception:', e.message);
     }
-
-    const all = sharedStore.getCSCServices();
-    return all.find((s) => s.slug === slug || s.id === slug) || all[0];
+    return null;
   },
 
   /**
-   * Submit CSC service application lead.
+   * Submit CSC service application lead directly to Supabase DB.
    */
   async submitCSCInquiry(payload) {
-    sharedStore.addInquiry({
-      type: 'csc_service',
-      name: payload.name,
-      mobile: payload.mobile,
-      service_id: payload.serviceId || payload.service
-    });
-
     try {
       const { data, error } = await supabase
         .from('inquiries')
@@ -130,30 +116,25 @@ export const InquiryRepository = {
           name: payload.name,
           mobile: payload.mobile,
           service_id: payload.serviceId || payload.service,
-          created_at: new Date().toISOString()
-        }]);
+          status: 'New Lead'
+        }])
+        .select();
 
       if (error) {
-        console.warn('Supabase DB notice:', error.message);
+        console.error('Supabase DB CSC inquiry error:', error.message);
+        return { success: false, error: error.message };
       }
-      return { success: true, data };
+      return { success: true, data: data?.[0] };
     } catch (err) {
-      console.warn('CSC inquiry clean handling:', err.message);
-      return { success: true };
+      console.error('CSC inquiry submission exception:', err.message);
+      return { success: false, error: err.message };
     }
   },
 
   /**
-   * Submit Govt Portal service application lead.
+   * Submit Govt Portal service application lead directly to Supabase DB.
    */
   async submitGovtInquiry(payload) {
-    sharedStore.addInquiry({
-      type: 'govt_service',
-      name: payload.name,
-      mobile: payload.mobile,
-      service_id: payload.serviceId || payload.service
-    });
-
     try {
       const { data, error } = await supabase
         .from('inquiries')
@@ -162,16 +143,18 @@ export const InquiryRepository = {
           name: payload.name,
           mobile: payload.mobile,
           service_id: payload.serviceId || payload.service,
-          created_at: new Date().toISOString()
-        }]);
+          status: 'New Lead'
+        }])
+        .select();
 
       if (error) {
-        console.warn('Supabase DB notice:', error.message);
+        console.error('Supabase DB Govt inquiry error:', error.message);
+        return { success: false, error: error.message };
       }
-      return { success: true, data };
+      return { success: true, data: data?.[0] };
     } catch (err) {
-      console.warn('Govt inquiry clean handling:', err.message);
-      return { success: true };
+      console.error('Govt inquiry submission exception:', err.message);
+      return { success: false, error: err.message };
     }
   }
 };
