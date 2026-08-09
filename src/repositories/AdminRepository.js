@@ -1,4 +1,40 @@
 import { supabase } from '../lib/supabase';
+import { sharedStore } from './sharedStore';
+
+/**
+ * Resilient Supabase Upsert Helper
+ * Automatically handles schema cache or table column mismatch errors (e.g., missing optional columns)
+ * by stripping the reported missing column and retrying the upsert operation.
+ */
+async function upsertWithColumnFallback(tableName, payload) {
+  let currentPayload = { ...payload };
+  let attempts = 0;
+  const maxAttempts = 10;
+
+  while (attempts < maxAttempts) {
+    attempts++;
+    const { data, error } = await supabase.from(tableName).upsert([currentPayload]).select();
+    if (!error) {
+      return { success: true, data: data?.[0] };
+    }
+
+    const errorMsg = error.message || '';
+    const match = errorMsg.match(/Could not find the ['"](.+?)['"] column/i) ||
+                  errorMsg.match(/column ['"](.+?)['"] of relation/i) ||
+                  errorMsg.match(/column ['"](.+?)['"] does not exist/i);
+
+    if (match && match[1] && Object.prototype.hasOwnProperty.call(currentPayload, match[1])) {
+      const missingCol = match[1];
+      console.warn(`[AdminRepository] Column '${missingCol}' missing in table '${tableName}'. Omitting column and retrying...`);
+      delete currentPayload[missingCol];
+      continue;
+    }
+
+    return { success: false, error: error.message };
+  }
+
+  return { success: false, error: `Failed to save record to '${tableName}' after column fallback attempts.` };
+}
 
 /**
  * AdminRepository — Direct Supabase Integration (Single Source of Truth)
@@ -9,16 +45,26 @@ export const AdminRepository = {
 
   // ================= COURSES CRUD =================
   async getAllCourses() {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from('courses')
       .select('*')
+      .order('display_order', { ascending: true })
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase fetch courses error:', error.message);
-      return [];
+    if (error && error.message.includes('display_order')) {
+      const retry = await supabase
+        .from('courses')
+        .select('*')
+        .order('created_at', { ascending: false });
+      data = retry.data;
+      error = retry.error;
     }
-    return data || [];
+
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase fetch courses error:', error.message);
+      return sharedStore.getCourses();
+    }
+    return data;
   },
 
   async saveCourse(courseData) {
@@ -29,10 +75,11 @@ export const AdminRepository = {
       subtitle_en: courseData.subtitleEn || courseData.subtitle_en || courseData.title,
       category: courseData.category || 'govt',
       tag: courseData.tag || 'New',
+      is_primary: courseData.isPrimary !== undefined ? courseData.isPrimary : (courseData.is_primary || false),
+      is_featured: courseData.isFeatured !== undefined ? courseData.isFeatured : (courseData.is_featured || false),
+      display_order: courseData.displayOrder !== undefined ? parseInt(courseData.displayOrder, 10) || 0 : (courseData.display_order || 0),
       duration_mr: courseData.durationMr || courseData.duration_mr || courseData.durationEn,
       duration_en: courseData.durationEn || courseData.duration_en,
-      fee_mr: courseData.feeMr || courseData.fee_mr || courseData.feeEn,
-      fee_en: courseData.feeEn || courseData.fee_en,
       certification_mr: courseData.certificationMr || courseData.certification_mr || courseData.certificationEn,
       certification_en: courseData.certificationEn || courseData.certification_en,
       eligibility_mr: courseData.eligibilityMr || courseData.eligibility_mr || courseData.eligibilityEn,
@@ -50,12 +97,11 @@ export const AdminRepository = {
       payload.id = courseData.id;
     }
 
-    const { data, error } = await supabase.from('courses').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase course save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('courses', payload);
+    if (res.success) {
+      sharedStore.saveCourse(res.data || courseData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteCourse(id) {
@@ -64,21 +110,32 @@ export const AdminRepository = {
       console.error('Supabase course delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteCourse(id);
     return { success: true };
   },
 
   // ================= CSC SERVICES CRUD =================
   async getAllCSCServices() {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from('csc_services')
       .select('*')
+      .order('display_order', { ascending: true })
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase fetch CSC error:', error.message);
-      return [];
+    if (error && error.message.includes('display_order')) {
+      const retry = await supabase
+        .from('csc_services')
+        .select('*')
+        .order('created_at', { ascending: false });
+      data = retry.data;
+      error = retry.error;
     }
-    return data || [];
+
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase fetch CSC error:', error.message);
+      return sharedStore.getCSCServices();
+    }
+    return data;
   },
 
   async saveCSCService(serviceData) {
@@ -86,10 +143,15 @@ export const AdminRepository = {
       slug: serviceData.slug || `csc-${Date.now()}`,
       title_mr: serviceData.titleMr || serviceData.title_mr || serviceData.titleEn,
       title_en: serviceData.titleEn || serviceData.title_en || serviceData.titleMr,
-      category: serviceData.category || 'identity',
+      category: serviceData.category || 'csc',
       badge: serviceData.badge || 'Govt Service',
       timeline_mr: serviceData.timelineMr || serviceData.timeline_mr || serviceData.timelineEn,
       timeline_en: serviceData.timelineEn || serviceData.timeline_en,
+      deadline_mr: serviceData.deadlineMr || serviceData.deadline_mr || serviceData.deadlineEn || 'सदैव उपलब्ध',
+      deadline_en: serviceData.deadlineEn || serviceData.deadline_en || serviceData.deadlineMr || 'Always Available',
+      status: serviceData.status || 'Open',
+      official_url: serviceData.officialUrl || serviceData.official_url || '',
+      is_featured: serviceData.isFeatured !== undefined ? serviceData.isFeatured : (serviceData.is_featured || false),
       govt_fee_mr: serviceData.govtFeeMr || serviceData.govt_fee_mr || serviceData.govtFeeEn,
       govt_fee_en: serviceData.govtFeeEn || serviceData.govt_fee_en,
       overview_mr: serviceData.overviewMr || serviceData.overview_mr || serviceData.overviewEn,
@@ -98,19 +160,19 @@ export const AdminRepository = {
       required_docs_en: serviceData.requiredDocsEn || serviceData.required_docs_en || [],
       steps_mr: serviceData.stepsMr || serviceData.steps_mr || [],
       steps_en: serviceData.stepsEn || serviceData.steps_en || [],
-      image_url: serviceData.imageUrl || serviceData.image_url || null
+      image_url: serviceData.imageUrl || serviceData.image_url || null,
+      display_order: serviceData.displayOrder !== undefined ? serviceData.displayOrder : (serviceData.display_order || 0)
     };
 
     if (serviceData.id && !serviceData.id.toString().startsWith('csc-')) {
       payload.id = serviceData.id;
     }
 
-    const { data, error } = await supabase.from('csc_services').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase CSC save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('csc_services', payload);
+    if (res.success) {
+      sharedStore.saveCSCService(res.data || serviceData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteCSCService(id) {
@@ -119,6 +181,7 @@ export const AdminRepository = {
       console.error('Supabase CSC delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteCSCService(id);
     return { success: true };
   },
 
@@ -129,11 +192,11 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase fetch Govt services error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase fetch Govt services error:', error.message);
+      return sharedStore.getGovtServices();
     }
-    return data || [];
+    return data;
   },
 
   async saveGovtService(serviceData) {
@@ -149,8 +212,10 @@ export const AdminRepository = {
       govt_fee_en: serviceData.govtFeeEn || serviceData.govt_fee_en,
       overview_mr: serviceData.overviewMr || serviceData.overview_mr || serviceData.overviewEn,
       overview_en: serviceData.overviewEn || serviceData.overview_en,
-      requirements_mr: serviceData.requirementsMr || serviceData.requirements_mr || [],
-      requirements_en: serviceData.requirementsEn || serviceData.requirements_en || [],
+      required_docs_mr: serviceData.requiredDocsMr || serviceData.required_docs_mr || serviceData.requirementsMr || serviceData.requirements_mr || [],
+      required_docs_en: serviceData.requiredDocsEn || serviceData.required_docs_en || serviceData.requirementsEn || serviceData.requirements_en || [],
+      steps_mr: serviceData.stepsMr || serviceData.steps_mr || [],
+      steps_en: serviceData.stepsEn || serviceData.steps_en || [],
       image_url: serviceData.imageUrl || serviceData.image_url || null
     };
 
@@ -158,12 +223,11 @@ export const AdminRepository = {
       payload.id = serviceData.id;
     }
 
-    const { data, error } = await supabase.from('govt_services').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase Govt save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('govt_services', payload);
+    if (res.success) {
+      sharedStore.saveGovtService(res.data || serviceData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteGovtService(id) {
@@ -172,6 +236,7 @@ export const AdminRepository = {
       console.error('Supabase Govt delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteGovtService(id);
     return { success: true };
   },
 
@@ -182,11 +247,11 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase fetch inquiries error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase fetch inquiries error:', error.message);
+      return sharedStore.getInquiries();
     }
-    return data || [];
+    return data;
   },
 
   async saveInquiry(inquiryData) {
@@ -199,12 +264,11 @@ export const AdminRepository = {
       status: inquiryData.status || 'New Lead'
     };
 
-    const { data, error } = await supabase.from('inquiries').insert([payload]).select();
-    if (error) {
-      console.error('Supabase inquiry save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('inquiries', payload);
+    if (res.success) {
+      sharedStore.addInquiry(res.data || inquiryData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async updateInquiryStatus(id, newStatus) {
@@ -213,6 +277,7 @@ export const AdminRepository = {
       console.error('Supabase inquiry update error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.updateInquiryStatus(id, newStatus);
     return { success: true };
   },
 
@@ -222,6 +287,7 @@ export const AdminRepository = {
       console.error('Supabase inquiry delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteInquiry(id);
     return { success: true };
   },
 
@@ -232,11 +298,11 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase gallery fetch error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase gallery fetch error:', error.message);
+      return sharedStore.getSiteGallery();
     }
-    return data || [];
+    return data;
   },
 
   async saveSiteGalleryItem(itemData) {
@@ -253,12 +319,11 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    const { data, error } = await supabase.from('site_gallery').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase gallery save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('site_gallery', payload);
+    if (res.success) {
+      sharedStore.saveSiteGalleryItem(res.data || itemData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteSiteGalleryItem(id) {
@@ -267,6 +332,7 @@ export const AdminRepository = {
       console.error('Supabase gallery delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteSiteGalleryItem(id);
     return { success: true };
   },
 
@@ -277,11 +343,11 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase faculty fetch error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase faculty fetch error:', error.message);
+      return sharedStore.getFaculty();
     }
-    return data || [];
+    return data;
   },
 
   async saveFacultyItem(itemData) {
@@ -301,12 +367,11 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    const { data, error } = await supabase.from('faculties').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase faculty save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('faculties', payload);
+    if (res.success) {
+      sharedStore.saveFacultyItem(res.data || itemData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteFacultyItem(id) {
@@ -315,21 +380,22 @@ export const AdminRepository = {
       console.error('Supabase faculty delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteFacultyItem(id);
     return { success: true };
   },
 
   // ================= BATCH TIMETABLE CRUD =================
   async getAllBatches() {
     const { data, error } = await supabase
-      .from('batch_timetable')
+      .from('batches')
       .select('*')
       .order('created_at', { ascending: true });
 
-    if (error) {
-      console.error('Supabase batch fetch error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase batch fetch error:', error.message);
+      return sharedStore.getBatches();
     }
-    return data || [];
+    return data;
   },
 
   async saveBatchItem(itemData) {
@@ -348,20 +414,20 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    const { data, error } = await supabase.from('batch_timetable').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase batch save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('batches', payload);
+    if (res.success) {
+      sharedStore.saveBatchItem(res.data || itemData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteBatchItem(id) {
-    const { error } = await supabase.from('batch_timetable').delete().eq('id', id);
+    const { error } = await supabase.from('batches').delete().eq('id', id);
     if (error) {
       console.error('Supabase batch delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteBatchItem(id);
     return { success: true };
   },
 
@@ -372,11 +438,11 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase news fetch error:', error.message);
-      return [];
+    if (error || !data || data.length === 0) {
+      if (error) console.error('Supabase news fetch error:', error.message);
+      return sharedStore.getNews();
     }
-    return data || [];
+    return data;
   },
 
   async saveNewsItem(itemData) {
@@ -394,12 +460,11 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    const { data, error } = await supabase.from('news').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase news save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('news', payload);
+    if (res.success) {
+      sharedStore.saveNewsItem(res.data || itemData);
     }
-    return { success: true, data: data?.[0] };
+    return res;
   },
 
   async deleteNewsItem(id) {
@@ -408,6 +473,7 @@ export const AdminRepository = {
       console.error('Supabase news delete error:', error.message);
       return { success: false, error: error.message };
     }
+    sharedStore.deleteNewsItem(id);
     return { success: true };
   },
 
@@ -427,7 +493,7 @@ export const AdminRepository = {
         heroTitleEn: data.hero_title_en
       };
     }
-    return { logoUrl: '', heroBgUrl: '', heroTitleMr: '', heroTitleEn: '' };
+    return sharedStore.getSiteSettings();
   },
 
   async saveSiteSettings(settings) {
@@ -439,11 +505,71 @@ export const AdminRepository = {
       hero_title_en: settings.heroTitleEn || null
     };
 
-    const { data, error } = await supabase.from('site_settings').upsert([payload]).select();
-    if (error) {
-      console.error('Supabase settings save error:', error.message);
-      return { success: false, error: error.message };
+    const res = await upsertWithColumnFallback('site_settings', payload);
+    if (res.success) {
+      sharedStore.saveSiteSettings(res.data || settings);
     }
-    return { success: true, data };
+    return res;
+  },
+
+  async syncAllLocalDataToSupabase() {
+    try {
+      let count = 0;
+
+      const courses = sharedStore.getCourses();
+      for (const c of courses) {
+        const res = await this.saveCourse(c);
+        if (res.success) count++;
+      }
+
+      const csc = sharedStore.getCSCServices();
+      for (const s of csc) {
+        const res = await this.saveCSCService(s);
+        if (res.success) count++;
+      }
+
+      const govt = sharedStore.getGovtServices();
+      for (const g of govt) {
+        const res = await this.saveGovtService(g);
+        if (res.success) count++;
+      }
+
+      const faculty = sharedStore.getFaculty();
+      for (const f of faculty) {
+        const res = await this.saveFacultyItem(f);
+        if (res.success) count++;
+      }
+
+      const gallery = sharedStore.getSiteGallery();
+      for (const gal of gallery) {
+        const res = await this.saveSiteGalleryItem(gal);
+        if (res.success) count++;
+      }
+
+      const batches = sharedStore.getBatches();
+      for (const b of batches) {
+        const res = await this.saveBatchItem(b);
+        if (res.success) count++;
+      }
+
+      const news = sharedStore.getNews();
+      for (const n of news) {
+        const res = await this.saveNewsItem(n);
+        if (res.success) count++;
+      }
+
+      const settings = sharedStore.getSiteSettings();
+      if (settings) {
+        const res = await this.saveSiteSettings(settings);
+        if (res.success) count++;
+      }
+
+      return { success: true, count };
+    } catch (err) {
+      console.error('syncAllLocalDataToSupabase error:', err.message);
+      return { success: false, error: err.message };
+    }
   }
 };
+
+

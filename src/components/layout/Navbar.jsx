@@ -13,7 +13,7 @@ export default function Navbar({ lang = 'mr', currentView = 'home', onNavigate }
   const navLinks = [
     { id: 'home',     labelEn: 'Home',         labelMr: 'मुख्यपृष्ठ' },
     { id: 'courses',  labelEn: 'Courses',       labelMr: 'कोर्सेस' },
-    { id: 'csc',      labelEn: 'CSC Services',  labelMr: 'सीएससी सेवा' },
+    { id: 'csc',      labelEn: 'Online Services', labelMr: 'ऑनलाइन सेवा' },
     { id: 'timetable',labelEn: 'Timetable',     labelMr: 'वेळापत्रक' },
     { id: 'about',    labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
     { id: 'faculty',  labelEn: 'Faculty',       labelMr: 'शिक्षक वृंद' },

@@ -42,8 +42,8 @@ export default function HomePage({ lang = 'mr', onNavigate }) {
       {/* 5. Why Choose Samarth Computers */}
       <WhyChooseUs lang={lang} />
 
-      {/* 6. CSC & Government Services Quick Hub */}
-      <CSCServices lang={lang} />
+      {/* 6. Online Services Showcase (CSC & Govt Services) */}
+      <CSCServices lang={lang} onNavigate={onNavigate} />
 
       {/* 7. Live Batch Timetable Schedule Widget */}
       <BatchTimetableWidget lang={lang} />

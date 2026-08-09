@@ -59,8 +59,10 @@ export default function MainLayout({ children, lang = 'mr', onLanguageChange, cu
         isOpen={isMobileMenuOpen} 
         onClose={() => setIsMobileMenuOpen(false)} 
         lang={lang} 
+        currentView={currentView}
         onNavigate={onNavigate}
       />
+
     </div>
   );
 }

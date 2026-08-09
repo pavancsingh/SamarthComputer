@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ShieldCheck, Plus, Trash2, Edit3, Save, X, LogOut, CheckCircle2, 
   BookOpen, FileText, Users, RefreshCw, Sparkles, Filter, Building2,
   Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup,
-  Clock, Megaphone, Crop, Search, Bell, Menu, ChevronRight, Phone, MessageSquare,
+  Clock, Megaphone, Search, Bell, Menu, ChevronRight, Phone, MessageSquare,
   LayoutDashboard, ArrowUpRight, CheckCircle, AlertCircle, Eye, SlidersHorizontal
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
 import { sharedStore } from '../../repositories/sharedStore';
 import { StorageService } from '../../services/StorageService';
-import ImageCropperModal from '../../components/admin/ImageCropperModal';
 
 /**
  * AdminDashboard Component — Stitch Design System (Admin Suite)
@@ -111,38 +110,25 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     }
   };
 
-  // Image Crop & Upload State
-  const cropStateRef = useRef(null);
-  const [cropState, setCropState] = useState(null);
-
-  const handleFileSelect = (e, folder = 'general', aspectRatio = 1, customCallback = null) => {
-    const file = e.target.files[0];
+  // Direct Image Upload Handler
+  const handleFileUpload = async (e, folder = 'general', customCallback = null) => {
+    const file = e.target.files?.[0];
     if (!file) return;
-    const state = { file, folder, aspectRatio, onComplete: customCallback };
-    cropStateRef.current = state;
-    setCropState(state);
     e.target.value = '';
-  };
 
-  const handleCroppedUpload = async (croppedFile) => {
-    const currentCropState = cropStateRef.current || cropState;
-    if (!currentCropState) return;
-    const { folder, onComplete } = currentCropState;
-    cropStateRef.current = null;
-    setCropState(null);
     setUploadingImage(true);
-    const publicUrl = await StorageService.uploadImage(croppedFile, folder);
+    const publicUrl = await StorageService.uploadImage(file, folder);
     setUploadingImage(false);
 
     if (publicUrl) {
-      if (onComplete) {
-        onComplete(publicUrl);
+      if (customCallback) {
+        customCallback(publicUrl);
       } else {
         setEditingItem((prev) => ({ ...prev, imageUrl: publicUrl, image_url: publicUrl }));
       }
-      setActionNotice({ type: 'success', text: 'Image uploaded to Supabase Storage successfully!' });
+      setActionNotice({ type: 'success', text: 'Image uploaded successfully!' });
     } else {
-      setActionNotice({ type: 'error', text: 'Failed to upload image to Supabase Storage bucket.' });
+      setActionNotice({ type: 'error', text: 'Failed to upload image to Storage.' });
     }
   };
 
@@ -835,15 +821,25 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 <div className="flex items-center justify-between">
                   <div>
                     <h1 className="text-2xl font-black text-slate-900 tracking-tight">Computer Courses Management</h1>
-                    <p className="text-xs font-semibold text-slate-500 mt-1">Manage MS-CIT, Tally Prime, KLiC, DTP and Web Dev courses</p>
+                    <p className="text-xs font-semibold text-slate-500 mt-1">Manage MS-CIT, Tally Prime, Advanced Excel, KLiC, DTP and Web Dev courses</p>
                   </div>
 
                   <button
                     onClick={() => {
                       setEditingItem({
                         slug: `course-${Date.now()}`,
-                        title: '', feeEn: '₹4,500', durationEn: '2 Months',
-                        category: 'govt', overviewEn: '', imageUrl: ''
+                        title: '',
+                        category: 'govt',
+                        isPrimary: false,
+                        isFeatured: false,
+                        displayOrder: courses.length + 1,
+                        durationEn: '2 Months',
+                        durationMr: '२ महिने',
+                        overviewEn: '',
+                        overviewMr: '',
+                        modulesEn: [],
+                        modulesMr: [],
+                        imageUrl: ''
                       });
                       setFormType('course');
                     }}
@@ -855,52 +851,86 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {courses.map((c) => (
-                    <div key={c.id || c.slug} className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between">
-                      {(c.image_url || c.imageUrl) && (
-                        <div className="h-40 w-full overflow-hidden bg-slate-100 relative">
-                          <img src={c.image_url || c.imageUrl} alt={c.title} className="w-full h-full object-cover" />
-                          <span className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
-                            {c.category || 'Course'}
-                          </span>
-                        </div>
-                      )}
-                      <div className="p-5 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-500">{c.duration_en || c.durationEn}</span>
-                          <span className="font-black text-sm text-primary">{c.fee_en || c.feeEn}</span>
+                  {courses.map((c) => {
+                    const isPrimary = c.is_primary || c.isPrimary || c.slug === 'mscit' || c.slug === 'tally-prime-gst' || c.slug === 'advanced-excel';
+                    const isFeatured = c.is_featured || c.isFeatured;
+                    const order = c.display_order !== undefined ? c.display_order : (c.displayOrder || 0);
+
+                    return (
+                      <div key={c.id || c.slug} className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between">
+                        {(c.image_url || c.imageUrl) ? (
+                          <div className="h-40 w-full overflow-hidden bg-slate-100 relative">
+                            <img src={c.image_url || c.imageUrl} alt={c.title} className="w-full h-full object-cover" />
+                            <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
+                              <span className="bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                                {c.category || 'Course'}
+                              </span>
+                              {isPrimary && (
+                                <span className="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                                  Primary/Home
+                                </span>
+                              )}
+                              {isFeatured && (
+                                <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                                  Featured
+                                </span>
+                              )}
+                            </div>
+                            <span className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-mono px-2 py-0.5 rounded">
+                              Order: #{order}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <span className="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                              {c.category || 'Course'}
+                            </span>
+                            {isPrimary && (
+                              <span className="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                                Primary
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <div className="p-5 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" />
+                              {c.duration_en || c.durationEn || '2 Months'}
+                            </span>
+                          </div>
+
+                          <h3 className="font-extrabold text-base text-slate-900">{c.title}</h3>
+                          <p className="text-xs text-slate-600 line-clamp-2">{c.overviewEn || c.overviewMr || c.overview_en || c.subtitleEn}</p>
                         </div>
 
-                        <h3 className="font-extrabold text-base text-slate-900">{c.title}</h3>
-                        <p className="text-xs text-slate-600 line-clamp-2">{c.overviewEn || c.overviewMr || c.overview_en}</p>
-                      </div>
-
-                      <div className="p-4 pt-0 border-t border-slate-100 flex items-center justify-between gap-2 mt-2">
-                        <button
-                          onClick={() => setDrawerCourse(c)}
-                          className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>View Details</span>
-                        </button>
-                        <div className="flex items-center gap-2">
+                        <div className="p-4 pt-0 border-t border-slate-100 flex items-center justify-between gap-2 mt-2">
                           <button
-                            onClick={() => { setEditingItem(c); setFormType('course'); }}
-                            className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all"
+                            onClick={() => setDrawerCourse(c)}
+                            className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
                           >
-                            <Edit3 className="w-3.5 h-3.5" />
-                            <span>Edit</span>
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>View Details</span>
                           </button>
-                          <button
-                            onClick={() => handleDeleteCourse(c.id || c.slug)}
-                            className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => { setEditingItem(c); setFormType('course'); }}
+                              className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCourse(c.id || c.slug)}
+                              className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1256,14 +1286,14 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                       {uploadingImage ? <Loader2 className="w-6 h-6 animate-spin text-primary" /> : <Plus className="w-6 h-6 text-primary" />}
                     </div>
                     <span className="font-extrabold text-sm text-slate-900 group-hover:text-primary">Create / Upload Photo</span>
-                    <span className="text-xs text-slate-400 mt-1 font-medium">Click to pick &amp; crop image</span>
+                    <span className="text-xs text-slate-400 mt-1 font-medium">Click to pick &amp; upload image</span>
                     <input 
                       type="file" 
                       accept="image/*" 
                       onChange={(e) => {
                         setEditingItem({ titleEn: 'New Gallery Photo', descEn: 'Center event or activity photo', category: 'Campus', imageUrl: '' });
                         setFormType('gallery');
-                        handleFileSelect(e, 'gallery', 1.5);
+                        handleFileUpload(e, 'gallery');
                       }} 
                       className="hidden" 
                     />
@@ -1323,7 +1353,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                         <input 
                           type="file" 
                           accept="image/*" 
-                          onChange={(e) => handleFileSelect(e, 'logo', 1, (url) => setSiteSettings((prev) => ({ ...prev, logoUrl: url })))} 
+                          onChange={(e) => handleFileUpload(e, 'logo', (url) => setSiteSettings((prev) => ({ ...prev, logoUrl: url })))} 
                           className="hidden" 
                         />
                       </label>
@@ -1347,7 +1377,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                         <input 
                           type="file" 
                           accept="image/*" 
-                          onChange={(e) => handleFileSelect(e, 'hero', 1.8, (url) => setSiteSettings((prev) => ({ ...prev, heroBgUrl: url })))} 
+                          onChange={(e) => handleFileUpload(e, 'hero', (url) => setSiteSettings((prev) => ({ ...prev, heroBgUrl: url })))} 
                           className="hidden" 
                         />
                       </label>
@@ -1402,11 +1432,15 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
               <div className="p-4 bg-slate-50 rounded-xl space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Duration:</span>
-                  <span className="font-bold text-slate-900">{drawerCourse.durationEn || drawerCourse.duration_en}</span>
+                  <span className="font-bold text-slate-900">{drawerCourse.durationEn || drawerCourse.duration_en || '2 Months'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Fee:</span>
-                  <span className="font-bold text-primary">{drawerCourse.feeEn || drawerCourse.fee_en}</span>
+                  <span className="text-slate-500">Category:</span>
+                  <span className="font-bold text-slate-900 uppercase">{drawerCourse.category || 'govt'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Primary / Home:</span>
+                  <span className="font-bold text-slate-900">{(drawerCourse.is_primary || drawerCourse.isPrimary) ? 'Yes' : 'No'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Certification:</span>
@@ -1459,35 +1493,95 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     value={editingItem.title || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
                     required
+                    placeholder="e.g. MS-CIT (MKCL Certified)"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Fee (English):</label>
-                    <input
-                      type="text"
-                      value={editingItem.feeEn || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, feeEn: e.target.value })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                    />
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course Category:</label>
+                    <select
+                      value={editingItem.category || 'govt'}
+                      onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
+                    >
+                      <option value="govt">🏛️ Government (MS-CIT)</option>
+                      <option value="job">💼 Job Oriented (Tally / Excel)</option>
+                      <option value="klic">🎓 MKCL KLiC Courses</option>
+                      <option value="design">🎨 Design & CAD</option>
+                    </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Duration:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Display Order:</label>
                     <input
-                      type="text"
-                      value={editingItem.durationEn || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, durationEn: e.target.value })}
+                      type="number"
+                      value={editingItem.displayOrder !== undefined ? editingItem.displayOrder : (editingItem.display_order || 0)}
+                      onChange={(e) => setEditingItem({ ...editingItem, displayOrder: parseInt(e.target.value, 10) || 0, display_order: parseInt(e.target.value, 10) || 0 })}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                     />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={!!(editingItem.isPrimary || editingItem.is_primary)}
+                      onChange={(e) => setEditingItem({ ...editingItem, isPrimary: e.target.checked, is_primary: e.target.checked })}
+                      className="w-4 h-4 rounded text-primary focus:ring-primary"
+                    />
+                    <span>Show on Home Page (Primary Course)</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={!!(editingItem.isFeatured || editingItem.is_featured)}
+                      onChange={(e) => setEditingItem({ ...editingItem, isFeatured: e.target.checked, is_featured: e.target.checked })}
+                      className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500"
+                    />
+                    <span>Featured Status Badge</span>
+                  </label>
+                </div>
+
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Overview Description:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Duration:</label>
+                  <input
+                    type="text"
+                    value={editingItem.durationEn || editingItem.duration_en || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, durationEn: e.target.value, durationMr: e.target.value })}
+                    placeholder="e.g. 2 Months (2 hrs/day)"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Short Description / Overview:</label>
+                  <textarea
+                    rows={2}
+                    value={editingItem.overviewEn || editingItem.overview_en || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overviewMr: e.target.value })}
+                    placeholder="Course summary description..."
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Key Topics (One per line):</label>
                   <textarea
                     rows={3}
-                    value={editingItem.overviewEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overviewMr: e.target.value })}
+                    value={
+                      Array.isArray(editingItem.modulesEn)
+                        ? editingItem.modulesEn.map((m) => typeof m === 'string' ? m : (m.name || m.title || '')).join('\n')
+                        : (editingItem.modulesEn || '')
+                    }
+                    onChange={(e) => {
+                      const lines = e.target.value.split('\n');
+                      const modulesList = lines.map((line) => ({ name: line }));
+                      setEditingItem({ ...editingItem, modulesEn: modulesList, modulesMr: modulesList });
+                    }}
+                    placeholder="Computer Operating & Windows 11&#10;MS Word & Excel 2021&#10;AI & Digital Tools"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
@@ -1501,7 +1595,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                       <input 
                         type="file" 
                         accept="image/*" 
-                        onChange={(e) => handleFileSelect(e, 'courses', 1.5)} 
+                        onChange={(e) => handleFileUpload(e, 'courses')} 
                         className="hidden" 
                       />
                     </label>
@@ -1521,38 +1615,157 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
               </form>
             )}
 
-            {/* CSC Form */}
+            {/* CSC & Online Services Form */}
             {formType === 'csc' && (
-              <form onSubmit={handleSaveCSC} className="space-y-3">
+              <form onSubmit={handleSaveCSC} className="space-y-3 max-h-[75vh] overflow-y-auto pr-1">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">CSC Service Title:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Service Category:</label>
+                  <select
+                    value={editingItem.category || 'csc'}
+                    onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
+                  >
+                    <option value="scholarship">🎓 Scholarship Forms (शिष्यवृत्ती अर्ज)</option>
+                    <option value="exam">📋 Competitive & Govt Exam Forms (स्पर्धा परीक्षा)</option>
+                    <option value="csc">🏛️ CSC & Identity Services (पॅन कार्ड, आधार, गुमास्ता)</option>
+                    <option value="admission">🏫 College & CAP Admissions (प्रवेश अर्ज)</option>
+                    <option value="utility">⚙️ Student Utilities (रेझ्युमे, रीझाईज, प्रिंट)</option>
+                    <option value="revenue">📜 Govt Revenue Certificates (उत्पन्न, जातीचा दाखला)</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value })}
+                      placeholder="e.g. MahaDBT Post-Matric Scholarship"
+                      required
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleMr: e.target.value })}
+                      placeholder="उदा. महाडीबीटी स्कॉलरशिप अर्ज"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Badge Tag:</label>
+                    <input
+                      type="text"
+                      value={editingItem.badge || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, badge: e.target.value })}
+                      placeholder="e.g. महाराष्ट्र शासन / MPSC"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Status:</label>
+                    <select
+                      value={editingItem.status || 'Open'}
+                      onChange={(e) => setEditingItem({ ...editingItem, status: e.target.value })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
+                    >
+                      <option value="Open">🟢 Open / Accepting</option>
+                      <option value="Closed">🔴 Closed / Expired</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Deadline Date / Note (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.deadlineEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, deadlineEn: e.target.value, deadlineMr: e.target.value })}
+                      placeholder="e.g. 31st October 2026"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Timeline / Processing Time:</label>
+                    <input
+                      type="text"
+                      value={editingItem.timelineEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, timelineEn: e.target.value, timelineMr: e.target.value })}
+                      placeholder="e.g. 3-5 Working Days"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Official Portal URL (Apply Link):</label>
                   <input
-                    type="text"
-                    value={editingItem.titleEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value, titleMr: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    type="url"
+                    value={editingItem.officialUrl || editingItem.official_url || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, officialUrl: e.target.value, official_url: e.target.value })}
+                    placeholder="https://mahadbt.maharashtra.gov.in"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-mono"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Timeline:</label>
-                  <input
-                    type="text"
-                    value={editingItem.timelineEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, timelineEn: e.target.value, timelineMr: e.target.value })}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Portal / Govt Fee (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.govtFeeEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, govtFeeEn: e.target.value, govtFeeMr: e.target.value })}
+                      placeholder="e.g. ₹56 Portal Fee"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div className="flex items-end pb-2">
+                    <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={!!editingItem.isFeatured}
+                        onChange={(e) => setEditingItem({ ...editingItem, isFeatured: e.target.checked })}
+                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                      />
+                      <span>Featured Service / Priority Form</span>
+                    </label>
+                  </div>
                 </div>
+
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Overview Description:</label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={editingItem.overviewEn || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overviewMr: e.target.value })}
+                    placeholder="Provide detailed description of the form/service..."
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
-                <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Required Documents (One per line):</label>
+                  <textarea
+                    rows={3}
+                    value={Array.isArray(editingItem.requiredDocsEn) ? editingItem.requiredDocsEn.join('\n') : (editingItem.requiredDocsEn || '')}
+                    onChange={(e) => {
+                      const list = e.target.value.split('\n');
+                      setEditingItem({ ...editingItem, requiredDocsEn: list, requiredDocsMr: list });
+                    }}
+                    placeholder="Aadhaar Card&#10;Marksheet&#10;Income Certificate"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-sm transition-all mt-2">
                   Save &amp; Sync Supabase DB
                 </button>
               </form>
@@ -1706,7 +1919,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                       <input 
                         type="file" 
                         accept="image/*" 
-                        onChange={(e) => handleFileSelect(e, 'faculty', 1)} 
+                        onChange={(e) => handleFileUpload(e, 'faculty')} 
                         className="hidden" 
                       />
                     </label>
@@ -1771,7 +1984,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                       <input 
                         type="file" 
                         accept="image/*" 
-                        onChange={(e) => handleFileSelect(e, 'gallery', 1.5)} 
+                        onChange={(e) => handleFileUpload(e, 'gallery')} 
                         className="hidden" 
                       />
                     </label>
@@ -1860,17 +2073,6 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
         </div>
       )}
 
-      {/* Image Cropper Modal */}
-      {cropState && (
-        <ImageCropperModal
-          imageFile={cropState.file}
-          file={cropState.file}
-          aspectRatio={cropState.aspectRatio || 1}
-          onClose={() => setCropState(null)}
-          onCancel={() => setCropState(null)}
-          onCropComplete={handleCroppedUpload}
-        />
-      )}
     </div>
   );
 }

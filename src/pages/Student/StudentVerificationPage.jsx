@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ShieldCheck, CheckCircle2, AlertCircle, FileCheck, Award, GraduationCap, Building2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { StudentRepository } from '../../repositories/StudentRepository';
 
 export default function StudentVerificationPage({ lang = 'mr' }) {
   const [regNo, setRegNo] = useState('');
@@ -24,16 +25,9 @@ export default function StudentVerificationPage({ lang = 'mr' }) {
     setResult(null);
 
     try {
-      const { data, error: dbErr } = await supabase
-        .from('certificates')
-        .select('*')
-        .or(`reg_no.ilike.%${queryTerm}%,student_name_en.ilike.%${queryTerm}%,student_name_mr.ilike.%${queryTerm}%`)
-        .maybeSingle();
+      const data = await StudentRepository.getCertificateByRegNo(queryTerm);
 
-      if (dbErr) {
-        console.error('Certificate verification error:', dbErr.message);
-        setError(isMarathi ? 'सत्यापन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Verification error occurred. Please try again.');
-      } else if (data) {
+      if (data) {
         setResult(data);
       } else {
         setError(isMarathi ? 'प्रविष्ट केलेला नोंदणी क्रमांक / विद्यार्थी सापडला नाही.' : 'No certificate record found for the provided query.');

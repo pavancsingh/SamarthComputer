@@ -21,7 +21,7 @@ function MainApp() {
   const [lang, setLang] = useState('mr');
   const [currentView, setCurrentView] = useState('home'); // home|courses|details|csc|govt|about|faculty|gallery|contact|timetable|admin
   const [selectedSlug, setSelectedSlug] = useState('mscit');
-  const { isAdmin } = useAuth();
+  const { isAdmin, loading: authLoading } = useAuth();
 
   const handleNavigate = (view, slug = 'mscit') => {
     setCurrentView(view);
@@ -63,7 +63,15 @@ function MainApp() {
 
       {/* Admin Protected View */}
       {currentView === 'admin' && (
-        isAdmin ? (
+        authLoading ? (
+          // Wait for session check to complete before deciding login vs dashboard
+          <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-muted-foreground">Checking session…</p>
+            </div>
+          </div>
+        ) : isAdmin ? (
           <AdminDashboard lang={lang} onLogout={() => handleNavigate('home')} />
         ) : (
           <AdminLoginPage lang={lang} onSuccess={() => setCurrentView('admin')} onNavigate={handleNavigate} />

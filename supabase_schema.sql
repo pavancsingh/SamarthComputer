@@ -45,8 +45,17 @@ CREATE TABLE IF NOT EXISTS public.courses (
     modules_en JSONB DEFAULT '[]'::jsonb,
     careers_mr JSONB DEFAULT '[]'::jsonb,
     careers_en JSONB DEFAULT '[]'::jsonb,
-    image_url TEXT
+    image_url TEXT,
+    is_primary BOOLEAN DEFAULT false,
+    is_featured BOOLEAN DEFAULT false,
+    display_order INTEGER DEFAULT 0
 );
+
+-- Ensure optional columns exist if table was previously created
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_primary BOOLEAN DEFAULT false;
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+
 
 -- 3. CSC SERVICES TABLE
 CREATE TABLE IF NOT EXISTS public.csc_services (
@@ -59,6 +68,11 @@ CREATE TABLE IF NOT EXISTS public.csc_services (
     badge TEXT DEFAULT 'शासकीय सेवा',
     timeline_mr TEXT,
     timeline_en TEXT,
+    deadline_mr TEXT,
+    deadline_en TEXT,
+    status TEXT DEFAULT 'Open',
+    official_url TEXT,
+    is_featured BOOLEAN DEFAULT false,
     govt_fee_mr TEXT,
     govt_fee_en TEXT,
     overview_mr TEXT,
@@ -69,6 +83,15 @@ CREATE TABLE IF NOT EXISTS public.csc_services (
     steps_en JSONB DEFAULT '[]'::jsonb,
     image_url TEXT
 );
+
+-- Ensure optional columns exist if table was previously created
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS deadline_mr TEXT;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS deadline_en TEXT;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Open';
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS official_url TEXT;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+
 
 -- 4. GOVT SERVICES TABLE
 CREATE TABLE IF NOT EXISTS public.govt_services (
@@ -156,6 +179,21 @@ CREATE TABLE IF NOT EXISTS public.news (
     desc_mr TEXT
 );
 
+-- 10. STUDENT CERTIFICATES TABLE (for verification portal)
+CREATE TABLE IF NOT EXISTS public.certificates (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    reg_no TEXT UNIQUE NOT NULL,
+    student_name_en TEXT NOT NULL,
+    student_name_mr TEXT,
+    course_name TEXT NOT NULL,
+    issue_date TEXT,
+    grade TEXT,
+    center_code TEXT DEFAULT 'ALC 13210399',
+    authority TEXT DEFAULT 'MKCL Authorized',
+    certificate_url TEXT
+);
+
 -- ============================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ============================================================
@@ -168,6 +206,7 @@ ALTER TABLE public.site_gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
 
 -- Allow Public Read Access
 CREATE POLICY "Public Read Inquiries" ON public.inquiries FOR SELECT USING (true);
@@ -180,6 +219,8 @@ CREATE POLICY "Public All Gallery" ON public.site_gallery FOR ALL USING (true);
 CREATE POLICY "Public All Settings" ON public.site_settings FOR ALL USING (true);
 CREATE POLICY "Public All Batches" ON public.batches FOR ALL USING (true);
 CREATE POLICY "Public All News" ON public.news FOR ALL USING (true);
+CREATE POLICY "Public Read Certificates" ON public.certificates FOR SELECT USING (true);
+CREATE POLICY "Public Insert Certificates" ON public.certificates FOR INSERT WITH CHECK (true);
 
 -- ============================================================
 -- SUPABASE STORAGE BUCKET SETUP ('samarth-media')

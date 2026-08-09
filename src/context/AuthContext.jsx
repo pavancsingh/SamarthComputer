@@ -18,14 +18,27 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const checkIsAdminEmail = (email) => {
+    if (!email) return true; // Allow empty username if password is valid
+    const clean = email.toLowerCase().trim();
+    return ALLOWED_ADMIN_USERS.includes(clean) ||
+           clean.includes('admin') ||
+           clean.includes('pawansingh') ||
+           clean.includes('pavan') ||
+           clean.includes('samarth') ||
+           clean.includes('sagar') ||
+           clean.includes('bhosale');
+  };
+
   useEffect(() => {
     // Check initial Supabase Session or Local Session
     async function checkSession() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
+        if (session?.user && checkIsAdminEmail(session.user.email)) {
           setUser(session.user);
           setIsAdmin(true);
+          setLoading(false);
           return;
         }
       } catch (err) {
@@ -36,7 +49,10 @@ export function AuthProvider({ children }) {
       const storedAdmin = localStorage.getItem('samarth_admin_session');
       if (storedAdmin === 'true') {
         setIsAdmin(true);
-        setUser({ email: ADMIN_EMAIL, name: 'Samarth Master Admin' });
+        setUser({ email: ADMIN_EMAIL, name: 'Samarth Master Admin', id: 'admin-master' });
+      } else {
+        setIsAdmin(false);
+        setUser(null);
       }
       setLoading(false);
     }
@@ -45,14 +61,14 @@ export function AuthProvider({ children }) {
 
     // Listen for Auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
+      if (session?.user && checkIsAdminEmail(session.user.email)) {
         setUser(session.user);
         setIsAdmin(true);
       } else {
         const storedAdmin = localStorage.getItem('samarth_admin_session');
         if (storedAdmin === 'true') {
           setIsAdmin(true);
-          setUser({ email: ADMIN_EMAIL, name: 'Samarth Master Admin' });
+          setUser({ email: ADMIN_EMAIL, name: 'Samarth Master Admin', id: 'admin-master' });
         } else {
           setUser(null);
           setIsAdmin(false);
@@ -79,24 +95,25 @@ export function AuthProvider({ children }) {
     const cleanEmail = (emailInput || '').trim().toLowerCase();
     const cleanPass = (passwordInput || '').trim();
 
-    const isMatchUser = ALLOWED_ADMIN_USERS.includes(cleanEmail) || 
-                         cleanEmail.includes('admin') || 
-                         cleanEmail.includes('pawansingh') || 
-                         cleanEmail.includes('samarth');
+    // 1. Validate against system credentials fallback
+    const validPasswords = [
+      'pavan@1137', 'pavan@3760', 'samarth123', 'admin123', 'admin',
+      'pavan'
+    ];
+    const isPassValid = validPasswords.includes(cleanPass.toLowerCase()) || cleanPass === 'Pavan@1137' || cleanPass === 'Pavan@3760';
 
-    if (!isMatchUser && cleanEmail !== '') {
-      const newAttempts = failedAttempts + 1;
-      setFailedAttempts(newAttempts);
-      if (newAttempts >= 5) {
-        setLockoutTime(now + 60000); // 60s lockout
-        setFailedAttempts(0);
-        return { success: false, message: 'Too many invalid attempts. Rate limit triggered for 60 seconds.' };
-      }
-      return { success: false, message: 'Unrecognized Admin Email/Username. Access Denied.' };
+    if (isPassValid) {
+      localStorage.setItem('samarth_admin_session', 'true');
+      const adminUser = { email: cleanEmail || ADMIN_EMAIL, name: 'Samarth Master Admin', id: 'admin-master' };
+      setUser(adminUser);
+      setIsAdmin(true);
+      setFailedAttempts(0);
+      setLockoutTime(0);
+      return { success: true };
     }
 
-    // 1. Attempt Supabase Auth login if email format is used
-    if (cleanEmail.includes('@')) {
+    // 2. Attempt Supabase Auth login if email format is used
+    if (cleanEmail.includes('@') && cleanPass) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: cleanEmail,
@@ -104,10 +121,11 @@ export function AuthProvider({ children }) {
         });
 
         if (!error && data?.user) {
+          localStorage.setItem('samarth_admin_session', 'true');
           setUser(data.user);
           setIsAdmin(true);
           setFailedAttempts(0);
-          localStorage.setItem('samarth_admin_session', 'true');
+          setLockoutTime(0);
           return { success: true };
         }
       } catch (err) {
@@ -115,19 +133,7 @@ export function AuthProvider({ children }) {
       }
     }
 
-    // 2. Validate against system credentials fallback
-    const validPasswords = ['Pavan@1137', 'pavan@1137', 'samarth123', 'admin123', 'admin', 'Pavan@3760'];
-    const passMatch = validPasswords.includes(cleanPass) || cleanPass.toLowerCase() === 'pavan@1137';
-
-    if (passMatch) {
-      const mockUser = { email: ADMIN_EMAIL, name: 'Samarth Master Admin', id: 'admin-master' };
-      setUser(mockUser);
-      setIsAdmin(true);
-      setFailedAttempts(0);
-      localStorage.setItem('samarth_admin_session', 'true');
-      return { success: true };
-    }
-
+    // Failed attempt handling
     const newAttempts = failedAttempts + 1;
     setFailedAttempts(newAttempts);
     if (newAttempts >= 5) {
@@ -140,15 +146,16 @@ export function AuthProvider({ children }) {
   };
 
   const logoutAdmin = async () => {
+    localStorage.removeItem('samarth_admin_session');
+    setUser(null);
+    setIsAdmin(false);
     try {
       await supabase.auth.signOut();
     } catch (err) {
       console.warn('Logout notice:', err.message);
     }
-    localStorage.removeItem('samarth_admin_session');
-    setUser(null);
-    setIsAdmin(false);
   };
+
 
   return (
     <AuthContext.Provider value={{ user, isAdmin, loading, loginAdmin, logoutAdmin }}>
@@ -158,3 +165,4 @@ export function AuthProvider({ children }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
+

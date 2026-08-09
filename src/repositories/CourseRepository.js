@@ -1,32 +1,86 @@
 import { supabase } from '../lib/supabase';
+import { COURSES_DATA } from '../constants/coursesData';
+import { AdminRepository } from './AdminRepository';
+import { sharedStore } from './sharedStore';
 
 /**
  * CourseRepository
  * Data Access Layer for computer training courses with direct Supabase DB integration.
+ * Uses Supabase as single source of truth and auto-populates missing courses safely (no duplicates).
  */
 export const CourseRepository = {
+  /**
+   * Duplicate-safe check to populate missing default courses into Supabase
+   */
+  async ensureSeedCourses() {
+    try {
+      const { data: existing, error } = await supabase.from('courses').select('slug');
+      if (error) return;
+      const existingSlugs = new Set((existing || []).map((c) => c.slug));
+
+      const missing = COURSES_DATA.filter((c) => !existingSlugs.has(c.slug));
+      if (missing.length > 0) {
+        console.log(`[CourseRepository] Seeding ${missing.length} missing course(s) to Supabase...`);
+        for (const course of missing) {
+          await AdminRepository.saveCourse(course);
+        }
+      }
+    } catch (e) {
+      console.warn('Course seed check warning:', e.message);
+    }
+  },
+
   /**
    * Fetch all courses with optional category filtering from Supabase DB.
    */
   async getCourses(category = 'all') {
     try {
-      let query = supabase.from('courses').select('*').order('created_at', { ascending: false });
+      await this.ensureSeedCourses();
+
+      let query = supabase.from('courses').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
       if (category !== 'all') {
-        query = query.eq('category', category);
+        if (category === 'primary') {
+          query = query.eq('is_primary', true);
+        } else {
+          query = query.eq('category', category);
+        }
       }
-      const { data, error } = await query;
-      if (error) {
-        console.error('Supabase course fetch error:', error.message);
-        return [];
+      let { data, error } = await query;
+      if (error && error.message.includes('display_order')) {
+        let retryQuery = supabase.from('courses').select('*').order('created_at', { ascending: false });
+        if (category !== 'all') {
+          if (category === 'primary') {
+            retryQuery = retryQuery.eq('is_primary', true);
+          } else {
+            retryQuery = retryQuery.eq('category', category);
+          }
+        }
+        const retry = await retryQuery;
+        data = retry.data;
+        error = retry.error;
       }
+
+      if (error || !data || data.length === 0) {
+        if (error) console.error('Supabase course fetch error:', error.message);
+        const local = sharedStore.getCourses();
+        if (category === 'primary') {
+          return local.filter((c) => c.isPrimary || c.is_primary || c.slug === 'mscit' || c.slug === 'tally-prime-gst' || c.slug === 'advanced-excel');
+        }
+        if (category !== 'all') {
+          return local.filter((c) => c.category === category);
+        }
+        return local;
+      }
+
       return (data || []).map((c) => ({
         ...c,
+        isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
+        isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
+        displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
         subtitleMr: c.subtitle_mr || c.subtitleMr,
         subtitleEn: c.subtitle_en || c.subtitleEn,
         durationMr: c.duration_mr || c.durationMr,
         durationEn: c.duration_en || c.durationEn,
-        feeMr: c.fee_mr || c.feeMr,
-        feeEn: c.fee_en || c.feeEn,
         certificationMr: c.certification_mr || c.certificationMr,
         certificationEn: c.certification_en || c.certificationEn,
         eligibilityMr: c.eligibility_mr || c.eligibilityMr,
@@ -40,7 +94,8 @@ export const CourseRepository = {
       }));
     } catch (e) {
       console.error('Supabase course fetch exception:', e.message);
-      return [];
+      const local = sharedStore.getCourses();
+      return local;
     }
   },
 
@@ -53,12 +108,13 @@ export const CourseRepository = {
       if (!error && data) {
         return {
           ...data,
+          isPrimary: data.is_primary !== undefined ? data.is_primary : (data.isPrimary || false),
+          isFeatured: data.is_featured !== undefined ? data.is_featured : (data.isFeatured || false),
+          displayOrder: data.display_order !== undefined ? data.display_order : (data.displayOrder || 0),
           subtitleMr: data.subtitle_mr || data.subtitleMr,
           subtitleEn: data.subtitle_en || data.subtitleEn,
           durationMr: data.duration_mr || data.durationMr,
           durationEn: data.duration_en || data.durationEn,
-          feeMr: data.fee_mr || data.feeMr,
-          feeEn: data.fee_en || data.feeEn,
           certificationMr: data.certification_mr || data.certificationMr,
           certificationEn: data.certification_en || data.certificationEn,
           eligibilityMr: data.eligibility_mr || data.eligibilityMr,
@@ -74,7 +130,9 @@ export const CourseRepository = {
     } catch (e) {
       console.error('Supabase course detail fetch exception:', e.message);
     }
-    return null;
+    // Local fallback if DB single query is empty
+    const local = sharedStore.getCourses();
+    return local.find((c) => c.slug === slug || c.id === slug) || null;
   },
 
   /**
@@ -105,3 +163,4 @@ export const CourseRepository = {
     }
   }
 };
+
