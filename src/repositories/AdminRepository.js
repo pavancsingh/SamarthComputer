@@ -363,8 +363,21 @@ export const AdminRepository = {
       image_url: itemData.imageUrl || itemData.image_url
     };
 
-    if (itemData.id && !itemData.id.toString().startsWith('fac-')) {
-      payload.id = itemData.id;
+    let targetId = itemData.id;
+    if (!targetId || targetId.toString().startsWith('fac-')) {
+      // Lookup existing faculty by name to prevent duplicate creation
+      const { data: existing } = await supabase
+        .from('faculties')
+        .select('id')
+        .eq('name', itemData.name)
+        .maybeSingle();
+      if (existing && existing.id) {
+        targetId = existing.id;
+      }
+    }
+
+    if (targetId && !targetId.toString().startsWith('fac-')) {
+      payload.id = targetId;
     }
 
     const res = await upsertWithColumnFallback('faculties', payload);

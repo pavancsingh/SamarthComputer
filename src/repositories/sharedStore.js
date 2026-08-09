@@ -332,11 +332,14 @@ class SharedStore {
   // --- Faculty Management ---
   getFaculty() { return this.faculty; }
   saveFacultyItem(item) {
-    const idx = this.faculty.findIndex((f) => f.id === item.id);
+    const idx = this.faculty.findIndex((f) => 
+      (item.id && f.id === item.id) || 
+      (item.name && f.name === item.name)
+    );
     if (idx >= 0) {
       this.faculty[idx] = { ...this.faculty[idx], ...item };
     } else {
-      this.faculty.unshift({ id: `fac-${Date.now()}`, ...item });
+      this.faculty.unshift({ id: item.id || `fac-${Date.now()}`, ...item });
     }
     saveStorage(STORAGE_KEY_FACULTY, this.faculty);
     this.notify();
