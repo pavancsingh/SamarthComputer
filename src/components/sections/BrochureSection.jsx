@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Send, CheckCircle2, Shield } from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
+import { CourseRepository } from '../../repositories/CourseRepository';
 
 /**
  * BrochureSection Component - Google Stitch Design
@@ -7,15 +9,33 @@ import { Download, Send, CheckCircle2, Shield } from 'lucide-react';
  */
 export default function BrochureSection({ lang = 'mr' }) {
   const [mobile, setMobile] = useState('');
-  const [course, setCourse] = useState('mscit');
+  const [courses, setCourses] = useState(sharedStore.getCourses());
+  const [course, setCourse] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const isMarathi = lang === 'mr';
+
+  useEffect(() => {
+    CourseRepository.getAllCourses().then((res) => {
+      if (res && res.length > 0) {
+        setCourses(res);
+        if (!course) setCourse(res[0]?.title || res[0]?.titleEn || 'MS-CIT');
+      }
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      const live = sharedStore.getCourses();
+      setCourses(live);
+      if (!course && live.length > 0) setCourse(live[0]?.title || live[0]?.titleEn);
+    });
+    return unsubscribe;
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!mobile || mobile.length < 10) return;
     setSubmitted(true);
-    const text = encodeURIComponent(`Hello Samarth Computers, I want to download the official Syllabus PDF for ${course}. My WhatsApp number is ${mobile}.`);
+    const selectedCourseName = course || (courses[0]?.title || 'MS-CIT');
+    const text = encodeURIComponent(`Hello Samarth Computers, I want to download the official Syllabus PDF for ${selectedCourseName}. My WhatsApp number is ${mobile}.`);
     window.open(`https://wa.me/919552345061?text=${text}`, '_blank');
   };
 
@@ -90,10 +110,11 @@ export default function BrochureSection({ lang = 'mr' }) {
                     onChange={(e) => setCourse(e.target.value)}
                     className="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-bold text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm transition-all"
                   >
-                    <option value="mscit">MS-CIT (MKCL Certified)</option>
-                    <option value="tally">Tally Prime + GST</option>
-                    <option value="typing">GCC-TBC Typing (Eng/Mar)</option>
-                    <option value="excel">Advanced Excel & Analytics</option>
+                    {courses.map((c) => (
+                      <option key={c.id || c.slug} value={c.title || c.titleEn}>
+                        {isMarathi ? (c.subtitleMr || c.subtitle_mr || c.title) : (c.title || c.titleEn)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

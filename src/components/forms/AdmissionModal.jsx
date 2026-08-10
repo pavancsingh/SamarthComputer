@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, X, CheckCircle2, Send, Clock, User, Phone } from 'lucide-react';
 import { CourseRepository } from '../../repositories/CourseRepository';
+import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * AdmissionModal Component
@@ -9,11 +10,25 @@ import { CourseRepository } from '../../repositories/CourseRepository';
 export default function AdmissionModal({ isOpen, onClose, defaultCourse = 'mscit', lang = 'mr' }) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
+  const [courses, setCourses] = useState(sharedStore.getCourses());
+  const [batchesList, setBatchesList] = useState(sharedStore.getBatches());
   const [course, setCourse] = useState(defaultCourse);
   const [batch, setBatch] = useState('09:30 AM - 11:00 AM');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const isMarathi = lang === 'mr';
+
+  useEffect(() => {
+    CourseRepository.getAllCourses().then((res) => {
+      if (res && res.length > 0) setCourses(res);
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      setCourses(sharedStore.getCourses());
+      setBatchesList(sharedStore.getBatches());
+    });
+    return unsubscribe;
+  }, []);
 
   if (!isOpen) return null;
 
@@ -131,10 +146,11 @@ export default function AdmissionModal({ isOpen, onClose, defaultCourse = 'mscit
                     onChange={(e) => setCourse(e.target.value)}
                     className="w-full px-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary"
                   >
-                    <option value="mscit">MS-CIT (MKCL)</option>
-                    <option value="tally-prime-gst">Tally Prime + GST</option>
-                    <option value="typing-certification">GCC-TBC Typing</option>
-                    <option value="advanced-excel">Advanced Excel</option>
+                    {courses.map((c) => (
+                      <option key={c.id || c.slug} value={c.title || c.titleEn}>
+                        {isMarathi ? (c.subtitleMr || c.subtitle_mr || c.title) : (c.title || c.titleEn)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -147,10 +163,20 @@ export default function AdmissionModal({ isOpen, onClose, defaultCourse = 'mscit
                     onChange={(e) => setBatch(e.target.value)}
                     className="w-full px-3 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary"
                   >
-                    <option value="08:00 AM - 09:30 AM">08:00 AM - 09:30 AM (सकाळ)</option>
-                    <option value="09:30 AM - 11:00 AM">09:30 AM - 11:00 AM (सकाळ)</option>
-                    <option value="02:30 PM - 04:00 PM">02:30 PM - 04:00 PM (दुपार)</option>
-                    <option value="05:30 PM - 07:00 PM">05:30 PM - 07:00 PM (संध्याकाळ)</option>
+                    {batchesList.length > 0 ? (
+                      batchesList.map((b) => (
+                        <option key={b.id} value={b.time}>
+                          {b.time} ({isMarathi ? (b.statusMr || b.status_mr || b.category) : (b.statusEn || b.status_en || b.category)})
+                        </option>
+                      ))
+                    ) : (
+                      <>
+                        <option value="08:00 AM - 09:30 AM">08:00 AM - 09:30 AM (सकाळ)</option>
+                        <option value="09:30 AM - 11:00 AM">09:30 AM - 11:00 AM (सकाळ)</option>
+                        <option value="02:30 PM - 04:00 PM">02:30 PM - 04:00 PM (दुपार)</option>
+                        <option value="05:30 PM - 07:00 PM">05:30 PM - 07:00 PM (संध्याकाळ)</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>

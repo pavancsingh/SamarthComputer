@@ -241,18 +241,27 @@ class SharedStore {
 
   syncFacultyFromRemote(remoteFaculty) {
     if (Array.isArray(remoteFaculty) && remoteFaculty.length > 0) {
-      this.faculty = remoteFaculty.map((item) => ({
-        id: item.id,
-        name: item.name,
-        roleMr: item.role_mr || item.roleMr,
-        roleEn: item.role_en || item.roleEn,
-        expMr: item.exp_mr || item.expMr,
-        expEn: item.exp_en || item.expEn,
-        specMr: item.spec_mr || item.specMr,
-        specEn: item.spec_en || item.specEn,
-        badge: item.badge || 'Faculty',
-        imageUrl: item.image_url || item.imageUrl
-      }));
+      const seenNames = new Set();
+      const unique = [];
+      for (const item of remoteFaculty) {
+        const normName = (item.name || '').trim().toLowerCase();
+        if (normName && !seenNames.has(normName)) {
+          seenNames.add(normName);
+          unique.push({
+            id: item.id,
+            name: item.name,
+            roleMr: item.role_mr || item.roleMr,
+            roleEn: item.role_en || item.roleEn,
+            expMr: item.exp_mr || item.expMr,
+            expEn: item.exp_en || item.expEn,
+            specMr: item.spec_mr || item.specMr,
+            specEn: item.spec_en || item.specEn,
+            badge: item.badge || 'Faculty',
+            imageUrl: item.image_url || item.imageUrl
+          });
+        }
+      }
+      this.faculty = unique;
       saveStorage(STORAGE_KEY_FACULTY, this.faculty);
       this.notify();
     }
@@ -332,20 +341,32 @@ class SharedStore {
   // --- Faculty Management ---
   getFaculty() { return this.faculty; }
   saveFacultyItem(item) {
+    const normName = (item.name || '').trim().toLowerCase();
     const idx = this.faculty.findIndex((f) => 
       (item.id && f.id === item.id) || 
-      (item.name && f.name === item.name)
+      (normName && (f.name || '').trim().toLowerCase() === normName)
     );
     if (idx >= 0) {
       this.faculty[idx] = { ...this.faculty[idx], ...item };
     } else {
       this.faculty.unshift({ id: item.id || `fac-${Date.now()}`, ...item });
     }
+
+    const seen = new Set();
+    this.faculty = this.faculty.filter((f) => {
+      const n = (f.name || '').trim().toLowerCase();
+      if (!n || seen.has(n)) return false;
+      seen.add(n);
+      return true;
+    });
+
     saveStorage(STORAGE_KEY_FACULTY, this.faculty);
     this.notify();
   }
   deleteFacultyItem(id) {
-    this.faculty = this.faculty.filter((f) => f.id !== id);
+    const target = this.faculty.find((f) => f.id === id);
+    const targetName = target ? (target.name || '').trim().toLowerCase() : null;
+    this.faculty = this.faculty.filter((f) => f.id !== id && ((!targetName) || (f.name || '').trim().toLowerCase() !== targetName));
     saveStorage(STORAGE_KEY_FACULTY, this.faculty);
     this.notify();
   }

@@ -8,7 +8,6 @@ import React from 'react';
 const TRUST_ITEMS = [
   { icon: 'verified',         label: 'MKCL' },
   { icon: 'account_balance',  label: 'Govt. of Maharashtra' },
-  { icon: 'badge',            label: 'ISO 9001:2015' },
   { icon: 'workspace_premium',label: 'CSC / MahaOnline' },
   { icon: 'school',           label: 'MS-CIT Authorized' },
   { icon: 'shield_check',     label: '100% Placement Support' },

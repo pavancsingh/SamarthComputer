@@ -76,7 +76,6 @@ export default function Footer({ lang = 'mr', onNavigate }) {
             <div>🏛️ MKCL Authorized Center</div>
             <div>🏛️ CSC / MahaOnline Center</div>
             <div>📋 ALC: 13210399 / 13210273</div>
-            <div>📋 Center Code: 64220078</div>
           </div>
 
           {/* SINGLE Admin Login Button */}

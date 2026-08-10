@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
+import { CourseRepository } from '../../repositories/CourseRepository';
+import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * ContactPage — Stitch Design System (14_contact_us.html)
@@ -18,6 +20,29 @@ export default function ContactPage({ lang = 'mr' }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const isMarathi = lang === 'mr';
+
+  const [courses, setCourses] = useState(sharedStore.getCourses());
+  const [cscServices, setCscServices] = useState(sharedStore.getCSCServices());
+  const [govtServices, setGovtServices] = useState(sharedStore.getGovtServices());
+
+  useEffect(() => {
+    CourseRepository.getAllCourses().then((res) => {
+      if (res && res.length > 0) setCourses(res);
+    });
+    CourseRepository.getCSCServices().then((res) => {
+      if (res && res.length > 0) setCscServices(res);
+    });
+    CourseRepository.getGovtServices().then((res) => {
+      if (res && res.length > 0) setGovtServices(res);
+    });
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      setCourses(sharedStore.getCourses());
+      setCscServices(sharedStore.getCSCServices());
+      setGovtServices(sharedStore.getGovtServices());
+    });
+    return unsubscribe;
+  }, []);
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
@@ -110,14 +135,12 @@ export default function ContactPage({ lang = 'mr' }) {
                         {isMarathi ? 'अभ्यासक्रम' : 'Course of Interest / अभ्यासक्रम'}
                       </label>
                       <select name="course" value={form.course} onChange={handleChange} className={inputClass}>
-                        <option value="">Select a course...</option>
-                        <option>MS-CIT</option>
-                        <option>Tally Prime</option>
-                        <option>Advanced Excel</option>
-                        <option>Web Development</option>
-                        <option>KLiC Courses</option>
-                        <option>DTP & Graphic Design</option>
-                        <option>English & Marathi Typing</option>
+                        <option value="">{isMarathi ? 'अभ्यासक्रम निवडा...' : 'Select a course...'}</option>
+                        {courses.map((c) => (
+                          <option key={c.id || c.slug} value={c.title || c.titleEn}>
+                            {isMarathi ? (c.subtitleMr || c.subtitle_mr || c.title) : (c.title || c.titleEn)}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -154,13 +177,17 @@ export default function ContactPage({ lang = 'mr' }) {
                     <div>
                       <label className="block text-label-bold font-label-bold text-text-primary mb-xs">Required Service</label>
                       <select name="service" value={form.service} onChange={handleChange} className={inputClass}>
-                        <option value="">Select service...</option>
-                        <option>PAN Card Services</option>
-                        <option>Aadhaar Updates</option>
-                        <option>Voter ID</option>
-                        <option>Passport Application</option>
-                        <option>Insurance</option>
-                        <option>Other E-Seva</option>
+                        <option value="">{isMarathi ? 'सेवा निवडा...' : 'Select service...'}</option>
+                        {cscServices.map((s) => (
+                          <option key={s.id || s.slug} value={s.titleMr || s.title_mr || s.titleEn || s.title_en}>
+                            {isMarathi ? (s.titleMr || s.title_mr || s.titleEn) : (s.titleEn || s.title_en || s.titleMr)}
+                          </option>
+                        ))}
+                        {govtServices.map((g) => (
+                          <option key={g.id || g.slug} value={g.titleMr || g.title_mr || g.titleEn || g.title_en}>
+                            {isMarathi ? (g.titleMr || g.title_mr || g.titleEn) : (g.titleEn || g.title_en || g.titleMr)}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <button type="submit" disabled={loading}
