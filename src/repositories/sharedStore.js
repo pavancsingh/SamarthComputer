@@ -35,24 +35,24 @@ const DEFAULT_FACULTY = [
     specMr: 'MS-CIT, Advanced Excel, Tally Prime (GST), बँकिंग, फायनान्स आणि शेअर मार्केट तज्ज्ञ.',
     specEn: 'Specializes in MS-CIT, Advanced Excel, Tally Prime (GST), Banking & Finance, and Share Market with real-world case studies.',
     badge: 'Center Head',
-    imageUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+    imageUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/sagar-bhosale.jpg'
   },
   {
     id: 'fac-2',
     name: 'Swati Bhosale (M.A. B.Ed)',
-    roleMr: 'टॅली एक्स्पर्ट & सिनियर ट्रेनर',
-    roleEn: 'Tally Expert & Trainer',
+    roleMr: 'सेंटर हेड & टॅली एक्स्पर्ट',
+    roleEn: 'Center Head & Tally Specialist',
     expMr: '१०+ वर्षांचा टीचिंग अनुभव',
     expEn: 'Over 10 years of teaching experience',
     specMr: 'M.A. B.Ed पदवीधर. टॅली प्राइम (GST), अकाउंटिंग फंडामेंटल्स आणि फायनान्शियल मॅनेजमेंट तज्ज्ञ.',
     specEn: 'B.Ed qualified with specialized expertise in Tally Prime (GST), accounting fundamentals, and financial management.',
-    badge: 'Tally Specialist',
-    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'
+    badge: 'Center Head',
+    imageUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/swati-bhosale.jpg'
   }
 ];
 
 const DEFAULT_SETTINGS = {
-  logoUrl: '',
+  logoUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/samarth-main-logo.png',
   heroBgUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
   heroTitleMr: 'समर्थ कॉम्प्युटर्स खंडाळा — तुमच्या करिअरचा स्मार्ट निर्णय!',
   heroTitleEn: 'Samarth Computers Khandala — Smart Decision for Your Career!'

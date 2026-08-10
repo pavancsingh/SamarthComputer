@@ -201,7 +201,7 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                   <div>
                     {/* Image */}
                     {(course.image_url || course.imageUrl) && (
-                      <div className="w-full h-44 overflow-hidden rounded-lg mb-md relative">
+                      <div className="w-full h-44 overflow-hidden rounded-lg mb-md relative bg-slate-100">
                         <img
                           src={course.image_url || course.imageUrl}
                           alt={course.title}
@@ -210,6 +210,15 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                         <span className={`absolute top-2 left-2 font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
                           {tag}
                         </span>
+                        {(course.logoUrl || course.logo_url) && (
+                          <div className="absolute top-2 right-2 bg-white p-1 rounded-lg shadow-md border border-slate-200/80 w-12 h-12 flex items-center justify-center shrink-0">
+                            <img
+                              src={course.logoUrl || course.logo_url}
+                              alt={`${course.title} logo`}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -218,6 +227,15 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                         <span className={`font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
                           {tag}
                         </span>
+                      )}
+                      {(course.logoUrl || course.logo_url) && (!course.image_url && !course.imageUrl) && (
+                        <div className="bg-white p-1 rounded-lg shadow-md border border-slate-200/80 w-12 h-12 flex items-center justify-center shrink-0">
+                          <img
+                            src={course.logoUrl || course.logo_url}
+                            alt={`${course.title} logo`}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
                       )}
                     </div>
 

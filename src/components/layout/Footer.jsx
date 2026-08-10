@@ -28,9 +28,17 @@ export default function Footer({ lang = 'mr', onNavigate }) {
 
         {/* Brand + Description */}
         <div className="flex flex-col gap-sm max-w-xs">
-          <span className="text-headline-md font-headline-lg text-primary-fixed">
-            Samarth Computers
-          </span>
+          <div className="flex items-center gap-3">
+            <img
+              src="https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/samarth-main-logo.png"
+              alt="Samarth Computers Logo"
+              className="w-12 h-12 object-contain bg-white rounded-xl p-1 shadow-sm border border-white/20"
+              onError={(e) => { e.currentTarget.src = '/assets/logos/samarth-main-logo.png'; }}
+            />
+            <span className="text-headline-md font-headline-lg text-primary-fixed">
+              Samarth Computers
+            </span>
+          </div>
           <p className="font-body-md text-label-bold text-surface-variant/80 leading-relaxed">
             Empowering the next generation of digital leaders through quality computer education and government services.
           </p>

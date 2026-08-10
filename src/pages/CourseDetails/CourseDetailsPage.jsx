@@ -54,13 +54,24 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
                 <div className="absolute inset-0 bg-gradient-to-r from-stitch-slate-card via-stitch-slate-card/90 to-transparent" />
               </div>
               <div className="relative z-10 max-w-2xl space-y-md">
-                <div className="flex items-center gap-sm mb-4">
-                  <span className="bg-stitch-emerald text-white px-3 py-1 rounded-full text-label-caps font-label-caps">
-                    Admissions Open
-                  </span>
-                  <span className="bg-stitch-indigo/20 text-stitch-indigo px-3 py-1 rounded-full text-label-caps font-label-caps backdrop-blur-sm border border-stitch-indigo/30">
-                    MKCL Certified
-                  </span>
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-sm">
+                    <span className="bg-stitch-emerald text-white px-3 py-1 rounded-full text-label-caps font-label-caps">
+                      Admissions Open
+                    </span>
+                    <span className="bg-stitch-indigo/20 text-stitch-indigo px-3 py-1 rounded-full text-label-caps font-label-caps backdrop-blur-sm border border-stitch-indigo/30">
+                      MKCL Certified
+                    </span>
+                  </div>
+                  {(course.logoUrl || course.logo_url) && (
+                    <div className="bg-white p-2 rounded-xl shadow-lg border border-white/40 w-16 h-16 flex items-center justify-center shrink-0">
+                      <img
+                        src={course.logoUrl || course.logo_url}
+                        alt={`${course.title} logo`}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  )}
                 </div>
                 <h1 className="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-white mb-xs">
                   {course.title}

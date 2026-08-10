@@ -39,17 +39,14 @@ export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOp
           onClick={() => onNavigate && onNavigate('home')}
           className="flex items-center gap-3 group text-left shrink-0"
         >
-          {settings.logoUrl ? (
-            <img
-              src={settings.logoUrl}
-              alt="Samarth Computers"
-              className="w-10 h-10 object-contain rounded-xl border border-surface-variant shadow-stitch-sm group-hover:scale-105 transition-all"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-black text-xl shadow-stitch-sm group-hover:scale-105 transition-all">
-              S
-            </div>
-          )}
+          <img
+            src={settings.logoUrl || 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/samarth-main-logo.png'}
+            alt="Samarth Computers"
+            className="w-11 h-11 object-contain rounded-xl border border-surface-variant shadow-stitch-sm group-hover:scale-105 transition-all bg-white p-0.5"
+            onError={(e) => {
+              e.currentTarget.src = '/assets/logos/samarth-main-logo.png';
+            }}
+          />
           <div className="hidden sm:block">
             {/* Stitch: text-headline-md font-headline-lg text-primary */}
             <div className="text-headline-md font-headline-lg text-primary tracking-tight leading-tight">

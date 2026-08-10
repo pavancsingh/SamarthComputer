@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
-import { COURSES_DATA } from '../constants/coursesData';
+import { COURSES_DATA, COURSE_LOGOS } from '../constants/coursesData';
 import { AdminRepository } from './AdminRepository';
+import { InquiryRepository } from './InquiryRepository';
 import { sharedStore } from './sharedStore';
 
 /**
@@ -35,6 +36,20 @@ export const CourseRepository = {
    */
   async getAllCourses() {
     return this.getCourses('all');
+  },
+
+  /**
+   * Resilience alias mapping to InquiryRepository.getCSCServices
+   */
+  async getCSCServices(category = 'all') {
+    return InquiryRepository.getCSCServices(category);
+  },
+
+  /**
+   * Resilience alias mapping to InquiryRepository.getGovtServices
+   */
+  async getGovtServices(category = 'all') {
+    return InquiryRepository.getGovtServices(category);
   },
 
   /**
@@ -81,6 +96,7 @@ export const CourseRepository = {
 
       return (data || []).map((c) => ({
         ...c,
+        logoUrl: c.logo_url || c.logoUrl || COURSE_LOGOS[c.slug] || '',
         isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
         isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
         displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
@@ -115,6 +131,7 @@ export const CourseRepository = {
       if (!error && data) {
         return {
           ...data,
+          logoUrl: data.logo_url || data.logoUrl || COURSE_LOGOS[data.slug] || '',
           isPrimary: data.is_primary !== undefined ? data.is_primary : (data.isPrimary || false),
           isFeatured: data.is_featured !== undefined ? data.is_featured : (data.isFeatured || false),
           displayOrder: data.display_order !== undefined ? data.display_order : (data.displayOrder || 0),

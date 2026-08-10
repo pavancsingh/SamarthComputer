@@ -3,6 +3,12 @@
  * Handcrafted comprehensive catalog for Samarth Computers, Khandala.
  * Includes MS-CIT, Tally Prime + GST, Advanced Excel, and KLiC Career Courses.
  */
+export const COURSE_LOGOS = {
+  'mscit': 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/mscit-logo.png',
+  'tally-prime-gst': 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/tally-logo.png',
+  'advanced-excel': 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/excel-logo.png'
+};
+
 export const COURSES_DATA = [
   {
     id: 'mscit',
@@ -15,6 +21,7 @@ export const COURSES_DATA = [
     isPrimary: true,
     isFeatured: true,
     displayOrder: 1,
+    logoUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/mscit-logo.png',
     imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
     durationMr: '२ महिने (रोज २ तास) किंवा ३ महिने (रोज १ तास)',
     durationEn: '2 Months (2 hrs/day) or 3 Months (1 hr/day)',
@@ -52,6 +59,7 @@ export const COURSES_DATA = [
     isPrimary: true,
     isFeatured: true,
     displayOrder: 2,
+    logoUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/tally-logo.png',
     imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
     durationMr: '२ महिने (रोज २ तास)',
     durationEn: '2 Months (2 hrs/day)',
@@ -89,6 +97,7 @@ export const COURSES_DATA = [
     isPrimary: true,
     isFeatured: true,
     displayOrder: 3,
+    logoUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/excel-logo.png',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
     durationMr: '१.५ महिने',
     durationEn: '1.5 Months',

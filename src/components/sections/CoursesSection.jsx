@@ -133,7 +133,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
 
                   {/* Course Image */}
                   {course.image_url || course.imageUrl ? (
-                    <div className="w-full h-48 overflow-hidden rounded-lg mb-6 relative">
+                    <div className="w-full h-48 overflow-hidden rounded-lg mb-6 relative bg-slate-100">
                       <img 
                         src={course.image_url || course.imageUrl} 
                         alt={course.title} 
@@ -142,12 +142,32 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                       <span className="absolute top-3 left-3 px-sm py-xs bg-primary text-white text-label-caps font-label-caps rounded-full shadow-sm">
                         {tag}
                       </span>
+                      {(course.logoUrl || course.logo_url) && (
+                        <div className="absolute top-3 right-3 bg-white p-1.5 rounded-xl shadow-stitch-md border border-slate-200/90 w-14 h-14 flex items-center justify-center shrink-0">
+                          <img
+                            src={course.logoUrl || course.logo_url}
+                            alt={`${course.title} logo`}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className={`w-12 h-12 rounded-lg ${iconBg} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary transition-all duration-300`}>
-                      <span className={`material-symbols-outlined ${iconColor} group-hover:text-white transition-colors duration-300`}>
-                        {icon}
-                      </span>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className={`w-12 h-12 rounded-lg ${iconBg} flex items-center justify-center group-hover:scale-110 group-hover:bg-primary transition-all duration-300`}>
+                        <span className={`material-symbols-outlined ${iconColor} group-hover:text-white transition-colors duration-300`}>
+                          {icon}
+                        </span>
+                      </div>
+                      {(course.logoUrl || course.logo_url) && (
+                        <div className="bg-white p-1.5 rounded-xl shadow-stitch-md border border-slate-200/90 w-14 h-14 flex items-center justify-center shrink-0">
+                          <img
+                            src={course.logoUrl || course.logo_url}
+                            alt={`${course.title} logo`}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
 

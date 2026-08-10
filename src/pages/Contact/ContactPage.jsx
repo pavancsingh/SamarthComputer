@@ -29,10 +29,10 @@ export default function ContactPage({ lang = 'mr' }) {
     CourseRepository.getAllCourses().then((res) => {
       if (res && res.length > 0) setCourses(res);
     });
-    CourseRepository.getCSCServices().then((res) => {
+    InquiryRepository.getCSCServices().then((res) => {
       if (res && res.length > 0) setCscServices(res);
     });
-    CourseRepository.getGovtServices().then((res) => {
+    InquiryRepository.getGovtServices().then((res) => {
       if (res && res.length > 0) setGovtServices(res);
     });
 
