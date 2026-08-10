@@ -1,21 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 
-const defaultUrl = 'https://vhcfjyhoghiylsvoxvxc.supabase.co';
-const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoY2ZqeWhvZ2hpeWxzdm94dnhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNzY5NTQsImV4cCI6MjEwMTY1Mjk1NH0.oDqifZJ5DIBvDuRYjE4tDYM0qELlUgJp12GVnVYBXmw';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || defaultUrl;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || defaultKey;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
 /**
- * Check if active Supabase project credentials are configured
+ * Check if active Supabase project credentials are input (non-placeholder)
  */
 export const isSupabaseConfigured = () => {
-  return Boolean(supabaseUrl && supabaseAnonKey);
+  return Boolean(
+    import.meta.env.VITE_SUPABASE_URL &&
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+  );
 };
 
 /**
  * Singleton Supabase Client Instance
- * Configured with resilient fallback to prevent top-level module load crashes in production.
+ * Configured for Auth persistence, Realtime subscriptions, and Storage uploads.
+ * Reads environment variables VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.
  */
 let client;
 try {
@@ -27,13 +28,9 @@ try {
     },
   });
 } catch (err) {
-  console.error('[Supabase Client Error] Failed to initialize Supabase client:', err.message);
-  client = createClient(defaultUrl, defaultKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
-    },
+  console.warn('[Supabase] Initialized in fallback mode:', err.message);
+  client = createClient('https://placeholder.supabase.co', 'placeholder-key', {
+    auth: { persistSession: false }
   });
 }
 
