@@ -31,6 +31,13 @@ export const CourseRepository = {
   },
 
   /**
+   * Alias for getCourses('all') to prevent runtime TypeErrors
+   */
+  async getAllCourses() {
+    return this.getCourses('all');
+  },
+
+  /**
    * Fetch all courses with optional category filtering from Supabase DB.
    */
   async getCourses(category = 'all') {
