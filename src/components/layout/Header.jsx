@@ -40,6 +40,7 @@ export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOp
           className="flex items-center gap-3 group text-left shrink-0"
         >
           <img
+            key={settings.logoUrl || 'logo'}
             src={settings.logoUrl || '/assets/logos/samarth-main-logo.png'}
             alt="Samarth Computers"
             className="w-11 h-11 object-contain rounded-xl border border-surface-variant shadow-stitch-sm group-hover:scale-105 transition-all bg-white p-0.5"

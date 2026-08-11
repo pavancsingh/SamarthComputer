@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { AdminRepository } from './repositories/AdminRepository';
+import { sharedStore } from './repositories/sharedStore';
+import { supabase } from './lib/supabase';
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/Home/HomePage';
 import CoursesPage from './pages/Courses/CoursesPage';
@@ -30,11 +33,39 @@ function MainApp() {
   };
 
   useEffect(() => {
+    // 1. Initial sync of site settings from DB
+    const syncSiteSettings = async () => {
+      try {
+        const settings = await AdminRepository.getSiteSettings();
+        if (settings) sharedStore.saveSiteSettings(settings);
+      } catch (err) {
+        console.warn('[App] site_settings sync notice:', err.message);
+      }
+    };
+    syncSiteSettings();
+
+    // 2. Refresh when window regains focus across tabs/devices
+    const handleFocus = () => syncSiteSettings();
+    window.addEventListener('focus', handleFocus);
+
+    // 3. Supabase Realtime channel for site_settings updates
+    const channel = supabase
+      .channel('public:site_settings_realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, async () => {
+        syncSiteSettings();
+      })
+      .subscribe();
+
     const handleOpenAdmin = () => {
       handleNavigate('admin');
     };
     window.addEventListener('openAdminPortal', handleOpenAdmin);
-    return () => window.removeEventListener('openAdminPortal', handleOpenAdmin);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('openAdminPortal', handleOpenAdmin);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (

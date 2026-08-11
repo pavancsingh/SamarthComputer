@@ -9,7 +9,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
 import { sharedStore } from '../../repositories/sharedStore';
-import { StorageService } from '../../services/StorageService';
+import { StorageService, toVersionedUrl } from '../../services/StorageService';
 
 /**
  * AdminDashboard Component — Stitch Design System (Admin Suite)
@@ -193,7 +193,21 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
         finalHeroUrl = uploadedHeroUrl;
       }
 
-      // 3. Save Settings to DB
+      // 3. Apply version-stamping for zero-delay cache busting across all devices & browsers
+      finalLogoUrl = toVersionedUrl(finalLogoUrl);
+      finalHeroUrl = toVersionedUrl(finalHeroUrl);
+
+      // Preload images into browser cache for instant rendering
+      if (finalLogoUrl && !finalLogoUrl.startsWith('data:')) {
+        const img = new Image();
+        img.src = finalLogoUrl;
+      }
+      if (finalHeroUrl && !finalHeroUrl.startsWith('data:')) {
+        const img = new Image();
+        img.src = finalHeroUrl;
+      }
+
+      // 4. Save Settings to DB
       const updatedSettings = {
         ...siteSettings,
         logoUrl: finalLogoUrl,

@@ -1,6 +1,16 @@
 import { supabase } from '../lib/supabase';
 
 /**
+ * Appends a cache-busting version timestamp query string to URLs
+ * to ensure all browsers and devices immediately display fresh images.
+ */
+export function toVersionedUrl(url) {
+  if (!url || typeof url !== 'string' || url.startsWith('data:')) return url;
+  const cleanUrl = url.split('?')[0];
+  return `${cleanUrl}?v=${Date.now()}`;
+}
+
+/**
  * StorageService
  * Handles media uploads to Supabase Storage bucket ('samarth-media')
  * with automatic fallback to Data URLs for instant client responsiveness.
@@ -24,7 +34,7 @@ export const StorageService = {
       const { data, error } = await supabase.storage
         .from('samarth-media')
         .upload(fileName, file, {
-          cacheControl: '3600',
+          cacheControl: '0',
           upsert: true,
         });
 
@@ -35,7 +45,7 @@ export const StorageService = {
           .getPublicUrl(fileName);
 
         if (urlData && urlData.publicUrl) {
-          return urlData.publicUrl;
+          return toVersionedUrl(urlData.publicUrl);
         }
       } else {
         console.warn('Supabase storage upload notice (using fallback):', error?.message);

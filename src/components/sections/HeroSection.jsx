@@ -131,6 +131,7 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           <div className="relative rounded-2xl overflow-hidden border border-surface-variant/50 shadow-xl bg-white p-2 group">
             <div className="overflow-hidden rounded-xl">
               <img
+                key={heroImgUrl}
                 src={heroImgUrl}
                 alt="Samarth Computers Modern Computer Lab"
                 loading="eager"

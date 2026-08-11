@@ -39,6 +39,7 @@ export default function Footer({ lang = 'mr', onNavigate }) {
         <div className="flex flex-col gap-sm max-w-xs">
           <div className="flex items-center gap-3">
             <img
+              key={settings?.logoUrl || 'footer-logo'}
               src={settings?.logoUrl || '/assets/logos/samarth-main-logo.png'}
               alt="Samarth Computers Logo"
               className="w-12 h-12 object-contain bg-white rounded-xl p-1 shadow-sm border border-white/20"
