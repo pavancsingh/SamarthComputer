@@ -89,8 +89,9 @@ export const AdminRepository = {
   },
 
   async saveCourse(courseData) {
+    const slug = courseData.slug || `course-${Date.now()}`;
     const payload = {
-      slug: courseData.slug || `course-${Date.now()}`,
+      slug,
       title: courseData.title,
       subtitle_mr: courseData.subtitleMr || courseData.subtitle_mr || courseData.title,
       subtitle_en: courseData.subtitleEn || courseData.subtitle_en || courseData.title,
@@ -114,8 +115,18 @@ export const AdminRepository = {
       image_url: courseData.imageUrl || courseData.image_url || null
     };
 
-    if (courseData.id && isValidUUID(courseData.id.toString())) {
-      payload.id = courseData.id;
+    let targetId = courseData.id;
+    if (targetId && isValidUUID(targetId.toString())) {
+      payload.id = targetId;
+    } else {
+      const { data: existing } = await supabase
+        .from('courses')
+        .select('id')
+        .eq('slug', slug)
+        .limit(1);
+      if (existing && existing.length > 0 && existing[0].id) {
+        payload.id = existing[0].id;
+      }
     }
 
     const res = await upsertWithColumnFallback('courses', payload);
@@ -166,8 +177,9 @@ export const AdminRepository = {
   },
 
   async saveCSCService(serviceData) {
+    const slug = serviceData.slug || `csc-${Date.now()}`;
     const payload = {
-      slug: serviceData.slug || `csc-${Date.now()}`,
+      slug,
       title_mr: serviceData.titleMr || serviceData.title_mr || serviceData.titleEn,
       title_en: serviceData.titleEn || serviceData.title_en || serviceData.titleMr,
       category: serviceData.category || 'csc',
@@ -191,8 +203,18 @@ export const AdminRepository = {
       display_order: serviceData.displayOrder !== undefined ? serviceData.displayOrder : (serviceData.display_order || 0)
     };
 
-    if (serviceData.id && isValidUUID(serviceData.id.toString())) {
-      payload.id = serviceData.id;
+    let targetId = serviceData.id;
+    if (targetId && isValidUUID(targetId.toString())) {
+      payload.id = targetId;
+    } else {
+      const { data: existing } = await supabase
+        .from('csc_services')
+        .select('id')
+        .eq('slug', slug)
+        .limit(1);
+      if (existing && existing.length > 0 && existing[0].id) {
+        payload.id = existing[0].id;
+      }
     }
 
     const res = await upsertWithColumnFallback('csc_services', payload);
@@ -233,8 +255,9 @@ export const AdminRepository = {
   },
 
   async saveGovtService(serviceData) {
+    const slug = serviceData.slug || `govt-${Date.now()}`;
     const payload = {
-      slug: serviceData.slug || `govt-${Date.now()}`,
+      slug,
       title_mr: serviceData.titleMr || serviceData.title_mr || serviceData.titleEn,
       title_en: serviceData.titleEn || serviceData.title_en || serviceData.titleMr,
       category: serviceData.category || 'revenue',
@@ -252,8 +275,18 @@ export const AdminRepository = {
       image_url: serviceData.imageUrl || serviceData.image_url || null
     };
 
-    if (serviceData.id && isValidUUID(serviceData.id.toString())) {
-      payload.id = serviceData.id;
+    let targetId = serviceData.id;
+    if (targetId && isValidUUID(targetId.toString())) {
+      payload.id = targetId;
+    } else {
+      const { data: existing } = await supabase
+        .from('govt_services')
+        .select('id')
+        .eq('slug', slug)
+        .limit(1);
+      if (existing && existing.length > 0 && existing[0].id) {
+        payload.id = existing[0].id;
+      }
     }
 
     const res = await upsertWithColumnFallback('govt_services', payload);
@@ -354,8 +387,21 @@ export const AdminRepository = {
       image_url: itemData.imageUrl || itemData.image_url
     };
 
-    if (itemData.id && isValidUUID(itemData.id.toString())) {
-      payload.id = itemData.id;
+    let targetId = itemData.id;
+    if (targetId && isValidUUID(targetId.toString())) {
+      payload.id = targetId;
+    } else {
+      const searchTitle = payload.title_en || payload.title_mr;
+      if (searchTitle) {
+        const { data: existing } = await supabase
+          .from('site_gallery')
+          .select('id')
+          .ilike('title_en', searchTitle)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      }
     }
 
     const res = await upsertWithColumnFallback('site_gallery', payload);
@@ -607,8 +653,21 @@ export const AdminRepository = {
       desc_en: itemData.descEn || itemData.desc_en || itemData.descMr || itemData.desc_mr || ''
     };
 
-    if (itemData.id && !itemData.id.toString().startsWith('n-')) {
-      payload.id = itemData.id;
+    let targetId = itemData.id;
+    if (targetId && isValidUUID(targetId.toString())) {
+      payload.id = targetId;
+    } else {
+      const searchTitle = payload.title_en || payload.title_mr;
+      if (searchTitle) {
+        const { data: existing } = await supabase
+          .from('news')
+          .select('id')
+          .ilike('title_en', searchTitle)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      }
     }
 
     const res = await upsertWithColumnFallback('news', payload);

@@ -436,11 +436,15 @@ class SharedStore {
   // --- Site Gallery & About Images ---
   getSiteGallery() { return this.siteGallery; }
   saveSiteGalleryItem(item) {
-    const idx = this.siteGallery.findIndex((g) => g.id === item.id);
+    const titleMatch = (item.title_en || item.titleEn || item.title_mr || item.titleMr || '').trim().toLowerCase();
+    const idx = this.siteGallery.findIndex((g) => 
+      (item.id && g.id === item.id) ||
+      (titleMatch && (g.title_en || g.titleEn || g.title_mr || g.titleMr || '').trim().toLowerCase() === titleMatch)
+    );
     if (idx >= 0) {
       this.siteGallery[idx] = { ...this.siteGallery[idx], ...item };
     } else {
-      this.siteGallery.unshift({ id: `gal-${Date.now()}`, ...item });
+      this.siteGallery.unshift({ id: item.id || `gal-${Date.now()}`, ...item });
     }
     saveStorage(STORAGE_KEY_GALLERY, this.siteGallery);
     this.notify();
