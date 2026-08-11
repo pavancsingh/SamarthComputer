@@ -267,9 +267,120 @@ export const COURSES_DATA = [
       { name: 'AutoCAD 2D Commands', desc: 'Line, Circle, Offset, Trim, Modify & Snap tools' },
       { name: 'Building Floor Plans', desc: '2BHK residential plans, door/window schedules & layers' },
       { name: 'Elevations & Hatching', desc: 'Front elevation, sectional view & wall hatching' },
-      { name: 'Plotting & Blueprints', desc: 'Scale printing & municipal sanction drawing layouts' }
+      { name: 'Plotting \u0026 Blueprints', desc: 'Scale printing \u0026 municipal sanction drawing layouts' }
     ],
     careersMr: ['ऑटोकॅड ड्राफ्ट्समन (सिव्हिल)', 'कन्स्ट्रक्शन CAD ऑपरेटर'],
     careersEn: ['AutoCAD Draftsman (Civil)', 'CAD Operator in Construction']
+  },
+  {
+    id: 'diploma-financial-accounting',
+    slug: 'diploma-financial-accounting',
+    title: 'Diploma in Financial Accounting',
+    subtitleMr: 'व्यावसायिक लेखांकन, फायनान्शियल स्टेटमेंट्स आणि ऑडिटिंग',
+    subtitleEn: 'Accounting • Financial Statements • Budgeting • Auditing',
+    category: 'job',
+    tag: 'फायनान्स करिअर',
+    isPrimary: true,
+    isFeatured: true,
+    displayOrder: 8,
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80',
+    durationMr: '३ महिने',
+    durationEn: '3 Months',
+    certificationMr: 'समर्थ कॉम्प्युटर्स डिप्लोमा इन फायनान्शियल अकाउंटिंग प्रमाणपत्र',
+    certificationEn: 'Samarth Computers Diploma in Financial Accounting Certificate',
+    eligibilityMr: '१२ वी (कॉमर्स) / बी.कॉम / कोणत्याही शाखेचे विद्यार्थी',
+    eligibilityEn: '12th Commerce / B.Com / Any Graduate or Job Seeker',
+    overviewMr: 'व्यावसायिक लेखांकनाचे संपूर्ण ज्ञान — जर्नल, लेजर, ट्रायल बॅलन्स, फायनल अकाउंट्स, GST बिलिंग, Tally Prime आणि फायनान्शियल रेशो ॲनालिसिस शिकवणारा सर्वसमावेशक डिप्लोमा कोर्स.',
+    overviewEn: 'Comprehensive diploma covering Journal entries, Ledger, Trial Balance, Final Accounts (P&L and Balance Sheet), GST billing, Tally Prime, and financial ratio analysis for real-world finance careers.',
+    modulesMr: [
+      { name: 'अकाउंटिंग फाऊंडेशन', desc: 'जर्नल, लेजर, ट्रायल बॅलन्स, दुहेरी नोंद पद्धत' },
+      { name: 'फायनल अकाउंट्स तयार करणे', desc: 'नफा-तोटा खाते, ताळेबंद, कॅश फ्लो स्टेटमेंट' },
+      { name: 'GST बिलिंग \u0026 रिटर्न', desc: 'GST नोंदणी, GSTR-1, GSTR-3B, E-Invoice' },
+      { name: 'Tally Prime इंटीग्रेशन', desc: 'Tally मध्ये अकाउंटिंग, इन्व्हेंटरी व रिपोर्ट' },
+      { name: 'फायनान्शियल ॲनालिसिस', desc: 'रेशो ॲनालिसिस, बजेटिंग, ऑडिट तपासणी' }
+    ],
+    modulesEn: [
+      { name: 'Accounting Fundamentals', desc: 'Journal entries, Ledger posting, Trial Balance, Double-entry' },
+      { name: 'Final Account Preparation', desc: 'Profit & Loss, Balance Sheet, Cash Flow Statements' },
+      { name: 'GST Billing & Returns', desc: 'GST registration, GSTR-1, GSTR-3B, E-Invoice filing' },
+      { name: 'Tally Prime Integration', desc: 'Accounting, inventory & reporting inside Tally Prime' },
+      { name: 'Financial Analysis & Audit', desc: 'Ratio analysis, budgeting, internal audit basics' }
+    ],
+    careersMr: ['जूनिअर अकाउंटंट', 'GST कन्सल्टंट', 'बँक क्लर्क परीक्षा तयारी'],
+    careersEn: ['Junior Accountant', 'GST Consultant', 'Finance Executive', 'Bank Clerk Aspirant']
+  },
+  {
+    id: 'share-market-banking',
+    slug: 'share-market-banking',
+    title: 'Share Market / Banking & Finance',
+    subtitleMr: 'शेअर मार्केट, म्युच्युअल फंड, बँकिंग आणि फायनान्शियल प्लॅनिंग',
+    subtitleEn: 'Stock Market • Mutual Funds • Banking Basics • Financial Planning',
+    category: 'job',
+    tag: 'इन्व्हेस्टमेंट करिअर',
+    isPrimary: true,
+    isFeatured: true,
+    displayOrder: 9,
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80',
+    durationMr: '२ महिने',
+    durationEn: '2 Months',
+    certificationMr: 'समर्थ कॉम्प्युटर्स शेअर मार्केट \u0026 फायनान्स प्रमाणपत्र',
+    certificationEn: 'Samarth Computers Share Market & Finance Certificate',
+    eligibilityMr: '१२ वी उत्तीर्ण / कोणत्याही शाखेचे विद्यार्थी / नोकरदार',
+    eligibilityEn: '12th Pass or above, Investors & Finance Enthusiasts',
+    overviewMr: 'NSE/BSE शेअर मार्केट, Demat अकाउंट उघडणे, IPO, म्युच्युअल फंड, SIP इन्व्हेस्टमेंट, बँकिंग प्रक्रिया आणि पर्सनल फायनान्शियल प्लॅनिंग शिकवणारा व्यावहारिक कोर्स.',
+    overviewEn: 'Practical course covering NSE/BSE stock market, opening Demat accounts, IPO investing, Mutual Funds, SIP planning, banking processes, and personal financial management.',
+    modulesMr: [
+      { name: 'शेअर मार्केट मूलभूत', desc: 'NSE/BSE, Demat अकाउंट, ब्रोकर निवड, IPO अर्ज' },
+      { name: 'टेक्निकल ॲनालिसिस', desc: 'चार्ट रीडिंग, कँडलस्टिक पॅटर्न, सपोर्ट-रेझिस्टन्स' },
+      { name: 'म्युच्युअल फंड \u0026 SIP', desc: 'फंड निवड, SIP कॅल्क्युलेटर, NAV, ELSS टॅक्स बेनिफिट' },
+      { name: 'बँकिंग प्रक्रिया', desc: 'बँक अकाउंट, FD, RD, लोन प्रक्रिया, NEFT/RTGS' },
+      { name: 'पर्सनल फायनान्शियल प्लॅनिंग', desc: 'बजेट, बचत योजना, जीवन विमा, आयकर मूलभूत' }
+    ],
+    modulesEn: [
+      { name: 'Stock Market Fundamentals', desc: 'NSE/BSE, Demat account, broker selection, IPO applications' },
+      { name: 'Technical Analysis', desc: 'Chart reading, candlestick patterns, support & resistance' },
+      { name: 'Mutual Funds & SIP', desc: 'Fund selection, SIP calculator, NAV, ELSS tax saving' },
+      { name: 'Banking Processes', desc: 'Bank accounts, FD/RD, loans, NEFT/RTGS/UPI transfers' },
+      { name: 'Personal Financial Planning', desc: 'Budgeting, savings plans, life insurance, income tax basics' }
+    ],
+    careersMr: ['शेअर मार्केट ट्रेडर', 'म्युच्युअल फंड एजंट', 'फायनान्शियल प्लॅनर'],
+    careersEn: ['Stock Market Trader', 'Mutual Fund Distributor', 'Financial Planner', 'Bank Sales Executive']
+  },
+  {
+    id: 'work-from-home-tools',
+    slug: 'work-from-home-tools',
+    title: 'Work From Home Tools',
+    subtitleMr: 'घरातून काम करण्यासाठी डिजिटल टूल्स आणि फ्रीलान्सिंग स्किल्स',
+    subtitleEn: 'Remote Work • Digital Tools • Freelancing • Online Income',
+    category: 'job',
+    tag: 'फ्रीलान्सिंग',
+    isPrimary: true,
+    isFeatured: true,
+    displayOrder: 10,
+    imageUrl: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80',
+    durationMr: '१.५ महिने',
+    durationEn: '1.5 Months',
+    certificationMr: 'समर्थ कॉम्प्युटर्स वर्क फ्रॉम होम टूल्स प्रमाणपत्र',
+    certificationEn: 'Samarth Computers Work From Home Tools Certificate',
+    eligibilityMr: 'गृहिणी, विद्यार्थी, नोकरदार — कोणीही शिकू शकतो',
+    eligibilityEn: 'Housewives, Students, Job Seekers & Working Professionals',
+    overviewMr: 'घरून ऑनलाइन काम करण्यासाठी आवश्यक डिजिटल टूल्स — Zoom/Google Meet, Google Workspace, Canva डिझाइन, ChatGPT, Fiverr/Upwork फ्रीलान्सिंग, डिजिटल मार्केटिंग आणि ऑनलाइन पेमेंट सेटअप शिकवणारा प्रॅक्टिकल कोर्स.',
+    overviewEn: 'Practical course on digital tools for remote work and online income — Zoom/Google Meet, Google Workspace, Canva design, ChatGPT AI, Fiverr/Upwork freelancing, and digital marketing basics.',
+    modulesMr: [
+      { name: 'व्हिडिओ कॉन्फरन्सिंग टूल्स', desc: 'Zoom, Google Meet, MS Teams — मीटिंग व स्क्रीन शेअर' },
+      { name: 'Google Workspace', desc: 'Gmail, Drive, Docs, Sheets, Forms व Calendar' },
+      { name: 'Canva डिझाइन', desc: 'पोस्टर, रिज्युमे, सोशल मीडिया व YouTube थंबनेल' },
+      { name: 'ChatGPT \u0026 AI टूल्स', desc: 'कंटेंट लेखन, अनुवाद, AI इमेज व ऑटोमेशन' },
+      { name: 'फ्रीलान्सिंग \u0026 ऑनलाइन कमाई', desc: 'Fiverr/Upwork प्रोफाइल, गिग तयार करणे, UPI पेमेंट' }
+    ],
+    modulesEn: [
+      { name: 'Video Conferencing Tools', desc: 'Zoom, Google Meet, MS Teams — meetings & screen sharing' },
+      { name: 'Google Workspace', desc: 'Gmail, Drive, Docs, Sheets, Forms & Calendar' },
+      { name: 'Canva Design', desc: 'Posters, resume, social media & YouTube thumbnail design' },
+      { name: 'ChatGPT & AI Tools', desc: 'Content writing, translation, AI image creation & automation' },
+      { name: 'Freelancing & Online Income', desc: 'Fiverr/Upwork profile, gig creation, UPI payment setup' }
+    ],
+    careersMr: ['फ्रीलान्स कंटेंट रायटर', 'सोशल मीडिया मॅनेजर', 'व्हर्च्युअल असिस्टंट'],
+    careersEn: ['Freelance Content Writer', 'Social Media Manager', 'Virtual Assistant', 'Online Tutor']
   }
 ];
