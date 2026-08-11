@@ -55,5 +55,39 @@ export const StorageService = {
       };
       reader.readAsDataURL(file);
     });
+  },
+
+  /**
+   * Delete an image from Supabase Storage bucket 'samarth-media' by its public URL
+   * @param {string} imageUrl - Public image URL to remove from storage
+   * @returns {Promise<boolean>} True if deleted or ignored safely, false on error
+   */
+  async deleteImage(imageUrl) {
+    if (!imageUrl || typeof imageUrl !== 'string') return false;
+    // Skip external fallback images (Unsplash, local assets, base64)
+    if (imageUrl.startsWith('data:') || imageUrl.startsWith('http://') || imageUrl.startsWith('/') || imageUrl.includes('unsplash.com')) {
+      return true;
+    }
+
+    try {
+      const bucketMarker = '/samarth-media/';
+      const index = imageUrl.indexOf(bucketMarker);
+      if (index !== -1) {
+        const filePath = imageUrl.substring(index + bucketMarker.length);
+        if (filePath) {
+          const { error } = await supabase.storage
+            .from('samarth-media')
+            .remove([filePath]);
+          if (error) {
+            console.warn('[StorageService] Error deleting old storage image:', error.message);
+            return false;
+          }
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('[StorageService] Storage delete exception:', err.message);
+    }
+    return false;
   }
 };

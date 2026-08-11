@@ -66,6 +66,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   const [actionNotice, setActionNotice] = useState(null); // { type: 'success' | 'error', text: '' }
 
   const [siteSettings, setSiteSettings] = useState(sharedStore.getSiteSettings());
+  const [pendingLogo, setPendingLogo] = useState(null); // { file: File, previewUrl: string }
+  const [pendingHero, setPendingHero] = useState(null); // { file: File, previewUrl: string }
 
   useEffect(() => {
     loadAllData();
@@ -98,15 +100,136 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     setLoading(false);
   }
 
+  // Cleanup Object URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (pendingLogo?.previewUrl) URL.revokeObjectURL(pendingLogo.previewUrl);
+      if (pendingHero?.previewUrl) URL.revokeObjectURL(pendingHero.previewUrl);
+    };
+  }, [pendingLogo, pendingHero]);
+
+  // Image Selection with Type & Size Validation + Instant Preview
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+  const handleSelectBrandingImage = (e, type) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    // 1. Validate File Format
+    if (!file.type || !file.type.startsWith('image/')) {
+      setActionNotice({ type: 'error', text: 'Invalid file format. Please select an image file (PNG, JPG, WebP, SVG).' });
+      return;
+    }
+
+    // 2. Validate File Size
+    if (file.size > MAX_FILE_SIZE) {
+      setActionNotice({ type: 'error', text: 'File size exceeds 5 MB. Please select a smaller image file.' });
+      return;
+    }
+
+    // 3. Create instant local Object URL preview
+    const previewUrl = URL.createObjectURL(file);
+
+    if (type === 'logo') {
+      if (pendingLogo?.previewUrl) URL.revokeObjectURL(pendingLogo.previewUrl);
+      setPendingLogo({ file, previewUrl });
+      setActionNotice({ type: 'success', text: 'New Logo preview loaded! Click "Save Site Branding Settings" to upload & save.' });
+    } else if (type === 'hero') {
+      if (pendingHero?.previewUrl) URL.revokeObjectURL(pendingHero.previewUrl);
+      setPendingHero({ file, previewUrl });
+      setActionNotice({ type: 'success', text: 'New Hero Banner preview loaded! Click "Save Site Branding Settings" to upload & save.' });
+    }
+  };
+
+  // Discard / Cancel Pending Image Selection
+  const handleCancelBrandingImage = (type) => {
+    if (type === 'logo' && pendingLogo) {
+      if (pendingLogo.previewUrl) URL.revokeObjectURL(pendingLogo.previewUrl);
+      setPendingLogo(null);
+      setActionNotice({ type: 'success', text: 'Selected logo preview discarded.' });
+    } else if (type === 'hero' && pendingHero) {
+      if (pendingHero.previewUrl) URL.revokeObjectURL(pendingHero.previewUrl);
+      setPendingHero(null);
+      setActionNotice({ type: 'success', text: 'Selected hero background preview discarded.' });
+    }
+  };
+
+  // Confirm & Save Branding Settings
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const res = await AdminRepository.saveSiteSettings(siteSettings);
-    setIsSubmitting(false);
-    if (res.success) {
-      setActionNotice({ type: 'success', text: 'Site Logo & Hero Background Image settings saved successfully!' });
-    } else {
-      setActionNotice({ type: 'error', text: `Failed to save settings: ${res.error}` });
+    setActionNotice(null);
+
+    const oldLogoUrl = siteSettings.logoUrl;
+    const oldHeroUrl = siteSettings.heroBgUrl;
+    let finalLogoUrl = siteSettings.logoUrl;
+    let finalHeroUrl = siteSettings.heroBgUrl;
+
+    try {
+      // 1. Upload Logo if pending
+      if (pendingLogo?.file) {
+        setUploadingImage(true);
+        const uploadedLogoUrl = await StorageService.uploadImage(pendingLogo.file, 'logo');
+        setUploadingImage(false);
+        if (!uploadedLogoUrl) {
+          setActionNotice({ type: 'error', text: 'Failed to upload logo image to Storage. Save aborted.' });
+          setIsSubmitting(false);
+          return;
+        }
+        finalLogoUrl = uploadedLogoUrl;
+      }
+
+      // 2. Upload Hero Banner if pending
+      if (pendingHero?.file) {
+        setUploadingImage(true);
+        const uploadedHeroUrl = await StorageService.uploadImage(pendingHero.file, 'hero');
+        setUploadingImage(false);
+        if (!uploadedHeroUrl) {
+          setActionNotice({ type: 'error', text: 'Failed to upload hero banner image to Storage. Save aborted.' });
+          setIsSubmitting(false);
+          return;
+        }
+        finalHeroUrl = uploadedHeroUrl;
+      }
+
+      // 3. Save Settings to DB
+      const updatedSettings = {
+        ...siteSettings,
+        logoUrl: finalLogoUrl,
+        heroBgUrl: finalHeroUrl
+      };
+
+      const res = await AdminRepository.saveSiteSettings(updatedSettings);
+
+      if (res.success) {
+        // 4. Delete old Storage files if replaced
+        if (pendingLogo?.file && oldLogoUrl && oldLogoUrl !== finalLogoUrl) {
+          await StorageService.deleteImage(oldLogoUrl);
+        }
+        if (pendingHero?.file && oldHeroUrl && oldHeroUrl !== finalHeroUrl) {
+          await StorageService.deleteImage(oldHeroUrl);
+        }
+
+        // 5. Cleanup preview Object URLs and clear pending state
+        if (pendingLogo?.previewUrl) URL.revokeObjectURL(pendingLogo.previewUrl);
+        if (pendingHero?.previewUrl) URL.revokeObjectURL(pendingHero.previewUrl);
+        setPendingLogo(null);
+        setPendingHero(null);
+
+        setSiteSettings(updatedSettings);
+        sharedStore.saveSiteSettings(updatedSettings);
+
+        setActionNotice({ type: 'success', text: 'Site Branding Settings updated & saved successfully!' });
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to save settings: ${res.error}` });
+      }
+    } catch (err) {
+      console.error('[AdminDashboard] handleSaveSettings exception:', err);
+      setActionNotice({ type: 'error', text: 'An unexpected error occurred while saving branding settings.' });
+    } finally {
+      setIsSubmitting(false);
+      setUploadingImage(false);
     }
   };
 
@@ -1378,65 +1501,211 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
               <div className="space-y-6 max-w-3xl">
                 <div>
                   <h1 className="text-2xl font-black text-slate-900 tracking-tight">Site Branding Settings</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">Header logo image URL and Hero background image manager</p>
+                  <p className="text-xs font-semibold text-slate-500 mt-1">
+                    Manage brand logo and hero banner with instant local preview, file validation, and automatic cloud storage synchronization.
+                  </p>
                 </div>
 
-                <form onSubmit={handleSaveSettings} className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-6">
+                <form onSubmit={handleSaveSettings} className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-8">
                   
-                  {/* Logo Image */}
-                  <div className="space-y-3">
-                    <label className="block text-xs font-black text-slate-900">1. Header Brand Logo Image:</label>
-                    <div className="flex items-center gap-3">
-                      <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all">
-                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                        <span>{uploadingImage ? 'Uploading...' : 'Choose Logo File'}</span>
+                  {/* 1. Logo Image Management */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-black text-slate-900 uppercase tracking-wider">
+                        1. Header Brand Logo Image
+                      </label>
+                      <span className="text-[10px] font-semibold text-slate-400">PNG, JPG, WebP, SVG • Max 5MB</span>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                      <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm">
+                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-accent-gold" /> : <Upload className="w-4 h-4 text-accent-gold" />}
+                        <span>Select Logo File</span>
                         <input 
                           type="file" 
                           accept="image/*" 
-                          onChange={(e) => handleFileUpload(e, 'logo', (url) => setSiteSettings((prev) => ({ ...prev, logoUrl: url })))} 
+                          onChange={(e) => handleSelectBrandingImage(e, 'logo')} 
                           className="hidden" 
                         />
                       </label>
                       <input
                         type="text"
                         placeholder="Logo Image URL"
-                        value={siteSettings.logoUrl || ''}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, logoUrl: e.target.value })}
-                        className="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-800"
+                        value={pendingLogo ? pendingLogo.previewUrl : (siteSettings.logoUrl || '')}
+                        onChange={(e) => {
+                          if (pendingLogo) setPendingLogo(null);
+                          setSiteSettings({ ...siteSettings, logoUrl: e.target.value });
+                        }}
+                        className="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
                       />
+                    </div>
+
+                    {/* Logo Preview Section (Current vs New Selected Preview) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                      {/* Current Logo Box */}
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                            Current Active Logo
+                          </span>
+                        </div>
+                        <div className="h-20 flex items-center justify-center bg-white border border-slate-200 rounded-lg p-2">
+                          {siteSettings.logoUrl ? (
+                            <img 
+                              src={siteSettings.logoUrl} 
+                              alt="Current Logo" 
+                              className="max-h-full max-w-full object-contain"
+                              onError={(e) => { e.currentTarget.src = '/assets/logos/samarth-main-logo.png'; }}
+                            />
+                          ) : (
+                            <span className="text-xs text-slate-400 italic">No custom logo set</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* New Selected Logo Preview Box */}
+                      {pendingLogo ? (
+                        <div className="bg-primary/5 border border-primary/30 p-4 rounded-xl space-y-2 relative animate-in fade-in duration-200">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-primary text-white flex items-center gap-1">
+                              <Sparkles className="w-3 h-3 text-accent-gold" /> New Selected Preview
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCancelBrandingImage('logo')}
+                              className="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1 rounded-lg flex items-center gap-1 transition-all"
+                              title="Discard pending logo selection"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Discard
+                            </button>
+                          </div>
+                          <div className="h-20 flex items-center justify-center bg-white border border-primary/20 rounded-lg p-2">
+                            <img 
+                              src={pendingLogo.previewUrl} 
+                              alt="New Logo Preview" 
+                              className="max-h-full max-w-full object-contain" 
+                            />
+                          </div>
+                          <p className="text-[10px] text-slate-500 font-semibold truncate">
+                            File: {pendingLogo.file.name} ({(pendingLogo.file.size / 1024).toFixed(1)} KB)
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="bg-slate-50/50 border border-dashed border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs text-center space-y-1">
+                          <Image className="w-6 h-6 text-slate-300 mb-1" />
+                          <span>Select a file to preview change</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Hero Background Image */}
-                  <div className="space-y-3 border-t border-slate-100 pt-5">
-                    <label className="block text-xs font-black text-slate-900">2. Hero Banner Background Image:</label>
-                    <div className="flex items-center gap-3">
-                      <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all">
-                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                        <span>{uploadingImage ? 'Uploading...' : 'Choose Background File'}</span>
+                  {/* 2. Hero Background Banner Image Management */}
+                  <div className="space-y-4 border-t border-slate-100 pt-6">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-black text-slate-900 uppercase tracking-wider">
+                        2. Hero Banner Background Image
+                      </label>
+                      <span className="text-[10px] font-semibold text-slate-400">PNG, JPG, WebP • Max 5MB</span>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                      <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm">
+                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-accent-gold" /> : <Upload className="w-4 h-4 text-accent-gold" />}
+                        <span>Select Banner File</span>
                         <input 
                           type="file" 
                           accept="image/*" 
-                          onChange={(e) => handleFileUpload(e, 'hero', (url) => setSiteSettings((prev) => ({ ...prev, heroBgUrl: url })))} 
+                          onChange={(e) => handleSelectBrandingImage(e, 'hero')} 
                           className="hidden" 
                         />
                       </label>
                       <input
                         type="text"
                         placeholder="Hero Background URL"
-                        value={siteSettings.heroBgUrl || ''}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, heroBgUrl: e.target.value })}
-                        className="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-800"
+                        value={pendingHero ? pendingHero.previewUrl : (siteSettings.heroBgUrl || '')}
+                        onChange={(e) => {
+                          if (pendingHero) setPendingHero(null);
+                          setSiteSettings({ ...siteSettings, heroBgUrl: e.target.value });
+                        }}
+                        className="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20"
                       />
+                    </div>
+
+                    {/* Banner Preview Section (Current vs New Selected Preview) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                      {/* Current Banner Box */}
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                            Current Active Banner
+                          </span>
+                        </div>
+                        <div className="h-28 overflow-hidden bg-slate-200 border border-slate-200 rounded-lg">
+                          {siteSettings.heroBgUrl ? (
+                            <img 
+                              src={siteSettings.heroBgUrl} 
+                              alt="Current Banner" 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-xs text-slate-400 italic">No custom banner set</div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* New Selected Banner Preview Box */}
+                      {pendingHero ? (
+                        <div className="bg-primary/5 border border-primary/30 p-4 rounded-xl space-y-2 relative animate-in fade-in duration-200">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-primary text-white flex items-center gap-1">
+                              <Sparkles className="w-3 h-3 text-accent-gold" /> New Selected Preview
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCancelBrandingImage('hero')}
+                              className="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1 rounded-lg flex items-center gap-1 transition-all"
+                              title="Discard pending hero banner selection"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Discard
+                            </button>
+                          </div>
+                          <div className="h-28 overflow-hidden bg-slate-200 border border-primary/30 rounded-lg">
+                            <img 
+                              src={pendingHero.previewUrl} 
+                              alt="New Banner Preview" 
+                              className="w-full h-full object-cover" 
+                            />
+                          </div>
+                          <p className="text-[10px] text-slate-500 font-semibold truncate">
+                            File: {pendingHero.file.name} ({(pendingHero.file.size / 1024).toFixed(1)} KB)
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="bg-slate-50/50 border border-dashed border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs text-center space-y-1">
+                          <Image className="w-6 h-6 text-slate-300 mb-1" />
+                          <span>Select a file to preview change</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
+                  {/* Save Button */}
                   <button
                     type="submit"
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 hover:scale-[1.01]"
+                    disabled={isSubmitting || uploadingImage}
+                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 hover:scale-[1.01] disabled:opacity-50"
                   >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Site Branding Settings</span>
+                    {isSubmitting || uploadingImage ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-white" />
+                        <span>Processing & Saving Settings...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 text-white" />
+                        <span>Save Site Branding Settings</span>
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
