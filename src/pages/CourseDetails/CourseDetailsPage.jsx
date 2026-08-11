@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CourseRepository } from '../../repositories/CourseRepository';
 import AdmissionModal from '../../components/forms/AdmissionModal';
+import MSCIT3DCourseMap from '../../components/sections/MSCIT3DCourseMap';
 
 /**
  * CourseDetailsPage — Stitch Design System (05_mscit_course_details.html)
@@ -126,6 +127,9 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
                 ))}
               </div>
             </section>
+
+            {/* 3D MS-CIT Interactive Learning Journey Course Map */}
+            <MSCIT3DCourseMap course={course} lang={lang} onNavigate={onNavigate} />
 
             {/* 3. Official Certification Section */}
             <section className="bg-surface-container-low rounded-xl p-lg border border-surface-variant/50 flex flex-col md:flex-row gap-lg items-center">
