@@ -711,134 +711,304 @@ export const AdminRepository = {
     return { success: true };
   },
 
-  // ================= SITE SETTINGS CRUD =================
+  // ================= MODULAR SITE SETTINGS CRUD =================
   async getSiteSettings() {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('*')
-      .eq('id', 'main_settings')
-      .maybeSingle();
+    const defaultSettings = sharedStore.getSiteSettings();
+    try {
+      const [
+        brandingRes,
+        homeRes,
+        aboutRes,
+        contactRes,
+        infoRes,
+        seoRes,
+        socialRes,
+        footerRes
+      ] = await Promise.all([
+        supabase.from('branding_settings').select('*').eq('id', 'main_branding').maybeSingle(),
+        supabase.from('home_settings').select('*').eq('id', 'main_home').maybeSingle(),
+        supabase.from('about_settings').select('*').eq('id', 'main_about').maybeSingle(),
+        supabase.from('contact_settings').select('*').eq('id', 'main_contact').maybeSingle(),
+        supabase.from('site_information').select('*').eq('id', 'main_info').maybeSingle(),
+        supabase.from('seo_settings').select('*').eq('id', 'main_seo').maybeSingle(),
+        supabase.from('social_links').select('*').eq('id', 'main_social').maybeSingle(),
+        supabase.from('footer_settings').select('*').eq('id', 'main_footer').maybeSingle()
+      ]);
 
-    if (!error && data) {
-      const defaultSettings = sharedStore.getSiteSettings();
-      return {
+      const branding = brandingRes.data || {};
+      const home = homeRes.data || {};
+      const about = aboutRes.data || {};
+      const contact = contactRes.data || {};
+      const info = infoRes.data || {};
+      const seo = seoRes.data || {};
+      const social = socialRes.data || {};
+      const footer = footerRes.data || {};
+
+      // If new tables empty, fallback to legacy site_settings row
+      if (!brandingRes.data && !homeRes.data) {
+        const { data: legacy } = await supabase.from('site_settings').select('*').eq('id', 'main_settings').maybeSingle();
+        if (legacy) {
+          return {
+            ...defaultSettings,
+            logoUrl: legacy.logo_url || defaultSettings.logoUrl,
+            heroBgUrl: legacy.hero_bg_url || defaultSettings.heroBgUrl,
+            heroTitleMr: legacy.hero_title_mr || defaultSettings.heroTitleMr,
+            heroTitleEn: legacy.hero_title_en || defaultSettings.heroTitleEn,
+            heroSubtitleMr: legacy.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
+            heroSubtitleEn: legacy.hero_subtitle_en || defaultSettings.heroSubtitleEn,
+            heroBadgeMr: legacy.hero_badge_mr || defaultSettings.heroBadgeMr,
+            heroBadgeEn: legacy.hero_badge_en || defaultSettings.heroBadgeEn,
+            heroCtaTextMr: legacy.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
+            heroCtaTextEn: legacy.hero_cta_text_en || defaultSettings.heroCtaTextEn,
+            heroCtaDest: legacy.hero_cta_dest || defaultSettings.heroCtaDest,
+            contactPhone: legacy.contact_phone || defaultSettings.contactPhone,
+            contactWhatsapp: legacy.contact_whatsapp || defaultSettings.contactWhatsapp,
+            contactEmail: legacy.contact_email || defaultSettings.contactEmail,
+            contactAddressMr: legacy.contact_address_mr || defaultSettings.contactAddressMr,
+            contactAddressEn: legacy.contact_address_en || defaultSettings.contactAddressEn,
+            contactHoursMr: legacy.contact_hours_mr || defaultSettings.contactHoursMr,
+            contactHoursEn: legacy.contact_hours_en || defaultSettings.contactHoursEn,
+            contactMapUrl: legacy.contact_map_url || defaultSettings.contactMapUrl,
+            callCtaPhone: legacy.call_cta_phone || defaultSettings.callCtaPhone,
+            callCtaTextMr: legacy.call_cta_text_mr || defaultSettings.callCtaTextMr,
+            callCtaTextEn: legacy.call_cta_text_en || defaultSettings.callCtaTextEn,
+            aboutHeadingMr: legacy.about_heading_mr || defaultSettings.aboutHeadingMr,
+            aboutHeadingEn: legacy.about_heading_en || defaultSettings.aboutHeadingEn,
+            aboutDescMr: legacy.about_desc_mr || defaultSettings.aboutDescMr,
+            aboutDescEn: legacy.about_desc_en || defaultSettings.aboutDescEn,
+            aboutImageUrl: legacy.about_image_url || defaultSettings.aboutImageUrl,
+            aboutMissionMr: legacy.about_mission_mr || defaultSettings.aboutMissionMr,
+            aboutMissionEn: legacy.about_mission_en || defaultSettings.aboutMissionEn,
+            aboutVisionMr: legacy.about_vision_mr || defaultSettings.aboutVisionMr,
+            aboutVisionEn: legacy.about_vision_en || defaultSettings.aboutVisionEn,
+            aboutValues: legacy.about_values || defaultSettings.aboutValues,
+            aboutTimeline: legacy.about_timeline || defaultSettings.aboutTimeline,
+            homeSections: legacy.home_sections && Object.keys(legacy.home_sections).length > 0 ? legacy.home_sections : defaultSettings.homeSections,
+            whyChooseUs: legacy.why_choose_us || defaultSettings.whyChooseUs,
+            navSettings: legacy.nav_settings || defaultSettings.navSettings,
+            siteTitleMr: legacy.site_title_mr || defaultSettings.siteTitleMr,
+            siteTitleEn: legacy.site_title_en || defaultSettings.siteTitleEn,
+            alcCode: legacy.alc_code || defaultSettings.alcCode,
+            cscId: legacy.csc_id || defaultSettings.cscId,
+            seoTitle: legacy.seo_title || defaultSettings.seoTitle,
+            seoDescription: legacy.seo_description || defaultSettings.seoDescription,
+            seoKeywords: legacy.seo_keywords || defaultSettings.seoKeywords,
+            socialFacebook: legacy.social_facebook || defaultSettings.socialFacebook,
+            socialInstagram: legacy.social_instagram || defaultSettings.socialInstagram,
+            socialYoutube: legacy.social_youtube || defaultSettings.socialYoutube,
+            footerTagline: legacy.footer_tagline || defaultSettings.footerTagline,
+            copyrightText: legacy.copyright_text || defaultSettings.copyrightText
+          };
+        }
+      }
+
+      const mergedSettings = {
         ...defaultSettings,
-        logoUrl: data.logo_url || defaultSettings.logoUrl,
-        heroBgUrl: data.hero_bg_url || defaultSettings.heroBgUrl,
-        heroTitleMr: data.hero_title_mr || defaultSettings.heroTitleMr,
-        heroTitleEn: data.hero_title_en || defaultSettings.heroTitleEn,
-        heroSubtitleMr: data.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
-        heroSubtitleEn: data.hero_subtitle_en || defaultSettings.heroSubtitleEn,
-        heroBadgeMr: data.hero_badge_mr || defaultSettings.heroBadgeMr,
-        heroBadgeEn: data.hero_badge_en || defaultSettings.heroBadgeEn,
-        heroCtaTextMr: data.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
-        heroCtaTextEn: data.hero_cta_text_en || defaultSettings.heroCtaTextEn,
-        heroCtaDest: data.hero_cta_dest || defaultSettings.heroCtaDest,
-        contactPhone: data.contact_phone || defaultSettings.contactPhone,
-        contactWhatsapp: data.contact_whatsapp || defaultSettings.contactWhatsapp,
-        contactEmail: data.contact_email || defaultSettings.contactEmail,
-        contactAddressMr: data.contact_address_mr || defaultSettings.contactAddressMr,
-        contactAddressEn: data.contact_address_en || defaultSettings.contactAddressEn,
-        contactHoursMr: data.contact_hours_mr || defaultSettings.contactHoursMr,
-        contactHoursEn: data.contact_hours_en || defaultSettings.contactHoursEn,
-        contactMapUrl: data.contact_map_url || defaultSettings.contactMapUrl,
-        callCtaPhone: data.call_cta_phone || defaultSettings.callCtaPhone,
-        callCtaTextMr: data.call_cta_text_mr || defaultSettings.callCtaTextMr,
-        callCtaTextEn: data.call_cta_text_en || defaultSettings.callCtaTextEn,
-        aboutHeadingMr: data.about_heading_mr || defaultSettings.aboutHeadingMr,
-        aboutHeadingEn: data.about_heading_en || defaultSettings.aboutHeadingEn,
-        aboutDescMr: data.about_desc_mr || defaultSettings.aboutDescMr,
-        aboutDescEn: data.about_desc_en || defaultSettings.aboutDescEn,
-        aboutImageUrl: data.about_image_url || defaultSettings.aboutImageUrl,
-        aboutMissionMr: data.about_mission_mr || defaultSettings.aboutMissionMr,
-        aboutMissionEn: data.about_mission_en || defaultSettings.aboutMissionEn,
-        aboutVisionMr: data.about_vision_mr || defaultSettings.aboutVisionMr,
-        aboutVisionEn: data.about_vision_en || defaultSettings.aboutVisionEn,
-        aboutValues: data.about_values || defaultSettings.aboutValues,
-        aboutTimeline: data.about_timeline || defaultSettings.aboutTimeline,
-        homeSections: data.home_sections && Object.keys(data.home_sections).length > 0 ? data.home_sections : defaultSettings.homeSections,
-        whyChooseUs: data.why_choose_us || defaultSettings.whyChooseUs,
-        navSettings: data.nav_settings || defaultSettings.navSettings,
-        siteTitleMr: data.site_title_mr || defaultSettings.siteTitleMr,
-        siteTitleEn: data.site_title_en || defaultSettings.siteTitleEn,
-        alcCode: data.alc_code || defaultSettings.alcCode,
-        cscId: data.csc_id || defaultSettings.cscId,
-        seoTitle: data.seo_title || defaultSettings.seoTitle,
-        seoDescription: data.seo_description || defaultSettings.seoDescription,
-        seoKeywords: data.seo_keywords || defaultSettings.seoKeywords,
-        socialFacebook: data.social_facebook || defaultSettings.socialFacebook,
-        socialInstagram: data.social_instagram || defaultSettings.socialInstagram,
-        socialYoutube: data.social_youtube || defaultSettings.socialYoutube,
-        footerTagline: data.footer_tagline || defaultSettings.footerTagline,
-        copyrightText: data.copyright_text || defaultSettings.copyrightText
+        logoUrl: branding.logo_url || defaultSettings.logoUrl,
+        heroBgUrl: branding.hero_bg_url || defaultSettings.heroBgUrl,
+        heroTitleMr: home.hero_title_mr || defaultSettings.heroTitleMr,
+        heroTitleEn: home.hero_title_en || defaultSettings.heroTitleEn,
+        heroSubtitleMr: home.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
+        heroSubtitleEn: home.hero_subtitle_en || defaultSettings.heroSubtitleEn,
+        heroBadgeMr: home.hero_badge_mr || defaultSettings.heroBadgeMr,
+        heroBadgeEn: home.hero_badge_en || defaultSettings.heroBadgeEn,
+        heroCtaTextMr: home.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
+        heroCtaTextEn: home.hero_cta_text_en || defaultSettings.heroCtaTextEn,
+        heroCtaDest: home.hero_cta_dest || defaultSettings.heroCtaDest,
+        homeSections: home.home_sections && Object.keys(home.home_sections).length > 0 ? home.home_sections : defaultSettings.homeSections,
+        whyChooseUs: home.why_choose_us || defaultSettings.whyChooseUs,
+        aboutHeadingMr: about.about_heading_mr || defaultSettings.aboutHeadingMr,
+        aboutHeadingEn: about.about_heading_en || defaultSettings.aboutHeadingEn,
+        aboutDescMr: about.about_desc_mr || defaultSettings.aboutDescMr,
+        aboutDescEn: about.about_desc_en || defaultSettings.aboutDescEn,
+        aboutImageUrl: about.about_image_url || defaultSettings.aboutImageUrl,
+        aboutMissionMr: about.about_mission_mr || defaultSettings.aboutMissionMr,
+        aboutMissionEn: about.about_mission_en || defaultSettings.aboutMissionEn,
+        aboutVisionMr: about.about_vision_mr || defaultSettings.aboutVisionMr,
+        aboutVisionEn: about.about_vision_en || defaultSettings.aboutVisionEn,
+        aboutValues: about.about_values || defaultSettings.aboutValues,
+        aboutTimeline: about.about_timeline || defaultSettings.aboutTimeline,
+        contactPhone: contact.contact_phone || defaultSettings.contactPhone,
+        contactWhatsapp: contact.contact_whatsapp || defaultSettings.contactWhatsapp,
+        contactEmail: contact.contact_email || defaultSettings.contactEmail,
+        contactAddressMr: contact.contact_address_mr || defaultSettings.contactAddressMr,
+        contactAddressEn: contact.contact_address_en || defaultSettings.contactAddressEn,
+        contactHoursMr: contact.contact_hours_mr || defaultSettings.contactHoursMr,
+        contactHoursEn: contact.contact_hours_en || defaultSettings.contactHoursEn,
+        contactMapUrl: contact.contact_map_url || defaultSettings.contactMapUrl,
+        callCtaPhone: contact.call_cta_phone || defaultSettings.callCtaPhone,
+        callCtaTextMr: contact.call_cta_text_mr || defaultSettings.callCtaTextMr,
+        callCtaTextEn: contact.call_cta_text_en || defaultSettings.callCtaTextEn,
+        siteTitleMr: info.site_title_mr || defaultSettings.siteTitleMr,
+        siteTitleEn: info.site_title_en || defaultSettings.siteTitleEn,
+        alcCode: info.alc_code || defaultSettings.alcCode,
+        cscId: info.csc_id || defaultSettings.cscId,
+        seoTitle: seo.seo_title || defaultSettings.seoTitle,
+        seoDescription: seo.seo_description || defaultSettings.seoDescription,
+        seoKeywords: seo.seo_keywords || defaultSettings.seoKeywords,
+        socialFacebook: social.social_facebook || defaultSettings.socialFacebook,
+        socialInstagram: social.social_instagram || defaultSettings.socialInstagram,
+        socialYoutube: social.social_youtube || defaultSettings.socialYoutube,
+        footerTagline: footer.footer_tagline || defaultSettings.footerTagline,
+        copyrightText: footer.copyright_text || defaultSettings.copyrightText
       };
+
+      sharedStore.saveSiteSettings(mergedSettings);
+      return mergedSettings;
+    } catch (err) {
+      console.warn('[AdminRepository] Exception in getSiteSettings:', err.message);
+      return sharedStore.getSiteSettings();
     }
-    return sharedStore.getSiteSettings();
   },
 
   async saveSiteSettings(settings) {
-    const payload = {
-      id: 'main_settings',
-      logo_url: settings.logoUrl || null,
-      hero_bg_url: settings.heroBgUrl || null,
-      hero_title_mr: settings.heroTitleMr || null,
-      hero_title_en: settings.heroTitleEn || null,
-      hero_subtitle_mr: settings.heroSubtitleMr || null,
-      hero_subtitle_en: settings.heroSubtitleEn || null,
-      hero_badge_mr: settings.heroBadgeMr || null,
-      hero_badge_en: settings.heroBadgeEn || null,
-      hero_cta_text_mr: settings.heroCtaTextMr || null,
-      hero_cta_text_en: settings.heroCtaTextEn || null,
-      hero_cta_dest: settings.heroCtaDest || null,
-      contact_phone: settings.contactPhone || null,
-      contact_whatsapp: settings.contactWhatsapp || null,
-      contact_email: settings.contactEmail || null,
-      contact_address_mr: settings.contactAddressMr || null,
-      contact_address_en: settings.contactAddressEn || null,
-      contact_hours_mr: settings.contactHoursMr || null,
-      contact_hours_en: settings.contactHoursEn || null,
-      contact_map_url: settings.contactMapUrl || null,
-      call_cta_phone: settings.callCtaPhone || null,
-      call_cta_text_mr: settings.callCtaTextMr || null,
-      call_cta_text_en: settings.callCtaTextEn || null,
-      about_heading_mr: settings.aboutHeadingMr || null,
-      about_heading_en: settings.aboutHeadingEn || null,
-      about_desc_mr: settings.aboutDescMr || null,
-      about_desc_en: settings.aboutDescEn || null,
-      about_image_url: settings.aboutImageUrl || null,
-      about_mission_mr: settings.aboutMissionMr || null,
-      about_mission_en: settings.aboutMissionEn || null,
-      about_vision_mr: settings.aboutVisionMr || null,
-      about_vision_en: settings.aboutVisionEn || null,
-      about_values: settings.aboutValues || [],
-      about_timeline: settings.aboutTimeline || [],
-      home_sections: settings.homeSections || {},
-      why_choose_us: settings.whyChooseUs || [],
-      nav_settings: settings.navSettings || [],
-      site_title_mr: settings.siteTitleMr || null,
-      site_title_en: settings.siteTitleEn || null,
-      alc_code: settings.alcCode || null,
-      csc_id: settings.cscId || null,
-      seo_title: settings.seoTitle || null,
-      seo_description: settings.seoDescription || null,
-      seo_keywords: settings.seoKeywords || null,
-      social_facebook: settings.socialFacebook || null,
-      social_instagram: settings.socialInstagram || null,
-      social_youtube: settings.socialYoutube || null,
-      footer_tagline: settings.footerTagline || null,
-      copyright_text: settings.copyrightText || null
-    };
-
     try {
-      const res = await upsertWithColumnFallback('site_settings', payload);
-      if (res.success) {
-        const normalizedData = { ...settings, ...payload };
-        sharedStore.saveSiteSettings(normalizedData);
-        return { success: true, data: normalizedData };
-      }
-      console.warn(`[AdminRepository] Table 'site_settings' save notice (${res.error}). Saved to local store.`);
+      const promises = [
+        // 1. Branding Settings
+        supabase.from('branding_settings').upsert({
+          id: 'main_branding',
+          logo_url: settings.logoUrl || null,
+          hero_bg_url: settings.heroBgUrl || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 2. Home Settings
+        supabase.from('home_settings').upsert({
+          id: 'main_home',
+          hero_title_mr: settings.heroTitleMr || null,
+          hero_title_en: settings.heroTitleEn || null,
+          hero_subtitle_mr: settings.heroSubtitleMr || null,
+          hero_subtitle_en: settings.heroSubtitleEn || null,
+          hero_badge_mr: settings.heroBadgeMr || null,
+          hero_badge_en: settings.heroBadgeEn || null,
+          hero_cta_text_mr: settings.heroCtaTextMr || null,
+          hero_cta_text_en: settings.heroCtaTextEn || null,
+          hero_cta_dest: settings.heroCtaDest || 'courses',
+          home_sections: settings.homeSections || {},
+          why_choose_us: settings.whyChooseUs || [],
+          updated_at: new Date().toISOString()
+        }),
+        // 3. About Settings
+        supabase.from('about_settings').upsert({
+          id: 'main_about',
+          about_heading_mr: settings.aboutHeadingMr || null,
+          about_heading_en: settings.aboutHeadingEn || null,
+          about_desc_mr: settings.aboutDescMr || null,
+          about_desc_en: settings.aboutDescEn || null,
+          about_image_url: settings.aboutImageUrl || null,
+          about_mission_mr: settings.aboutMissionMr || null,
+          about_mission_en: settings.aboutMissionEn || null,
+          about_vision_mr: settings.aboutVisionMr || null,
+          about_vision_en: settings.aboutVisionEn || null,
+          about_values: settings.aboutValues || [],
+          about_timeline: settings.aboutTimeline || [],
+          updated_at: new Date().toISOString()
+        }),
+        // 4. Contact Settings
+        supabase.from('contact_settings').upsert({
+          id: 'main_contact',
+          contact_phone: settings.contactPhone || null,
+          contact_whatsapp: settings.contactWhatsapp || null,
+          contact_email: settings.contactEmail || null,
+          contact_address_mr: settings.contactAddressMr || null,
+          contact_address_en: settings.contactAddressEn || null,
+          contact_hours_mr: settings.contactHoursMr || null,
+          contact_hours_en: settings.contactHoursEn || null,
+          contact_map_url: settings.contactMapUrl || null,
+          call_cta_phone: settings.callCtaPhone || null,
+          call_cta_text_mr: settings.callCtaTextMr || null,
+          call_cta_text_en: settings.callCtaTextEn || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 5. Site Information
+        supabase.from('site_information').upsert({
+          id: 'main_info',
+          site_title_mr: settings.siteTitleMr || null,
+          site_title_en: settings.siteTitleEn || null,
+          alc_code: settings.alcCode || null,
+          csc_id: settings.cscId || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 6. SEO Settings
+        supabase.from('seo_settings').upsert({
+          id: 'main_seo',
+          seo_title: settings.seoTitle || null,
+          seo_description: settings.seoDescription || null,
+          seo_keywords: settings.seoKeywords || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 7. Social Links
+        supabase.from('social_links').upsert({
+          id: 'main_social',
+          social_facebook: settings.socialFacebook || null,
+          social_instagram: settings.socialInstagram || null,
+          social_youtube: settings.socialYoutube || null,
+          social_whatsapp: settings.contactWhatsapp || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 8. Footer Settings
+        supabase.from('footer_settings').upsert({
+          id: 'main_footer',
+          footer_tagline: settings.footerTagline || null,
+          copyright_text: settings.copyrightText || null,
+          updated_at: new Date().toISOString()
+        }),
+        // 9. Legacy site_settings table backup (Zero Data Loss)
+        supabase.from('site_settings').upsert({
+          id: 'main_settings',
+          logo_url: settings.logoUrl || null,
+          hero_bg_url: settings.heroBgUrl || null,
+          hero_title_mr: settings.heroTitleMr || null,
+          hero_title_en: settings.heroTitleEn || null,
+          hero_subtitle_mr: settings.heroSubtitleMr || null,
+          hero_subtitle_en: settings.heroSubtitleEn || null,
+          hero_badge_mr: settings.heroBadgeMr || null,
+          hero_badge_en: settings.heroBadgeEn || null,
+          hero_cta_text_mr: settings.heroCtaTextMr || null,
+          hero_cta_text_en: settings.heroCtaTextEn || null,
+          hero_cta_dest: settings.heroCtaDest || null,
+          contact_phone: settings.contactPhone || null,
+          contact_whatsapp: settings.contactWhatsapp || null,
+          contact_email: settings.contactEmail || null,
+          contact_address_mr: settings.contactAddressMr || null,
+          contact_address_en: settings.contactAddressEn || null,
+          contact_hours_mr: settings.contactHoursMr || null,
+          contact_hours_en: settings.contactHoursEn || null,
+          contact_map_url: settings.contactMapUrl || null,
+          call_cta_phone: settings.callCtaPhone || null,
+          call_cta_text_mr: settings.callCtaTextMr || null,
+          call_cta_text_en: settings.callCtaTextEn || null,
+          about_heading_mr: settings.aboutHeadingMr || null,
+          about_heading_en: settings.aboutHeadingEn || null,
+          about_desc_mr: settings.aboutDescMr || null,
+          about_desc_en: settings.aboutDescEn || null,
+          about_image_url: settings.aboutImageUrl || null,
+          about_mission_mr: settings.aboutMissionMr || null,
+          about_mission_en: settings.aboutMissionEn || null,
+          about_vision_mr: settings.aboutVisionMr || null,
+          about_vision_en: settings.aboutVisionEn || null,
+          about_values: settings.aboutValues || [],
+          about_timeline: settings.aboutTimeline || [],
+          home_sections: settings.homeSections || {},
+          why_choose_us: settings.whyChooseUs || [],
+          nav_settings: settings.navSettings || [],
+          site_title_mr: settings.siteTitleMr || null,
+          site_title_en: settings.siteTitleEn || null,
+          alc_code: settings.alcCode || null,
+          csc_id: settings.cscId || null,
+          seo_title: settings.seoTitle || null,
+          seo_description: settings.seoDescription || null,
+          seo_keywords: settings.seoKeywords || null,
+          social_facebook: settings.socialFacebook || null,
+          social_instagram: settings.socialInstagram || null,
+          social_youtube: settings.socialYoutube || null,
+          footer_tagline: settings.footerTagline || null,
+          copyright_text: settings.copyrightText || null
+        })
+      ];
+
+      await Promise.allSettled(promises);
       sharedStore.saveSiteSettings(settings);
-      return { success: true, data: settings, fallback: true };
+      return { success: true, data: settings };
     } catch (err) {
       console.warn(`[AdminRepository] saveSiteSettings exception (${err.message}). Saved to local store.`);
       sharedStore.saveSiteSettings(settings);

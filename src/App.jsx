@@ -40,7 +40,30 @@ function MainApp() {
     const syncSiteSettings = async () => {
       try {
         const settings = await AdminRepository.getSiteSettings();
-        if (settings) sharedStore.saveSiteSettings(settings);
+        if (settings) {
+          sharedStore.saveSiteSettings(settings);
+          if (settings.seoTitle) {
+            document.title = settings.seoTitle;
+          }
+          if (settings.seoDescription) {
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+              metaDesc = document.createElement('meta');
+              metaDesc.name = 'description';
+              document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = settings.seoDescription;
+          }
+          if (settings.seoKeywords) {
+            let metaKey = document.querySelector('meta[name="keywords"]');
+            if (!metaKey) {
+              metaKey = document.createElement('meta');
+              metaKey.name = 'keywords';
+              document.head.appendChild(metaKey);
+            }
+            metaKey.content = settings.seoKeywords;
+          }
+        }
       } catch (err) {
         console.warn('[App] site_settings sync notice:', err.message);
       }

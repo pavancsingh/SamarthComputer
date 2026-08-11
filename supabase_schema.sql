@@ -58,12 +58,14 @@ CREATE TABLE IF NOT EXISTS public.courses (
     image_url TEXT,
     is_primary BOOLEAN DEFAULT false,
     is_featured BOOLEAN DEFAULT false,
+    is_active BOOLEAN DEFAULT true,
     display_order INTEGER DEFAULT 0
 );
 
 -- Ensure optional columns exist if table was previously created
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_primary BOOLEAN DEFAULT false;
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 
@@ -83,6 +85,8 @@ CREATE TABLE IF NOT EXISTS public.csc_services (
     status TEXT DEFAULT 'Open',
     official_url TEXT,
     is_featured BOOLEAN DEFAULT false,
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0,
     govt_fee_mr TEXT,
     govt_fee_en TEXT,
     overview_mr TEXT,
@@ -100,6 +104,7 @@ ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS deadline_en TEXT;
 ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Open';
 ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS official_url TEXT;
 ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
 ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 
@@ -122,8 +127,14 @@ CREATE TABLE IF NOT EXISTS public.govt_services (
     required_docs_en JSONB DEFAULT '[]'::jsonb,
     steps_mr JSONB DEFAULT '[]'::jsonb,
     steps_en JSONB DEFAULT '[]'::jsonb,
-    image_url TEXT
+    image_url TEXT,
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0
 );
+
+-- Ensure optional columns exist
+ALTER TABLE public.govt_services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE public.govt_services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 -- 5. FACULTIES & STAFF TABLE
 CREATE TABLE IF NOT EXISTS public.faculties (
@@ -289,55 +300,46 @@ CREATE TABLE IF NOT EXISTS public.certificates (
     certificate_url TEXT
 );
 
--- ============================================================
--- ROW LEVEL SECURITY (RLS) POLICIES
--- ============================================================
-ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.csc_services ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.govt_services ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.faculties ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.site_gallery ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
+-- 11. ADMIN USERS TABLE
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT UNIQUE NOT NULL,
+    role TEXT DEFAULT 'admin',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Drop Existing Policies (Safe Reruns)
-DROP POLICY IF EXISTS "Public Read Inquiries" ON public.inquiries;
-DROP POLICY IF EXISTS "Public Insert Inquiries" ON public.inquiries;
-DROP POLICY IF EXISTS "Public All Inquiries" ON public.inquiries;
-DROP POLICY IF EXISTS "Public All Courses" ON public.courses;
-DROP POLICY IF EXISTS "Public All CSC" ON public.csc_services;
-DROP POLICY IF EXISTS "Public All Govt" ON public.govt_services;
-DROP POLICY IF EXISTS "Public All Faculty" ON public.faculties;
-DROP POLICY IF EXISTS "Public All Gallery" ON public.site_gallery;
-DROP POLICY IF EXISTS "Public All Settings" ON public.site_settings;
-DROP POLICY IF EXISTS "Public All Batches" ON public.batches;
-DROP POLICY IF EXISTS "Public All News" ON public.news;
-DROP POLICY IF EXISTS "Public Read Certificates" ON public.certificates;
-DROP POLICY IF EXISTS "Public Insert Certificates" ON public.certificates;
-
--- Allow Public Access Policies (Read & Lead Submissions)
-CREATE POLICY "Public All Inquiries" ON public.inquiries FOR ALL USING (true);
-CREATE POLICY "Public All Courses" ON public.courses FOR ALL USING (true);
-CREATE POLICY "Public All CSC" ON public.csc_services FOR ALL USING (true);
-CREATE POLICY "Public All Govt" ON public.govt_services FOR ALL USING (true);
-CREATE POLICY "Public All Faculty" ON public.faculties FOR ALL USING (true);
-CREATE POLICY "Public All Gallery" ON public.site_gallery FOR ALL USING (true);
-CREATE POLICY "Public All Settings" ON public.site_settings FOR ALL USING (true);
-CREATE POLICY "Public All Batches" ON public.batches FOR ALL USING (true);
-CREATE POLICY "Public All News" ON public.news FOR ALL USING (true);
-CREATE POLICY "Public Read Certificates" ON public.certificates FOR SELECT USING (true);
-CREATE POLICY "Public Insert Certificates" ON public.certificates FOR INSERT WITH CHECK (true);
+-- SECURITY DEFINER HELPER FUNCTION
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.admin_users
+    WHERE user_id = auth.uid()
+    AND is_active = true
+  );
+$$;
 
 -- ============================================================
--- SUPABASE STORAGE BUCKET SETUP ('samarth-media')
+-- STRICT ROW LEVEL SECURITY (RLS) POLICIES
 -- ============================================================
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('samarth-media', 'samarth-media', true)
-ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "Public Media Storage Access" ON storage.objects
-FOR ALL USING (bucket_id = 'samarth-media');
+-- Apply Public SELECT / Admin WRITE Policies to Content & Settings Tables
+-- (branding_settings, home_settings, about_settings, contact_settings, navigation_menu, site_information, seo_settings, social_links, footer_settings, site_settings, courses, csc_services, govt_services, faculties, site_gallery, batch_timetable, batches, news, certificates)
+
+-- Inquiries Table Policies:
+-- Public submit: CREATE POLICY "Public Submit Inquiry" ON public.inquiries FOR INSERT WITH CHECK (true);
+-- Admin access: CREATE POLICY "Admin Select Inquiries" ON public.inquiries FOR SELECT USING (is_admin());
+
+-- Storage Bucket Policies ('samarth-media'):
+-- Public read: CREATE POLICY "Public Read Storage Access" ON storage.objects FOR SELECT USING (bucket_id = 'samarth-media');
+-- Admin write: CREATE POLICY "Admin Insert Storage Access" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'samarth-media' AND is_admin());
+
 
