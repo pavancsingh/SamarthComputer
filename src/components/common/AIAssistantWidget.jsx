@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, MessageCircle, X, Send, Bot, User } from 'lucide-react';
 
 /**
@@ -19,7 +19,7 @@ export default function AIAssistantWidget({ lang = 'mr' }) {
     }
   ]);
 
-  const timerRef = React.useRef(null);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     return () => {
