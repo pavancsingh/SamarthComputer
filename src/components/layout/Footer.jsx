@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * Footer Component — Stitch Design System
@@ -8,6 +9,14 @@ import React from 'react';
  */
 export default function Footer({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
+  const [settings, setSettings] = useState(sharedStore.getSiteSettings());
+
+  useEffect(() => {
+    const unsub = sharedStore.subscribe(() => {
+      setSettings(sharedStore.getSiteSettings());
+    });
+    return () => unsub();
+  }, []);
 
   const quickLinks = [
     { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
