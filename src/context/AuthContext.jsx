@@ -81,9 +81,16 @@ export function AuthProvider({ children }) {
 
   const loginAdmin = async (emailInput, passwordInput) => {
     const now = Date.now();
-    if (lockoutTime > now) {
-      const remainingSec = Math.ceil((lockoutTime - now) / 1000);
-      return { success: false, message: `Too many failed attempts. Please wait ${remainingSec} seconds.` };
+    // Check if lockout is currently active
+    if (lockoutTime > 0) {
+      if (lockoutTime > now) {
+        const remainingSec = Math.ceil((lockoutTime - now) / 1000);
+        return { success: false, message: `Too many failed attempts. Please wait ${remainingSec} seconds.` };
+      } else {
+        // Lockout expired, reset counters
+        setLockoutTime(0);
+        setFailedAttempts(0);
+      }
     }
 
     let cleanEmail = (emailInput || '').trim().toLowerCase();
@@ -120,22 +127,29 @@ export function AuthProvider({ children }) {
       }
 
       if (error) {
-        console.warn('[AuthContext] Supabase Auth login notice:', error.message);
+        const newAttempts = failedAttempts + 1;
+        setFailedAttempts(newAttempts);
+        if (newAttempts >= 5) {
+          setLockoutTime(now + 60000); // 60s lockout
+          setFailedAttempts(0);
+          return { success: false, message: 'Too many invalid attempts. Account locked for 60 seconds.' };
+        }
+        return { success: false, message: error.message || 'Invalid login credentials.' };
       }
     } catch (err) {
       console.warn('[AuthContext] Exception during login:', err.message);
+      return { success: false, message: err.message || 'Authentication error occurred.' };
     }
 
-    // Failed attempt handling
     const newAttempts = failedAttempts + 1;
     setFailedAttempts(newAttempts);
     if (newAttempts >= 5) {
-      setLockoutTime(now + 60000); // 60s lockout
+      setLockoutTime(now + 60000);
       setFailedAttempts(0);
       return { success: false, message: 'Too many invalid attempts. Account locked for 60 seconds.' };
     }
 
-    return { success: false, message: `Invalid Admin Credentials. (${5 - newAttempts} attempts remaining)` };
+    return { success: false, message: 'Invalid Admin Credentials.' };
   };
 
   const logoutAdmin = async () => {
