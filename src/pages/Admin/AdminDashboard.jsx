@@ -199,11 +199,11 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
       // Preload images into browser cache for instant rendering
       if (finalLogoUrl && !finalLogoUrl.startsWith('data:')) {
-        const img = new Image();
+        const img = new window.Image();
         img.src = finalLogoUrl;
       }
       if (finalHeroUrl && !finalHeroUrl.startsWith('data:')) {
-        const img = new Image();
+        const img = new window.Image();
         img.src = finalHeroUrl;
       }
 
