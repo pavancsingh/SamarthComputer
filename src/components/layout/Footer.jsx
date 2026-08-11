@@ -18,9 +18,22 @@ export default function Footer({ lang = 'mr', onNavigate }) {
     return () => unsub();
   }, []);
 
+  const courseLinks = [
+    { id: 'courses',  labelEn: 'All Courses',     labelMr: 'सर्व कोर्सेस' },
+    { id: 'courses',  labelEn: 'MS-CIT (MKCL)',    labelMr: 'MS-CIT (कोर्स)' },
+    { id: 'courses',  labelEn: 'Tally Prime + GST', labelMr: 'टॅली प्राइम + GST' },
+    { id: 'courses',  labelEn: 'Advanced Excel',    labelMr: 'ॅड्वान्स एक्सल' },
+  ];
+
+  const serviceLinks = [
+    { id: 'services', labelEn: 'All Services',      labelMr: 'सर्व सेवा' },
+    { id: 'services', labelEn: 'Govt Certificates', labelMr: 'शासकीय दाखले' },
+    { id: 'services', labelEn: 'PAN Card Services',  labelMr: 'पॅन कार्ड सेवा' },
+    { id: 'services', labelEn: 'CSC / Digital Seva', labelMr: 'CSC / डिजिटल सेवा' },
+  ];
+
   const quickLinks = [
     { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
-    { id: 'courses',   labelEn: 'Courses',        labelMr: 'कोर्सेस' },
     { id: 'faculty',   labelEn: 'Faculty',        labelMr: 'शिक्षक वृंद' },
     { id: 'contact',   labelEn: 'Contact',        labelMr: 'संपर्क' },
   ];
@@ -58,12 +71,27 @@ export default function Footer({ lang = 'mr', onNavigate }) {
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Courses Links */}
         <div className="flex flex-col gap-sm">
-          <h4 className="font-label-bold text-white mb-sm">Quick Links</h4>
-          {quickLinks.map((link) => (
+          <h4 className="font-label-bold text-white mb-sm">{isMarathi ? 'कोर्सेस' : 'Courses'}</h4>
+          {courseLinks.map((link, idx) => (
             <button
-              key={link.id}
+              key={`course-${idx}`}
+              type="button"
+              onClick={() => onNavigate && onNavigate(link.id)}
+              className="font-body-md text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-left text-sm"
+            >
+              {isMarathi ? link.labelMr : link.labelEn}
+            </button>
+          ))}
+        </div>
+
+        {/* Services Links */}
+        <div className="flex flex-col gap-sm">
+          <h4 className="font-label-bold text-white mb-sm">{isMarathi ? 'ऑनलाइन सेवा' : 'Services'}</h4>
+          {serviceLinks.map((link, idx) => (
+            <button
+              key={`service-${idx}`}
               type="button"
               onClick={() => onNavigate && onNavigate(link.id)}
               className="font-body-md text-surface-variant/80 hover:text-primary-fixed transition-colors duration-200 text-left text-sm"

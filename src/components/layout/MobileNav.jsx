@@ -13,7 +13,7 @@ export default function MobileNav({ isOpen = false, onClose, lang = 'mr', curren
   const drawerLinks = [
     { id: 'home', labelEn: 'Home', labelMr: 'मुख्यपृष्ठ', icon: Home },
     { id: 'courses', labelEn: 'Courses', labelMr: 'कोर्सेस', icon: BookOpen },
-    { id: 'csc', labelEn: 'Online Services', labelMr: 'ऑनलाइन सेवा', icon: FileText },
+    { id: 'services', labelEn: 'Services', labelMr: 'सेवा', icon: FileText },
     { id: 'timetable', labelEn: 'Batch Timetable', labelMr: 'वेळापत्रक', icon: Clock },
     { id: 'about', labelEn: 'About Institute', labelMr: 'आमच्याबद्दल', icon: Info },
     { id: 'faculty', labelEn: 'Faculty & Mentors', labelMr: 'शिक्षक वृंद', icon: Users },
@@ -25,7 +25,7 @@ export default function MobileNav({ isOpen = false, onClose, lang = 'mr', curren
   const bottomNavItems = [
     { id: 'home', labelEn: 'Home', labelMr: 'होम', iconFill: 'home' },
     { id: 'courses', labelEn: 'Courses', labelMr: 'कोर्सेस', iconFill: 'school' },
-    { id: 'csc', labelEn: 'Services', labelMr: 'सेवा', iconFill: 'account_balance' },
+    { id: 'services', labelEn: 'Services', labelMr: 'सेवा', iconFill: 'account_balance' },
     { id: 'timetable', labelEn: 'Schedule', labelMr: 'वेळापत्रक', iconFill: 'calendar_month' },
     { id: 'contact', labelEn: 'Contact', labelMr: 'संपर्क', iconFill: 'phone' },
   ];

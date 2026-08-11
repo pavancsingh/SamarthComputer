@@ -527,23 +527,31 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     }
   };
 
-  // Filtered Leads
+  // Filtered Leads — supports type-based filtering (Course Leads / Service Requests)
   const filteredInquiries = inquiries.filter((inq) => {
-    const matchesFilter = leadFilter === 'All' || (inq.status || 'New Lead') === leadFilter;
+    // Type filter
+    if (leadFilter === 'Course Leads') {
+      if (inq.type !== 'course_admission') return false;
+    } else if (leadFilter === 'Service Requests') {
+      if (!['service_request', 'csc_service', 'govt_service'].includes(inq.type || '')) return false;
+    } else if (leadFilter !== 'All') {
+      // Status filter (New Lead, Contacted, Completed, etc.)
+      if ((inq.status || 'New Lead') !== leadFilter) return false;
+    }
     const matchesSearch = !searchQuery || 
       (inq.name && inq.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (inq.mobile && inq.mobile.includes(searchQuery)) ||
       (inq.course_id && inq.course_id.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (inq.service_id && inq.service_id.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesFilter && matchesSearch;
+    return matchesSearch;
   });
 
   const sidebarNavItems = [
     { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'inquiries', label: 'Inbox Leads', icon: Users, badge: inquiries.length },
-    { id: 'courses', label: 'Courses', icon: BookOpen, badge: courses.length },
-    { id: 'csc', label: 'CSC Services', icon: FileText, badge: cscServices.length },
-    { id: 'govt', label: 'Govt Services', icon: Building2, badge: govtServices.length },
+    { id: 'courses', label: '🎓 Courses', icon: BookOpen, badge: courses.length },
+    { id: 'csc', label: '🖥️ Online CSC & Forms', icon: FileText, badge: cscServices.length },
+    { id: 'govt', label: '🏛️ Govt Certificates', icon: Building2, badge: govtServices.length },
     { id: 'timetable', label: 'Batch Timetable', icon: Clock, badge: batchesList.length },
     { id: 'news', label: 'News & Updates', icon: Megaphone, badge: newsList.length },
     { id: 'faculty', label: 'Faculty', icon: GraduationCap, badge: facultyList.length },
@@ -847,17 +855,21 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                 {/* Filters & Search Toolbar */}
                 <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
                   <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-                    {['All', 'New Lead', 'In Process', 'Completed'].map((f) => (
+                    {['All', 'Course Leads', 'Service Requests', 'New Lead', 'In Process', 'Completed'].map((f) => (
                       <button
                         key={f}
                         onClick={() => setLeadFilter(f)}
-                        className={`px-4 py-1.5 rounded-full text-xs font-extrabold transition-all ${
+                        className={`px-4 py-1.5 rounded-full text-xs font-extrabold transition-all whitespace-nowrap ${
                           leadFilter === f
-                            ? 'bg-primary text-white shadow-sm'
+                            ? f === 'Course Leads' ? 'bg-primary text-white shadow-sm'
+                              : f === 'Service Requests' ? 'bg-indigo-600 text-white shadow-sm'
+                              : 'bg-primary text-white shadow-sm'
+                            : f === 'Course Leads' ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
+                            : f === 'Service Requests' ? 'bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100'
                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
                         }`}
                       >
-                        {f}
+                        {f === 'Course Leads' ? '🎓 ' : f === 'Service Requests' ? '🛎️ ' : ''}{f}
                       </button>
                     ))}
                   </div>
@@ -901,7 +913,20 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                               <td className="p-4 font-bold text-slate-900">{inq.name}</td>
                               <td className="p-4 font-mono font-bold text-primary">{inq.mobile}</td>
                               <td className="p-4 font-semibold text-slate-700">
-                                {inq.course_id || inq.service_id || inq.issue_type || inq.type || 'Course Admission'}
+                                <div>{inq.course_id || inq.service_id || inq.issue_type || 'General Inquiry'}</div>
+                                {inq.type && (
+                                  <span className={`inline-block text-[9px] font-extrabold px-2 py-0.5 rounded-full mt-1 ${
+                                    inq.type === 'course_admission'
+                                      ? 'bg-red-50 text-red-600 border border-red-200'
+                                      : ['service_request','csc_service','govt_service'].includes(inq.type)
+                                      ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+                                      : 'bg-slate-100 text-slate-500 border border-slate-200'
+                                  }`}>
+                                    {inq.type === 'course_admission' ? '🎓 Course' 
+                                      : ['service_request','csc_service','govt_service'].includes(inq.type) ? '🛎️ Service' 
+                                      : inq.type}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-4 text-slate-500">{inq.batch_timing || '-'}</td>
                               <td className="p-4">

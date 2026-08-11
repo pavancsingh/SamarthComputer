@@ -9,6 +9,7 @@ import CoursesPage from './pages/Courses/CoursesPage';
 import CourseDetailsPage from './pages/CourseDetails/CourseDetailsPage';
 import CSCPage from './pages/CSC/CSCPage';
 import GovernmentPage from './pages/Government/GovernmentPage';
+import ServicesPage from './pages/Services/ServicesPage';
 import ContactPage from './pages/Contact/ContactPage';
 import AboutPage from './pages/About/AboutPage';
 import FacultyPage from './pages/Faculty/FacultyPage';
@@ -22,12 +23,14 @@ import './styles/tailwind.css';
 
 function MainApp() {
   const [lang, setLang] = useState('mr');
-  const [currentView, setCurrentView] = useState('home'); // home|courses|details|csc|govt|about|faculty|gallery|contact|timetable|admin
+  const [currentView, setCurrentView] = useState('home'); // home|courses|details|services|csc|govt|about|faculty|gallery|contact|timetable|verification|admin
   const [selectedSlug, setSelectedSlug] = useState('mscit');
   const { isAdmin, loading: authLoading } = useAuth();
 
   const handleNavigate = (view, slug = 'mscit') => {
-    setCurrentView(view);
+    // Redirect old csc/govt direct links to unified services hub
+    const resolvedView = (view === 'csc' || view === 'govt') ? 'services' : view;
+    setCurrentView(resolvedView);
     if (slug) setSelectedSlug(slug);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -79,8 +82,10 @@ function MainApp() {
       {currentView === 'home' && <HomePage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'courses' && <CoursesPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'details' && <CourseDetailsPage slug={selectedSlug} lang={lang} onNavigate={handleNavigate} />}
-      {currentView === 'csc' && <CSCPage lang={lang} onNavigate={handleNavigate} />}
-      {currentView === 'govt' && <GovernmentPage lang={lang} onNavigate={handleNavigate} />}
+      {currentView === 'services' && <ServicesPage lang={lang} onNavigate={handleNavigate} />}
+      {/* Legacy views redirected to services via handleNavigate, kept for safety */}
+      {currentView === 'csc' && <ServicesPage lang={lang} onNavigate={handleNavigate} />}
+      {currentView === 'govt' && <ServicesPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'about' && <AboutPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'faculty' && <FacultyPage lang={lang} onNavigate={handleNavigate} />}
       {currentView === 'gallery' && <GalleryPage lang={lang} onNavigate={handleNavigate} />}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CourseRepository } from '../../repositories/CourseRepository';
 import { sharedStore } from '../../repositories/sharedStore';
-import AdmissionModal from '../../components/forms/AdmissionModal';
+import CourseEnquiryModal from '../../components/forms/CourseEnquiryModal';
 import SyllabusModal from '../../components/forms/SyllabusModal';
 
 /**
@@ -59,17 +59,37 @@ const FALLBACK_COURSES = [
     slug: 'klic-autocad', title: 'MKCL KLiC AutoCAD', tag: 'KLiC', tagColor: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
     subtitleEn: '2D & 3D AutoCAD drafting for civil engineering floor plans, house layouts, and architectural elevations.',
     durationEn: '2 Months', isPrimary: false,
-    modulesEn: [{ name: 'AutoCAD 2D Commands' }, { name: 'Building Floor Plans' }, { name: 'Plotting & Blueprints' }]
-  }
+    modulesEn: [{ name: 'AutoCAD 2D Commands' }, { name: 'Building Floor Plans' }, { name: 'Elevations & Blueprints' }]
+  },
+  {
+    slug: 'diploma-financial-accounting', title: 'Diploma in Financial Accounting', tag: 'Primary', tagColor: 'bg-surface-container-highest text-on-surface',
+    subtitleEn: 'Journal, Ledger, Final Accounts (P&L, Balance Sheet), GST Billing, Tally Prime and Financial Ratio Analysis.',
+    durationEn: '3 Months', isPrimary: true,
+    modulesEn: [{ name: 'Accounting Fundamentals' }, { name: 'GST Billing & Returns' }, { name: 'Tally Prime Integration' }]
+  },
+  {
+    slug: 'share-market-banking', title: 'Share Market / Banking & Finance', tag: 'Primary', tagColor: 'bg-surface-container-highest text-on-surface',
+    subtitleEn: 'NSE/BSE Stock Market, Demat Account, Mutual Funds, SIP, Banking and Personal Financial Planning.',
+    durationEn: '2 Months', isPrimary: true,
+    modulesEn: [{ name: 'Stock Market Basics' }, { name: 'Mutual Funds & SIP' }, { name: 'Personal Financial Planning' }]
+  },
+  {
+    slug: 'work-from-home-tools', title: 'Work From Home Tools', tag: 'Primary', tagColor: 'bg-surface-container-highest text-on-surface',
+    subtitleEn: 'Zoom, Google Workspace, Canva Design, ChatGPT AI, Fiverr/Upwork Freelancing and Online Income setup.',
+    durationEn: '1.5 Months', isPrimary: true,
+    modulesEn: [{ name: 'Google Workspace & Zoom' }, { name: 'Canva & ChatGPT' }, { name: 'Freelancing & Online Income' }]
+  },
 ];
+
 
 export default function CoursesPage({ lang = 'mr', onNavigate }) {
   const [courses, setCourses] = useState([]);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isAdmissionOpen, setIsAdmissionOpen] = useState(false);
-  const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
+  const [admissionCourse, setAdmissionCourse] = useState(null);
+  const [isCourseEnquiryOpen, setIsCourseEnquiryOpen] = useState(false);
+  const [syllabusSlug, setSyllabusSlug] = useState(null);
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
@@ -304,7 +324,7 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => { setSelectedCourse(course.id || course.slug); setIsAdmissionOpen(true); }}
+                      onClick={() => { setAdmissionCourse(course.id || course.slug || ''); setIsCourseEnquiryOpen(true); }}
                       className="flex-1 bg-primary text-white font-label-bold text-xs py-2.5 rounded-lg btn-interactive hover:bg-stitch-red-dark shadow-sm text-center"
                     >
                       {isMarathi ? 'प्रवेश घ्या' : 'Enroll Now'}
@@ -345,17 +365,17 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
         </section>
       </main>
 
-      {/* Modals */}
-      <AdmissionModal
-        isOpen={isAdmissionOpen}
-        onClose={() => setIsAdmissionOpen(false)}
-        defaultCourse={selectedCourse || 'mscit'}
+      {/* Modals — COURSES WORKFLOW ONLY */}
+      <CourseEnquiryModal
+        isOpen={isCourseEnquiryOpen}
+        onClose={() => setIsCourseEnquiryOpen(false)}
+        defaultCourse={admissionCourse || ''}
         lang={lang}
       />
       <SyllabusModal
-        isOpen={isSyllabusOpen}
-        onClose={() => setIsSyllabusOpen(false)}
-        courseTitle={selectedCourse ? String(selectedCourse.title || selectedCourse).toUpperCase() : 'MS-CIT'}
+        isOpen={!!syllabusSlug}
+        onClose={() => setSyllabusSlug(null)}
+        courseTitle={syllabusSlug ? String(syllabusSlug).toUpperCase() : 'MS-CIT'}
         lang={lang}
       />
     </div>

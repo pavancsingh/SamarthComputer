@@ -224,6 +224,40 @@ export const InquiryRepository = {
   },
 
   /**
+   * Submit a service request lead directly to Supabase DB.
+   * SERVICES Workflow only — type: 'service_request'.
+   * Never used for course admissions.
+   */
+  async submitServiceRequest(payload) {
+    try {
+      const { data, error } = await supabase
+        .from('inquiries')
+        .insert([{
+          type: 'service_request',
+          name: payload.name,
+          mobile: payload.mobile,
+          service_id: payload.serviceId || payload.service || '',
+          status: 'New Lead',
+          details: {
+            serviceName: payload.serviceName || '',
+            notes: payload.notes || '',
+            preferredTime: payload.preferredTime || 'anytime'
+          }
+        }])
+        .select();
+
+      if (error) {
+        console.error('Supabase DB service request error:', error.message);
+        return { success: false, error: error.message };
+      }
+      return { success: true, data: data?.[0] };
+    } catch (err) {
+      console.error('Service request submission exception:', err.message);
+      return { success: false, error: err.message };
+    }
+  },
+
+  /**
    * Generic inquiry submission for contact form.
    */
   async submitInquiry(payload) {

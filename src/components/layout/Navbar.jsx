@@ -11,14 +11,15 @@ export default function Navbar({ lang = 'mr', currentView = 'home', onNavigate }
   const isMarathi = lang === 'mr';
 
   const navLinks = [
-    { id: 'home',     labelEn: 'Home',         labelMr: 'मुख्यपृष्ठ' },
-    { id: 'courses',  labelEn: 'Courses',       labelMr: 'कोर्सेस' },
-    { id: 'csc',      labelEn: 'Online Services', labelMr: 'ऑनलाइन सेवा' },
-    { id: 'timetable',labelEn: 'Timetable',     labelMr: 'वेळापत्रक' },
-    { id: 'about',    labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
-    { id: 'faculty',  labelEn: 'Faculty',       labelMr: 'शिक्षक वृंद' },
-    { id: 'contact',  labelEn: 'Contact',       labelMr: 'संपर्क' },
+    { id: 'home',      labelEn: 'Home',         labelMr: 'मुख्यपृष्ठ' },
+    { id: 'courses',   labelEn: 'Courses',       labelMr: 'कोर्सेस' },
+    { id: 'services',  labelEn: 'Services',      labelMr: 'सेवा' },
+    { id: 'timetable', labelEn: 'Timetable',     labelMr: 'वेळापत्रक' },
+    { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
+    { id: 'faculty',   labelEn: 'Faculty',       labelMr: 'शिक्षक वृंद' },
+    { id: 'contact',   labelEn: 'Contact',       labelMr: 'संपर्क' },
   ];
+
 
   return (
     <nav className="hidden md:flex items-center gap-lg font-label-bold text-label-bold">
