@@ -10,37 +10,45 @@ import { sharedStore } from '../../repositories/sharedStore';
  * Subscribes to live Supabase DB updates.
  */
 export default function WorkshopsSection({ lang = 'mr' }) {
-  const [newsArticles, setNewsArticles] = useState([]);
+  const [newsArticles, setNewsArticles] = useState(sharedStore.getNews());
   const [activeFilter, setActiveFilter] = useState('all');
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
+    let isMounted = true;
     async function load() {
       try {
         const data = await AdminRepository.getAllNews();
-        setNewsArticles(data || []);
+        if (isMounted && data && data.length > 0) setNewsArticles(data);
       } catch (err) {
-        console.error('Error fetching news:', err);
+        console.warn('Notice loading news:', err.message);
       }
     }
     load();
 
     const unsubscribe = sharedStore.subscribe(() => {
-      load();
+      if (isMounted) setNewsArticles(sharedStore.getNews());
     });
-    return unsubscribe;
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
+
+  const filteredArticles = newsArticles.filter(item => {
+    if (activeFilter === 'all') return true;
+    const cat = ((item.categoryEn || item.category_en || item.categoryMr || item.category_mr || '') + ' ' + (item.titleEn || item.title_en || '')).toLowerCase();
+    if (activeFilter === 'admissions') return cat.includes('admiss') || cat.includes('प्रवेश');
+    if (activeFilter === 'exams') return cat.includes('exam') || cat.includes('परीक्षा') || cat.includes('निकाल') || cat.includes('result') || cat.includes('timetable');
+    return true;
+  });
 
   return (
     <section className="py-20 bg-stitch-ivory border-b border-slate-200/80 text-stitch-slate-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header Frame */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        <div 
           className="bg-white border border-slate-200/90 p-8 sm:p-10 rounded-3xl shadow-stitch-md space-y-6"
         >
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -75,6 +83,7 @@ export default function WorkshopsSection({ lang = 'mr' }) {
               ].map(tab => (
                 <button
                   key={tab.id}
+                  type="button"
                   onClick={() => setActiveFilter(tab.id)}
                   className={`px-4 py-2.5 rounded-full text-xs font-black transition-all shadow-stitch-sm border ${
                     activeFilter === tab.id
@@ -90,22 +99,18 @@ export default function WorkshopsSection({ lang = 'mr' }) {
             </div>
 
           </div>
-        </motion.div>
+        </div>
 
         {/* Cards Grid */}
-        {newsArticles.length === 0 ? (
+        {filteredArticles.length === 0 ? (
           <div className="text-center py-12 text-slate-500 font-medium">
             {isMarathi ? 'सध्या कोणत्याही नवीन सूचना उपलब्ध नाहीत.' : 'No current updates available.'}
           </div>
         ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          <div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {newsArticles.map((item, idx) => {
+            {filteredArticles.map((item, idx) => {
               const categoryName = isMarathi 
                 ? (item.categoryMr || item.category_mr || 'अपडेट') 
                 : (item.categoryEn || item.category_en || 'Update');
@@ -121,10 +126,9 @@ export default function WorkshopsSection({ lang = 'mr' }) {
               const dateDisplay = item.dateStr || item.date_str || '2026';
 
               return (
-                <motion.div
-                  key={item.id || idx}
-                  whileHover={{ y: -5 }}
-                  className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-stitch-md hover:shadow-stitch-lg transition-all flex flex-col justify-between space-y-4 group"
+                <div
+                  key={item.id || `news-${idx}-${title}`}
+                  className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-stitch-md hover:shadow-stitch-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-4 group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -158,10 +162,10 @@ export default function WorkshopsSection({ lang = 'mr' }) {
                     </a>
                   </div>
 
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         )}
 
       </div>

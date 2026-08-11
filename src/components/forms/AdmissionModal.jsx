@@ -32,14 +32,38 @@ export default function AdmissionModal({ isOpen, onClose, defaultCourse = 'mscit
 
   if (!isOpen) return null;
 
+  const [lastSubmitTime, setLastSubmitTime] = useState(0);
+  const [formError, setFormError] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !mobile || mobile.length < 10) return;
+    setFormError('');
+
+    const cleanName = name.trim().replace(/<[^>]*>/g, '');
+    const cleanMobile = mobile.trim().replace(/\D/g, '');
+
+    if (!cleanName || cleanName.length < 2) {
+      setFormError(isMarathi ? 'कृपया वैध नाव टाका.' : 'Please enter a valid name.');
+      return;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(cleanMobile)) {
+      setFormError(isMarathi ? 'कृपया १० अंकांचा वैध मोबाईल नंबर प्रविष्ट करा.' : 'Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSubmitTime < 5000) {
+      setFormError(isMarathi ? 'कृपया पुन्हा प्रयत्न करण्यापूर्वी ५ सेकंद थांबा.' : 'Please wait 5 seconds before submitting again.');
+      return;
+    }
 
     setIsSubmitting(true);
+    setLastSubmitTime(now);
+
     await CourseRepository.submitAdmissionInquiry({
-      name,
-      mobile,
+      name: cleanName,
+      mobile: cleanMobile,
       course,
       batchTiming: batch
     });

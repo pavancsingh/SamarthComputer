@@ -41,29 +41,52 @@ export default function ContactForm({ lang = 'mr' }) {
     }
   }
 
+  const [lastSubmitTime, setLastSubmitTime] = useState(0);
+  const [formError, setFormError] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !phone || phone.length < 10) return;
+    setFormError('');
 
+    const cleanName = name.trim().replace(/<[^>]*>/g, '');
+    const cleanPhone = phone.trim().replace(/\D/g, '');
+
+    if (!cleanName || cleanName.length < 2) {
+      setFormError(isMarathi ? 'कृपया वैध नाव प्रविष्ट करा.' : 'Please enter a valid name.');
+      return;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      setFormError(isMarathi ? 'कृपया १० अंकांचा वैध मोबाईल नंबर प्रविष्ट करा.' : 'Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSubmitTime < 5000) {
+      setFormError(isMarathi ? 'कृपया पुन्हा प्रयत्न करण्यापूर्वी ५ सेकंद थांबा.' : 'Please wait 5 seconds before submitting again.');
+      return;
+    }
+
+    setLastSubmitTime(now);
     const chosen = selectedItem || (courses.length > 0 ? courses[0].title : 'MS-CIT');
 
     if (activeTab === 'course') {
       await CourseRepository.submitAdmissionInquiry({
-        name,
-        mobile: phone,
+        name: cleanName,
+        mobile: cleanPhone,
         courseId: chosen,
         batchTiming: 'Morning'
       });
     } else {
       await InquiryRepository.submitCSCInquiry({
-        name,
-        mobile: phone,
+        name: cleanName,
+        mobile: cleanPhone,
         serviceId: chosen
       });
     }
 
     setSubmitted(true);
-    const text = encodeURIComponent(`Hello Samarth Computers, my name is ${name} (${phone}). I am inquiring about ${chosen}.`);
+    const text = encodeURIComponent(`Hello Samarth Computers, my name is ${cleanName} (${cleanPhone}). I am inquiring about ${chosen}.`);
     window.open(`https://wa.me/919552345061?text=${text}`, '_blank');
   };
 
@@ -235,6 +258,11 @@ export default function ContactForm({ lang = 'mr' }) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {formError && (
+                  <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold rounded-xl animate-in fade-in">
+                    {formError}
+                  </div>
+                )}
                 <div>
                   <label className="block text-xs font-extrabold text-stitch-slate-dark mb-1.5">
                     {isMarathi ? 'विद्यार्थ्याचे नाव:' : 'Full Name:'}

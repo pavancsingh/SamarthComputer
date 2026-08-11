@@ -8,6 +8,14 @@ import { AdminRepository } from '../../repositories/AdminRepository';
  * Direct Supabase DB integration.
  */
 
+const getMediaUrl = (path) => {
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+  if (baseUrl && !baseUrl.includes('placeholder')) {
+    return `${baseUrl}/storage/v1/object/public/samarth-media/${path}`;
+  }
+  return `/assets/${path}`;
+};
+
 const FALLBACK_FACULTY = [
   {
     id: 'fac-1',
@@ -23,7 +31,7 @@ const FALLBACK_FACULTY = [
     specEn: 'MS-CIT, Advanced Excel, Tally Prime (GST), Banking & Finance, Share Market',
     specMr: 'MS-CIT, ॲडव्हान्स एक्सल, टॅली प्राइम (GST), बँकिंग व फायनान्स, शेअर मार्केट',
     skills: ['MS-CIT', 'Tally Prime', 'Advanced Excel', 'Banking & Finance'],
-    image: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/sagar-bhosale.jpg',
+    image: getMediaUrl('faculty/sagar-bhosale.jpg'),
     badge: 'Center Head',
     lead: true
   },
@@ -41,7 +49,7 @@ const FALLBACK_FACULTY = [
     specEn: 'Tally Prime (GST), Accounting Fundamentals, Financial Management',
     specMr: 'टॅली प्राइम (GST), अकाउंटिंग तत्त्वे, फायनान्शियल मॅनेजमेंट',
     skills: ['Tally Prime GST', 'Accounting Fundamentals', 'Financial Management'],
-    image: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/swati-bhosale.jpg',
+    image: getMediaUrl('faculty/swati-bhosale.jpg'),
     badge: 'Center Head',
     lead: true
   }

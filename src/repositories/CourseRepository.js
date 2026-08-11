@@ -57,8 +57,6 @@ export const CourseRepository = {
    */
   async getCourses(category = 'all') {
     try {
-      await this.ensureSeedCourses();
-
       let query = supabase.from('courses').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
       if (category !== 'all') {
         if (category === 'primary') {

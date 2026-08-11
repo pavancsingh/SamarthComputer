@@ -13,13 +13,22 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
+    let isMounted = true;
     AdminRepository.getSiteSettings().then((res) => {
-      if (res) setSettings(res);
-    });
+      if (isMounted && res && res.heroBgUrl) {
+        setSettings((prev) => (prev.heroBgUrl === res.heroBgUrl && prev.heroTitleMr === res.heroTitleMr ? prev : { ...prev, ...res }));
+      }
+    }).catch(() => {});
 
-    const unsubscribe = sharedStore.subscribe(() => setSettings(sharedStore.getSiteSettings()));
-    return unsubscribe;
+    const unsubscribe = sharedStore.subscribe(() => {
+      if (isMounted) setSettings(sharedStore.getSiteSettings());
+    });
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
+
 
   return (
     <section
@@ -124,6 +133,8 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
               <img
                 src={heroImgUrl}
                 alt="Samarth Computers Modern Computer Lab"
+                loading="eager"
+                decoding="async"
                 className="w-full h-auto rounded-xl object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-700 ease-in-out"
               />
             </div>

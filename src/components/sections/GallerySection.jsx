@@ -209,28 +209,25 @@ export default function GallerySection({ lang = 'mr' }) {
         </motion.div>
 
         {/* Media Grid */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {filteredItems.map((item, idx) => {
             const isVideo = item.type === 'video' || item.category === 'Reels';
             return (
-              <motion.div
-                key={item.id || idx}
-                whileHover={{ y: -5 }}
+              <div
+                key={item.id || `gal-${idx}-${item.title_en || item.titleEn}`}
                 onClick={() => setSelectedMedia(item)}
-                className="group relative rounded-3xl overflow-hidden border border-slate-200/90 bg-white aspect-[4/3] flex flex-col justify-end p-5 shadow-stitch-md hover:shadow-stitch-lg cursor-pointer transition-all"
+                className="group relative rounded-3xl overflow-hidden border border-slate-200/90 bg-white aspect-[4/3] flex flex-col justify-end p-5 shadow-stitch-md hover:shadow-stitch-lg hover:-translate-y-1 cursor-pointer transition-all duration-300"
               >
                 {/* Media Image */}
                 {item.image_url ? (
                   <img
                     src={item.image_url}
                     alt={item.title_en || item.titleEn}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-slate-200" />
@@ -261,7 +258,7 @@ export default function GallerySection({ lang = 'mr' }) {
                 {/* Center Play Icon for Reels */}
                 {isVideo && (
                   <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                    <div className="w-12 h-12 rounded-full bg-stitch-red text-white flex items-center justify-center shadow-stitch-glow group-hover:scale-125 transition-transform">
+                    <div className="w-12 h-12 rounded-full bg-stitch-red text-white flex items-center justify-center shadow-stitch-glow group-hover:scale-110 transition-transform">
                       <PlayCircle className="w-7 h-7 text-white" />
                     </div>
                   </div>
@@ -283,10 +280,10 @@ export default function GallerySection({ lang = 'mr' }) {
                     {isMarathi ? (item.desc_mr || item.descMr || item.desc_en || item.descEn) : (item.desc_en || item.descEn)}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
 
       </div>
 

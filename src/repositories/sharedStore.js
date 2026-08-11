@@ -24,6 +24,14 @@ const DEFAULT_NEWS = [
   { id: 'n-2', titleMr: 'Tally Prime GST विशेष सवलत स्कॉलरशिप', titleEn: 'Tally Prime GST Special Discount Scholarship', categoryMr: 'स्कॉलरशिप', categoryEn: 'Scholarship', dateStr: '२०२६', descMr: 'वाणिज्य (Commerce) विद्यार्थ्यांसाठी विशेष सवलत योजना.', descEn: 'Special fee concession scheme for commerce students and job seekers.' }
 ];
 
+const getMediaUrl = (path) => {
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+  if (baseUrl && !baseUrl.includes('placeholder')) {
+    return `${baseUrl}/storage/v1/object/public/samarth-media/${path}`;
+  }
+  return `/assets/${path}`;
+};
+
 const DEFAULT_FACULTY = [
   {
     id: 'fac-1',
@@ -35,7 +43,7 @@ const DEFAULT_FACULTY = [
     specMr: 'MS-CIT, Advanced Excel, Tally Prime (GST), बँकिंग, फायनान्स आणि शेअर मार्केट तज्ज्ञ.',
     specEn: 'Specializes in MS-CIT, Advanced Excel, Tally Prime (GST), Banking & Finance, and Share Market with real-world case studies.',
     badge: 'Center Head',
-    imageUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/sagar-bhosale.jpg'
+    imageUrl: getMediaUrl('faculty/sagar-bhosale.jpg')
   },
   {
     id: 'fac-2',
@@ -47,12 +55,12 @@ const DEFAULT_FACULTY = [
     specMr: 'M.A. B.Ed पदवीधर. टॅली प्राइम (GST), अकाउंटिंग फंडामेंटल्स आणि फायनान्शियल मॅनेजमेंट तज्ज्ञ.',
     specEn: 'B.Ed qualified with specialized expertise in Tally Prime (GST), accounting fundamentals, and financial management.',
     badge: 'Center Head',
-    imageUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/faculty/swati-bhosale.jpg'
+    imageUrl: getMediaUrl('faculty/swati-bhosale.jpg')
   }
 ];
 
 const DEFAULT_SETTINGS = {
-  logoUrl: 'https://vhcfjyhoghiylsvoxvxc.supabase.co/storage/v1/object/public/samarth-media/logos/samarth-main-logo.png',
+  logoUrl: getMediaUrl('logos/samarth-main-logo.png'),
   heroBgUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
   heroTitleMr: 'समर्थ कॉम्प्युटर्स खंडाळा — तुमच्या करिअरचा स्मार्ट निर्णय!',
   heroTitleEn: 'Samarth Computers Khandala — Smart Decision for Your Career!'

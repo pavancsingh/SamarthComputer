@@ -19,16 +19,26 @@ export default function AIAssistantWidget({ lang = 'mr' }) {
     }
   ]);
 
+  const timerRef = React.useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   const handleSend = (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    const cleanInput = input.trim().replace(/<[^>]*>/g, '');
+    if (!cleanInput) return;
 
-    const userMsg = input;
+    const userMsg = cleanInput;
     setMessages((prev) => [...prev, { sender: 'user', text: userMsg }]);
     setInput('');
 
     // Instant Bot Response
-    setTimeout(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
       let botReply = isMarathi
         ? 'धन्यवाद! अधिक सविस्तर माहितीसाठी आमच्या टीमशी थेट व्हाट्सॲपवर संपर्क साधा.'
         : 'Thank you! For complete details, connect directly with our center counselor via WhatsApp.';
@@ -54,7 +64,7 @@ export default function AIAssistantWidget({ lang = 'mr' }) {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-primary to-primary-dark text-white p-3.5 rounded-full shadow-2xl border border-primary-light/40 flex items-center gap-2 transform hover:scale-110 transition-all animate-bounce"
+          className="bg-gradient-to-r from-primary to-primary-dark text-white p-3.5 rounded-full shadow-2xl border border-primary-light/40 flex items-center gap-2 transform hover:scale-105 transition-all"
           title="Samarth AI Assistant"
         >
           <Sparkles className="w-5 h-5 text-accent-gold" />

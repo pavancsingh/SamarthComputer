@@ -31,8 +31,8 @@ export default function TrustStrip({ lang = 'mr' }) {
           <div className="marquee-track flex gap-16 items-center opacity-70 grayscale hover:grayscale-0 hover:[animation-play-state:paused] transition-all duration-500 pr-16">
             {ALL_ITEMS.map((item, idx) => (
               <div
-                key={idx}
-                className="flex items-center gap-sm flex-shrink-0 hover:scale-110 transition-transform"
+                key={`trust-${idx}-${item.label}`}
+                className="flex items-center gap-sm flex-shrink-0 hover:scale-105 transition-transform"
               >
                 <span className="material-symbols-outlined text-3xl text-primary fill">
                   {item.icon}

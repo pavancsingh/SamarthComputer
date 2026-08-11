@@ -14,22 +14,30 @@ export default function CSCServices({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
+    let isMounted = true;
     async function load() {
       try {
         const cscData = await InquiryRepository.getCSCServices('all');
         const govtData = await InquiryRepository.getGovtServices('all');
         const combined = [...(cscData || []), ...(govtData || [])];
-        setServices(combined);
+        if (isMounted) setServices(combined);
       } catch (e) {
-        console.error('Error loading online services:', e);
+        console.warn('Notice loading online services:', e.message);
       }
     }
     load();
 
     const unsubscribe = sharedStore.subscribe(() => {
-      load();
+      if (isMounted) {
+        const csc = sharedStore.getCSCServices();
+        const govt = sharedStore.getGovtServices();
+        setServices([...(csc || []), ...(govt || [])]);
+      }
     });
-    return unsubscribe;
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
 
   const filtered = services.filter(s => 
@@ -85,7 +93,7 @@ export default function CSCServices({ lang = 'mr', onNavigate }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayServices.map((item, idx) => (
               <div 
-                key={item.id || item.slug || idx}
+                key={item.id || item.slug || `csc-${idx}-${item.titleEn || item.titleMr}`}
                 className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
               >
                 <div className="space-y-3">
@@ -113,7 +121,7 @@ export default function CSCServices({ lang = 'mr', onNavigate }) {
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {((isMarathi ? item.requiredDocsMr : item.requiredDocsEn) || []).slice(0, 3).map((doc, dIdx) => (
-                        <span key={dIdx} className="bg-white border border-slate-200/80 text-slate-700 text-[10px] font-semibold px-2.5 py-0.5 rounded-lg shadow-stitch-sm">
+                        <span key={`doc-${dIdx}-${doc}`} className="bg-white border border-slate-200/80 text-slate-700 text-[10px] font-semibold px-2.5 py-0.5 rounded-lg shadow-stitch-sm">
                           ✓ {doc}
                         </span>
                       ))}

@@ -62,10 +62,9 @@ export default function StatsCounter({ lang = 'mr' }) {
             {stats.map((stat, idx) => {
               const Icon = stat.icon;
               return (
-                <motion.div 
-                  key={idx}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="text-center space-y-3 p-5 rounded-2xl bg-slate-50/70 border border-slate-200/70 hover:bg-white hover:border-slate-300 hover:shadow-stitch-sm transition-all"
+                <div 
+                  key={`stat-${idx}-${stat.value}`}
+                  className="text-center space-y-3 p-5 rounded-2xl bg-slate-50/70 border border-slate-200/70 hover:bg-white hover:border-slate-300 hover:shadow-stitch-sm hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border ${stat.accent} shadow-stitch-sm`}>
                     <Icon className="w-6 h-6" />
@@ -79,7 +78,7 @@ export default function StatsCounter({ lang = 'mr' }) {
                   <div className={`text-xs text-slate-500 font-medium ${isMarathi ? 'marathi-text' : ''}`}>
                     {isMarathi ? stat.descMr : stat.descEn}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>

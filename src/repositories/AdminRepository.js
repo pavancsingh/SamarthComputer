@@ -1,6 +1,11 @@
 import { supabase } from '../lib/supabase';
 import { sharedStore } from './sharedStore';
 
+function isValidUUID(uuidStr) {
+  if (!uuidStr || typeof uuidStr !== 'string') return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuidStr.trim());
+}
+
 /**
  * Resilient Supabase Upsert Helper
  * Automatically handles schema cache or table column mismatch errors (e.g., missing optional columns)
@@ -109,7 +114,7 @@ export const AdminRepository = {
       image_url: courseData.imageUrl || courseData.image_url || null
     };
 
-    if (courseData.id && !courseData.id.toString().startsWith('c-')) {
+    if (courseData.id && isValidUUID(courseData.id.toString())) {
       payload.id = courseData.id;
     }
 
@@ -186,7 +191,7 @@ export const AdminRepository = {
       display_order: serviceData.displayOrder !== undefined ? serviceData.displayOrder : (serviceData.display_order || 0)
     };
 
-    if (serviceData.id && !serviceData.id.toString().startsWith('csc-')) {
+    if (serviceData.id && isValidUUID(serviceData.id.toString())) {
       payload.id = serviceData.id;
     }
 
@@ -247,7 +252,7 @@ export const AdminRepository = {
       image_url: serviceData.imageUrl || serviceData.image_url || null
     };
 
-    if (serviceData.id && !serviceData.id.toString().startsWith('govt-')) {
+    if (serviceData.id && isValidUUID(serviceData.id.toString())) {
       payload.id = serviceData.id;
     }
 
@@ -349,7 +354,7 @@ export const AdminRepository = {
       image_url: itemData.imageUrl || itemData.image_url
     };
 
-    if (itemData.id && !itemData.id.toString().startsWith('gal-')) {
+    if (itemData.id && isValidUUID(itemData.id.toString())) {
       payload.id = itemData.id;
     }
 
@@ -440,7 +445,7 @@ export const AdminRepository = {
     };
 
     let targetId = itemData.id;
-    if (targetId && !targetId.toString().startsWith('fac-')) {
+    if (targetId && isValidUUID(targetId.toString())) {
       payload.id = targetId;
     } else {
       // Lookup existing faculty by name to update existing UUID row

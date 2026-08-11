@@ -6,26 +6,46 @@ import { AdminRepository } from '../../repositories/AdminRepository';
  * Faculty Component - Google Stitch Design
  * Leadership & Instructors showcase: Dynamic rendering directly from Supabase DB.
  */
+const DEFAULT_FACULTY = [
+  {
+    id: 'fac-1',
+    name: 'पवन सिंग (Pavan Singh)',
+    role_mr: 'केंद्र संचालक व मुख्य ट्रेनर',
+    role_en: 'Center Director & Lead Trainer',
+    exp_mr: '१२+ वर्षे संगणक व आयटी अध्यापनाचा अनुभव',
+    exp_en: '12+ Years IT Training & Management Experience',
+    spec_mr: 'MS-CIT, टॅली प्राईम जीएसटी व कॉम्प्युटर हार्डवेअर तज्ज्ञ',
+    spec_en: 'MS-CIT, Tally Prime GST & Hardware Expert',
+    badge: 'Center Director'
+  },
+  {
+    id: 'fac-2',
+    name: 'सागर भोसले (Sagar Bhosale)',
+    role_mr: 'वरिष्ठ संगणक शिक्षक',
+    role_en: 'Senior Computer Instructor',
+    exp_mr: '१०+ वर्षे प्रॅक्टिकल लॅब व टायपिंग मार्गदर्शन',
+    exp_en: '10+ Years Practical Lab & Typing Guidance',
+    spec_mr: 'ॲडव्हान्स एक्सल, टायपिंग (30/40 wpm) व सीएससी ऑनलाईन सेतू',
+    spec_en: 'Advanced Excel, GCC-TBC Typing & CSC Online Services',
+    badge: 'Senior Faculty'
+  }
+];
+
 export default function Faculty({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
-  const [facultyList, setFacultyList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [facultyList, setFacultyList] = useState(DEFAULT_FACULTY);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
     AdminRepository.getAllFaculty().then((res) => {
-      if (isMounted) {
-        setFacultyList(res || []);
-        setLoading(false);
+      if (isMounted && res && res.length > 0) {
+        setFacultyList(res);
       }
-    }).catch(() => {
-      if (isMounted) setLoading(false);
-    });
+    }).catch(() => {});
 
     return () => { isMounted = false; };
   }, []);
-
-  if (loading || facultyList.length === 0) return null;
 
   return (
     <section className="py-20 bg-stitch-ivory border-b border-slate-200/80">
@@ -67,6 +87,8 @@ export default function Faculty({ lang = 'mr' }) {
                     <img 
                       src={imgSrc} 
                       alt={item.name} 
+                      loading="lazy"
+                      decoding="async"
                       className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-stitch-sm group-hover:scale-105 transition-transform shrink-0"
                     />
                   ) : (

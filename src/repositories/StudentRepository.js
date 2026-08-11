@@ -10,21 +10,24 @@ export const StudentRepository = {
    */
   async getCertificateByRegNo(regNo) {
     if (!regNo) return null;
-    const queryTerm = regNo.trim();
+    // Sanitize search query: strip out commas, parentheses, quotes, and % to prevent filter injection
+    const cleanTerm = regNo.trim().replace(/[,()%"'\\]/g, '');
+    if (!cleanTerm) return null;
+
     try {
       const { data, error } = await supabase
         .from('certificates')
         .select('*')
-        .or(`reg_no.ilike.%${queryTerm}%,student_name_en.ilike.%${queryTerm}%,student_name_mr.ilike.%${queryTerm}%`)
+        .or(`reg_no.ilike.%${cleanTerm}%,student_name_en.ilike.%${cleanTerm}%,student_name_mr.ilike.%${cleanTerm}%`)
         .maybeSingle();
 
       if (error) {
-        console.error('StudentRepository certificate search error:', error.message);
+        console.warn('[StudentRepository] Search notice:', error.message);
         return null;
       }
       return data;
     } catch (err) {
-      console.error('StudentRepository certificate search exception:', err.message);
+      console.warn('[StudentRepository] Search exception:', err.message);
       return null;
     }
   }

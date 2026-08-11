@@ -29,23 +29,30 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
+    let isMounted = true;
     async function load() {
       setLoading(true);
       try {
         const data = await CourseRepository.getCourses('all');
-        setCourses(data || []);
+        if (isMounted) setCourses(data || []);
       } catch (err) {
-        console.error('Error loading homepage courses:', err);
+        console.warn('Notice loading courses:', err.message);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
     load();
 
     const unsubscribe = sharedStore.subscribe(() => {
-      load();
+      if (isMounted) {
+        setCourses(sharedStore.getCourses());
+        setLoading(false);
+      }
     });
-    return unsubscribe;
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
 
   // Ensure exact order: MS-CIT, Tally Prime, Advanced Excel
@@ -118,13 +125,9 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
             const keyTopics = Array.isArray(modules) ? modules.slice(0, 4) : [];
 
             return (
-              <motion.div
-                key={course.id || course.slug || idx}
-                className="bg-white rounded-xl border border-surface-variant/50 p-6 group relative overflow-hidden stitch-card-hover cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+              <div
+                key={course.slug || course.id || `course-${idx}`}
+                className="bg-white rounded-xl border border-surface-variant/50 p-6 group relative overflow-hidden cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 onClick={(e) => handleViewDetailsClick(e, course)}
               >
                 <div>
@@ -137,6 +140,8 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                       <img 
                         src={course.image_url || course.imageUrl} 
                         alt={course.title} 
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <span className="absolute top-3 left-3 px-sm py-xs bg-primary text-white text-label-caps font-label-caps rounded-full shadow-sm">
@@ -147,6 +152,8 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                           <img
                             src={course.logoUrl || course.logo_url}
                             alt={`${course.title} logo`}
+                            loading="lazy"
+                            decoding="async"
                             className="max-w-full max-h-full object-contain"
                           />
                         </div>
@@ -154,7 +161,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                     </div>
                   ) : (
                     <div className="flex items-center justify-between mb-6">
-                      <div className={`w-12 h-12 rounded-lg ${iconBg} flex items-center justify-center group-hover:scale-110 group-hover:bg-primary transition-all duration-300`}>
+                      <div className={`w-12 h-12 rounded-lg ${iconBg} flex items-center justify-center group-hover:scale-105 group-hover:bg-primary transition-all duration-300`}>
                         <span className={`material-symbols-outlined ${iconColor} group-hover:text-white transition-colors duration-300`}>
                           {icon}
                         </span>
@@ -164,6 +171,8 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                           <img
                             src={course.logoUrl || course.logo_url}
                             alt={`${course.title} logo`}
+                            loading="lazy"
+                            decoding="async"
                             className="max-w-full max-h-full object-contain"
                           />
                         </div>
@@ -197,7 +206,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                         {keyTopics.map((topic, tidx) => {
                           const topicName = typeof topic === 'string' ? topic : (topic.name || topic.title || '');
                           return (
-                            <li key={tidx} className="text-xs text-secondary flex items-start gap-1.5">
+                            <li key={`topic-${tidx}-${topicName}`} className="text-xs text-secondary flex items-start gap-1.5">
                               <span className="material-symbols-outlined text-[14px] text-stitch-emerald mt-0.5 shrink-0">check_circle</span>
                               <span className="line-clamp-1">{topicName}</span>
                             </li>
@@ -226,7 +235,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                     <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                   </button>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

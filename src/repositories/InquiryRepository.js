@@ -56,8 +56,6 @@ export const InquiryRepository = {
    */
   async getCSCServices(category = 'all') {
     try {
-      await this.ensureSeedCSCServices();
-
       let query = supabase.from('csc_services').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
       if (category !== 'all') {
         query = query.eq('category', category);
@@ -110,8 +108,6 @@ export const InquiryRepository = {
    */
   async getGovtServices(category = 'all') {
     try {
-      await this.ensureSeedGovtServices();
-
       let query = supabase.from('govt_services').select('*').order('created_at', { ascending: false });
       if (category !== 'all') {
         query = query.eq('category', category);

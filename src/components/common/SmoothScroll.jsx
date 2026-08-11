@@ -7,24 +7,39 @@ import Lenis from 'lenis';
  */
 export default function SmoothScroll({ children }) {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 2,
-    });
+    let rafId = null;
+    let lenis = null;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+    try {
+      lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 1.5,
+      });
+
+      function raf(time) {
+        if (lenis) {
+          lenis.raf(time);
+          rafId = requestAnimationFrame(raf);
+        }
+      }
+
+      rafId = requestAnimationFrame(raf);
+    } catch (e) {
+      console.warn('Lenis smooth scroll initialization notice:', e);
     }
 
-    requestAnimationFrame(raf);
-
     return () => {
-      lenis.destroy();
+      if (rafId) cancelAnimationFrame(rafId);
+      if (lenis) {
+        try {
+          lenis.destroy();
+        } catch {}
+      }
     };
   }, []);
 
   return <>{children}</>;
 }
+
