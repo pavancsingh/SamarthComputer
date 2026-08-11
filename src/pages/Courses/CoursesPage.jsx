@@ -105,7 +105,7 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
       (c.subtitleEn || c.subtitle_en || c.overviewEn || c.overview_en || '').toLowerCase().includes(q);
   });
 
-  const displayCourses = filtered.length > 0 ? filtered : FALLBACK_COURSES;
+  const displayCourses = filtered;
 
   return (
     <div className="bg-background min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
@@ -181,8 +181,26 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
 
         {/* Course Grid */}
         <section className="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-            {displayCourses.map((course, idx) => {
+          {displayCourses.length === 0 ? (
+            <div className="bg-white border border-surface-variant/50 rounded-xl p-xl text-center space-y-md">
+              <span className="material-symbols-outlined text-4xl text-secondary">search_off</span>
+              <h3 className="font-headline-md text-headline-md text-text-primary">
+                {isMarathi ? 'कोणताही अभ्यासक्रम सापडला नाही' : 'No matching courses found'}
+              </h3>
+              <p className="font-body-md text-body-md text-secondary">
+                {isMarathi ? 'कृपया इतर कीवर्ड वापरून शोधा किंवा फिल्टर बदला.' : 'Try searching with another keyword or reset category filters.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => { setFilter('all'); setSearchTerm(''); }}
+                className="bg-primary text-white px-lg py-sm rounded-lg font-label-bold text-label-bold inline-block mt-sm"
+              >
+                {isMarathi ? 'सर्व कोर्सेस दाखवा' : 'Show All Courses'}
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+              {displayCourses.map((course, idx) => {
               const tag = course.tag || (course.isPrimary ? 'Primary' : course.category?.toUpperCase() || 'Course');
               const tagColor = course.tagColor || (course.isPrimary ? 'bg-stitch-red-light text-primary border border-stitch-red-border' : 'bg-surface-container-highest text-on-surface');
               const desc = (isMarathi
@@ -296,6 +314,7 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
               );
             })}
           </div>
+          )}
         </section>
 
         {/* CTA Section */}
