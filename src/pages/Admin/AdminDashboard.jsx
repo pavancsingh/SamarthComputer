@@ -240,7 +240,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
       }
     } catch (err) {
       console.error('[AdminDashboard] handleSaveSettings exception:', err);
-      setActionNotice({ type: 'error', text: 'An unexpected error occurred while saving branding settings.' });
+      setActionNotice({ type: 'error', text: `An unexpected error occurred while saving branding settings: ${err?.message || err}` });
     } finally {
       setIsSubmitting(false);
       setUploadingImage(false);

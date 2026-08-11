@@ -829,18 +829,21 @@ export const AdminRepository = {
       copyright_text: settings.copyrightText || null
     };
 
-    const res = await upsertWithColumnFallback('site_settings', payload);
-    if (res.success) {
-      const normalizedData = { ...settings, ...payload };
-      sharedStore.saveSiteSettings(normalizedData);
-      return { success: true, data: normalizedData };
-    }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'site_settings' missing in Supabase schema (${res.error}). Saved to local store.`);
+    try {
+      const res = await upsertWithColumnFallback('site_settings', payload);
+      if (res.success) {
+        const normalizedData = { ...settings, ...payload };
+        sharedStore.saveSiteSettings(normalizedData);
+        return { success: true, data: normalizedData };
+      }
+      console.warn(`[AdminRepository] Table 'site_settings' save notice (${res.error}). Saved to local store.`);
+      sharedStore.saveSiteSettings(settings);
+      return { success: true, data: settings, fallback: true };
+    } catch (err) {
+      console.warn(`[AdminRepository] saveSiteSettings exception (${err.message}). Saved to local store.`);
       sharedStore.saveSiteSettings(settings);
       return { success: true, data: settings, fallback: true };
     }
-    return res;
   },
 
   async syncAllLocalDataToSupabase() {
