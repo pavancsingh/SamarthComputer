@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, MessageCircle, ShieldCheck, Phone } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
 import Navbar from './Navbar';
 import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * Header Component — Stitch Design System
- * Sticky glassmorphic top app bar: brand lockup, desktop nav, Call Now + WhatsApp + Apply Now CTAs.
+ * Sticky glassmorphic top app bar: brand lockup, desktop nav, Call Now + Apply Now CTAs.
  * Matches Stitch screens: bg-white/80 backdrop-blur-xl h-20 max-w-7xl
  */
 export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOpen, currentView, onNavigate }) {
@@ -75,18 +75,6 @@ export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOp
           >
             <Phone className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600/20" />
             <span>{isMarathi ? (settings.callCtaTextMr || '📞 कॉल करा') : (settings.callCtaTextEn || 'Call Now')}</span>
-          </a>
-
-          {/* WhatsApp */}
-          <a
-            href={`https://wa.me/${settings.contactWhatsapp || '919552345061'}?text=Hello%20Samarth%20Computers,%20I%20want%20information.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-2 text-slate-700 hover:text-slate-900 font-bold text-xs rounded-xl hover:bg-slate-100 transition-colors"
-            title="WhatsApp"
-          >
-            <MessageCircle className="w-4 h-4 text-stitch-emerald" />
-            <span>WhatsApp</span>
           </a>
 
           {/* Apply Now — Stitch primary button */}
