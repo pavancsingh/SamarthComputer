@@ -218,18 +218,27 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                 </div>
 
                 {/* Footer Action Buttons */}
-                <div className="flex gap-2 pt-4 border-t border-surface-variant/30 mt-auto">
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 pt-4 border-t border-surface-variant/30 mt-auto">
+                  <a
+                    href="tel:+919552345061"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1 shadow-xs shrink-0"
+                    title="Call Now: +91 95523 45061"
+                  >
+                    <span className="material-symbols-outlined text-[15px] text-emerald-600">call</span>
+                    <span>{isMarathi ? 'कॉल' : 'Call'}</span>
+                  </a>
                   <button
                     type="button"
                     onClick={(e) => handleViewDetailsClick(e, course)}
-                    className="flex-1 bg-white text-text-primary border border-surface-variant font-label-bold text-xs py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-1"
+                    className="flex-1 bg-white text-text-primary border border-surface-variant font-label-bold text-xs py-2.5 px-3 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-1"
                   >
                     <span>{isMarathi ? 'तपशील पहा' : 'View Details'}</span>
                   </button>
                   <button
                     type="button"
                     onClick={(e) => handleEnrollClick(e, course)}
-                    className="flex-1 bg-primary text-white font-label-bold text-xs py-2.5 px-3 rounded-lg hover:bg-stitch-red-dark transition-colors flex items-center justify-center gap-1 shadow-sm"
+                    className="flex-1 bg-primary text-white font-label-bold text-xs py-2.5 px-3 rounded-xl hover:bg-stitch-red-dark transition-colors flex items-center justify-center gap-1 shadow-sm"
                   >
                     <span>{isMarathi ? 'प्रवेश घ्या' : 'Enroll Now'}</span>
                     <span className="material-symbols-outlined text-[14px]">arrow_forward</span>

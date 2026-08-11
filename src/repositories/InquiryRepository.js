@@ -72,33 +72,36 @@ export const InquiryRepository = {
       }
       if (error || !data || data.length === 0) {
         if (error) console.error('Supabase CSC service fetch error:', error.message);
-        const local = sharedStore.getCSCServices();
+        let local = sharedStore.getCSCServices().filter(s => s.is_active !== false && s.isActive !== false);
         return category !== 'all' ? local.filter(s => s.category === category) : local;
       }
-      return (data || []).map((s) => ({
-        ...s,
-        titleMr: s.title_mr || s.titleMr,
-        titleEn: s.title_en || s.titleEn,
-        timelineMr: s.timeline_mr || s.timelineMr,
-        timelineEn: s.timeline_en || s.timelineEn,
-        deadlineMr: s.deadline_mr || s.deadlineMr || 'सदैव उपलब्ध',
-        deadlineEn: s.deadline_en || s.deadlineEn || 'Always Available',
-        status: s.status || 'Open',
-        officialUrl: s.official_url || s.officialUrl || '',
-        isFeatured: s.is_featured !== undefined ? s.is_featured : (s.isFeatured || false),
-        displayOrder: s.display_order !== undefined ? s.display_order : (s.displayOrder || 0),
-        govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
-        govtFeeEn: s.govt_fee_en || s.govtFeeEn,
-        overviewMr: s.overview_mr || s.overviewMr,
-        overviewEn: s.overview_en || s.overviewEn,
-        requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
-        requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
-        stepsMr: s.steps_mr || s.stepsMr || [],
-        stepsEn: s.steps_en || s.stepsEn || []
-      }));
+      return (data || [])
+        .filter(s => s.is_active !== false && s.isActive !== false)
+        .map((s) => ({
+          ...s,
+          titleMr: s.title_mr || s.titleMr,
+          titleEn: s.title_en || s.titleEn,
+          timelineMr: s.timeline_mr || s.timelineMr,
+          timelineEn: s.timeline_en || s.timelineEn,
+          deadlineMr: s.deadline_mr || s.deadlineMr || 'सदैव उपलब्ध',
+          deadlineEn: s.deadline_en || s.deadlineEn || 'Always Available',
+          status: s.status || 'Open',
+          officialUrl: s.official_url || s.officialUrl || '',
+          isFeatured: s.is_featured !== undefined ? s.is_featured : (s.isFeatured || false),
+          isActive: s.is_active !== undefined ? s.is_active : true,
+          displayOrder: s.display_order !== undefined ? s.display_order : (s.displayOrder || 0),
+          govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
+          govtFeeEn: s.govt_fee_en || s.govtFeeEn,
+          overviewMr: s.overview_mr || s.overviewMr,
+          overviewEn: s.overview_en || s.overviewEn,
+          requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
+          requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
+          stepsMr: s.steps_mr || s.stepsMr || [],
+          stepsEn: s.steps_en || s.stepsEn || []
+        }));
     } catch (e) {
       console.error('Supabase CSC service fetch exception:', e.message);
-      const local = sharedStore.getCSCServices();
+      const local = sharedStore.getCSCServices().filter(s => s.is_active !== false && s.isActive !== false);
       return category !== 'all' ? local.filter(s => s.category === category) : local;
     }
   },
@@ -115,24 +118,26 @@ export const InquiryRepository = {
       const { data, error } = await query;
       if (error || !data || data.length === 0) {
         if (error) console.error('Supabase Govt service fetch error:', error.message);
-        const local = sharedStore.getGovtServices();
+        let local = sharedStore.getGovtServices().filter(g => g.is_active !== false && g.isActive !== false);
         return category !== 'all' ? local.filter(g => g.category === category) : local;
       }
-      return (data || []).map((g) => ({
-        ...g,
-        titleMr: g.title_mr || g.titleMr,
-        titleEn: g.title_en || g.titleEn,
-        timelineMr: g.timeline_mr || g.timelineMr,
-        timelineEn: g.timeline_en || g.timelineEn,
-        govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
-        govtFeeEn: g.govt_fee_en || g.govtFeeEn,
-        overviewMr: g.overview_mr || g.overviewMr,
-        overviewEn: g.overview_en || g.overviewEn,
-        requiredDocsMr: g.required_docs_mr || g.requiredDocsMr || g.requirementsMr || g.requirements_mr || [],
-        requiredDocsEn: g.required_docs_en || g.requiredDocsEn || g.requirementsEn || g.requirements_en || [],
-        stepsMr: g.steps_mr || g.stepsMr || [],
-        stepsEn: g.steps_en || g.stepsEn || []
-      }));
+      return (data || [])
+        .filter(g => g.is_active !== false && g.isActive !== false)
+        .map((g) => ({
+          ...g,
+          titleMr: g.title_mr || g.titleMr,
+          titleEn: g.title_en || g.titleEn,
+          timelineMr: g.timeline_mr || g.timelineMr,
+          timelineEn: g.timeline_en || g.timelineEn,
+          govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
+          govtFeeEn: g.govt_fee_en || g.govtFeeEn,
+          overviewMr: g.overview_mr || g.overviewMr,
+          overviewEn: g.overview_en || g.overviewEn,
+          requiredDocsMr: g.required_docs_mr || g.requiredDocsMr || g.requirementsMr || g.requirements_mr || [],
+          requiredDocsEn: g.required_docs_en || g.requiredDocsEn || g.requirementsEn || g.requirements_en || [],
+          stepsMr: g.steps_mr || g.stepsMr || [],
+          stepsEn: g.steps_en || g.stepsEn || []
+        }));
     } catch (e) {
       console.error('Supabase Govt service fetch exception:', e.message);
       const local = sharedStore.getGovtServices();
@@ -258,21 +263,32 @@ export const InquiryRepository = {
   },
 
   /**
-   * Generic inquiry submission for contact form.
+   * Generic inquiry submission for contact forms, brochure requests, and service leads.
    */
   async submitInquiry(payload) {
-    const type = payload.type === 'csc' ? 'csc_service' : payload.type === 'general' ? 'general_feedback' : 'course_admission';
+    const type = payload.type === 'brochure_download'
+      ? 'brochure_download'
+      : payload.type === 'csc'
+      ? 'csc_service'
+      : payload.type === 'general'
+      ? 'general_feedback'
+      : payload.type || 'course_admission';
+
     try {
+      const cleanName = (payload.name || payload.studentName || 'Website Visitor').trim();
+      const cleanMobile = (payload.mobile || payload.phone || payload.contact || '').toString().trim();
+
       const { data, error } = await supabase
         .from('inquiries')
         .insert([{
           type,
-          name: payload.name,
-          mobile: payload.phone || payload.contact,
-          course_id: payload.course,
-          service_id: payload.service,
+          name: cleanName,
+          mobile: cleanMobile,
+          course_id: payload.course_id || payload.courseId || payload.course || null,
+          service_id: payload.service_id || payload.serviceId || payload.service || null,
+          batch_timing: payload.batchTiming || payload.batch_timing || null,
           status: 'New Lead',
-          details: { message: payload.message, lang: payload.lang }
+          details: payload.details || { message: payload.message, lang: payload.lang }
         }])
         .select();
 

@@ -4,7 +4,7 @@ import ServiceEnquiryModal from '../../components/forms/ServiceEnquiryModal';
 import {
   Search, ChevronRight, ChevronLeft, ArrowRight, ExternalLink,
   FileText, Shield, Printer, Laptop, Wrench, Globe,
-  Clock, CheckCircle2, AlertCircle, Sparkles, MessageCircle, X
+  Clock, CheckCircle2, AlertCircle, Sparkles, MessageCircle, X, Phone
 } from 'lucide-react';
 
 /**
@@ -487,7 +487,15 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                         )}
                       </div>
 
-                      <div className="pt-4 mt-3 border-t border-slate-100 flex gap-2">
+                      <div className="pt-4 mt-3 border-t border-slate-100 flex flex-wrap sm:flex-nowrap gap-2">
+                        <a
+                          href="tel:+919552345061"
+                          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs px-3 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shrink-0"
+                          title="Call Now: +91 95523 45061"
+                        >
+                          <Phone className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600/20" />
+                          <span>{isMarathi ? 'कॉल' : 'Call'}</span>
+                        </a>
                         <button
                           type="button"
                           onClick={() => setDetailService(service)}
@@ -610,6 +618,14 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
 
               {/* Action Buttons */}
               <div className="space-y-3 pt-2">
+                <a
+                  href="tel:+919552345061"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+                >
+                  <Phone className="w-4 h-4 text-white fill-white/20" />
+                  {isMarathi ? '📞 थेट कॉल करा (Call Now)' : 'Call Now (+91 95523 45061)'}
+                </a>
+
                 <button
                   type="button"
                   onClick={() => { openEnquiry(detailService); setDetailService(null); }}

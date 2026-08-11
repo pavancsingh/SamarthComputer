@@ -21,6 +21,7 @@ export default function ContactPage({ lang = 'mr' }) {
   const [loading, setLoading] = useState(false);
   const isMarathi = lang === 'mr';
 
+  const [settings, setSettings] = useState(sharedStore.getSiteSettings());
   const [courses, setCourses] = useState(sharedStore.getCourses());
   const [cscServices, setCscServices] = useState(sharedStore.getCSCServices());
   const [govtServices, setGovtServices] = useState(sharedStore.getGovtServices());
@@ -37,6 +38,7 @@ export default function ContactPage({ lang = 'mr' }) {
     });
 
     const unsubscribe = sharedStore.subscribe(() => {
+      setSettings(sharedStore.getSiteSettings());
       setCourses(sharedStore.getCourses());
       setCscServices(sharedStore.getCSCServices());
       setGovtServices(sharedStore.getGovtServices());
@@ -237,7 +239,7 @@ export default function ContactPage({ lang = 'mr' }) {
                   <div>
                     <p className="text-label-bold font-label-bold text-text-primary">Main Office</p>
                     <p className="text-body-md font-body-md text-secondary mt-xs">
-                      Near Rajendra Vidhalya, Khandala,<br />Ta. Khandala, Dist. Satara - 412802
+                      {isMarathi ? (settings.contactAddressMr || 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा ४१२८०२') : (settings.contactAddressEn || 'Near Rajendra Vidhalya, Khandala, Ta. Khandala, Dist. Satara - 412802')}
                     </p>
                   </div>
                 </div>
@@ -249,7 +251,7 @@ export default function ContactPage({ lang = 'mr' }) {
                   <div>
                     <p className="text-label-bold font-label-bold text-text-primary">Office Hours</p>
                     <p className="text-body-md font-body-md text-secondary mt-xs">
-                      Monday - Saturday: 9:00 AM - 7:00 PM<br />Sunday: Closed
+                      {isMarathi ? (settings.contactHoursMr || 'सोमवार - शनिवार: सकाळी ९:०० ते रात्री ७:००') : (settings.contactHoursEn || 'Monday - Saturday: 9:00 AM - 7:00 PM')}
                     </p>
                   </div>
                 </div>
@@ -260,8 +262,8 @@ export default function ContactPage({ lang = 'mr' }) {
                   </div>
                   <div>
                     <p className="text-label-bold font-label-bold text-text-primary">Phone</p>
-                    <a href="tel:+919552345061" className="text-body-md font-body-md text-primary font-medium mt-xs hover:underline block">
-                      +91 95523 45061
+                    <a href={`tel:${settings.contactPhone || '+919552345061'}`} className="text-body-md font-body-md text-primary font-medium mt-xs hover:underline block">
+                      {settings.contactPhone || '+91 95523 45061'}
                     </a>
                   </div>
                 </div>
@@ -270,7 +272,7 @@ export default function ContactPage({ lang = 'mr' }) {
               {/* WhatsApp CTA */}
               <div className="mt-lg pt-lg border-t border-slate-100">
                 <a
-                  href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers"
+                  href={`https://wa.me/${settings.contactWhatsapp || '919552345061'}?text=Hello%20Samarth%20Computers`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-sm w-full bg-[#25D366]/10 text-[#075E54] hover:bg-[#25D366]/20 py-sm px-md rounded-lg transition-colors font-label-bold text-label-bold"
@@ -287,7 +289,7 @@ export default function ContactPage({ lang = 'mr' }) {
             <div className="bg-surface-container rounded-xl overflow-hidden h-[300px] relative shadow-stitch-md border border-slate-200/50">
               <iframe
                 title="Samarth Computers Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3789.0946052295697!2d74.06488181504043!3d18.04649018799785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2f7bf9d34c6f1%3A0xadf7d5d7d5e8e8e8!2sKhandala%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+                src={settings.contactMapUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3789.0946052295697!2d74.06488181504043!3d18.04649018799785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2f7bf9d34c6f1%3A0xadf7d5d7d5e8e8e8!2sKhandala%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"}
                 className="w-full h-full border-0 opacity-80"
                 loading="lazy"
                 allowFullScreen

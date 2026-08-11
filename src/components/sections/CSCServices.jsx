@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, FileText, Shield, MessageCircle, ArrowRight } from 'lucide-react';
+import { Search, FileText, Shield, MessageCircle, ArrowRight, Phone } from 'lucide-react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
 import { sharedStore } from '../../repositories/sharedStore';
 
@@ -129,15 +129,26 @@ export default function CSCServices({ lang = 'mr', onNavigate }) {
                   </div>
                 </div>
 
-                <a
-                  href={`https://wa.me/919552345061?text=I%20want%20to%20apply%20for%20${encodeURIComponent(item.titleEn || item.titleMr || 'Online Service')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 w-full flex items-center justify-center gap-2 bg-stitch-slate-dark hover:bg-stitch-whatsapp text-white hover:text-slate-950 font-extrabold text-xs py-3 rounded-2xl shadow-stitch-sm transition-all"
-                >
-                  <MessageCircle className="w-4 h-4 text-stitch-whatsapp" />
-                  <span>{isMarathi ? 'व्हाट्सॲपवर अर्ज करा' : 'Apply via WhatsApp'}</span>
-                </a>
+                <div className="mt-5 flex gap-2">
+                  <a
+                    href="tel:+919552345061"
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs py-3 rounded-2xl shadow-xs transition-all"
+                    title="Call Now: +91 95523 45061"
+                  >
+                    <Phone className="w-4 h-4 text-emerald-600 fill-emerald-600/20" />
+                    <span>{isMarathi ? '📞 कॉल' : 'Call Now'}</span>
+                  </a>
+
+                  <a
+                    href={`https://wa.me/919552345061?text=I%20want%20to%20apply%20for%20${encodeURIComponent(item.titleEn || item.titleMr || 'Online Service')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-stitch-slate-dark hover:bg-stitch-whatsapp text-white hover:text-slate-950 font-extrabold text-xs py-3 rounded-2xl shadow-stitch-sm transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4 text-stitch-whatsapp" />
+                    <span>{isMarathi ? 'व्हाट्सॲप' : 'WhatsApp'}</span>
+                  </a>
+                </div>
               </div>
             ))}
           </div>

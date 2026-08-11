@@ -99,6 +99,7 @@ export const AdminRepository = {
       tag: courseData.tag || 'New',
       is_primary: courseData.isPrimary !== undefined ? courseData.isPrimary : (courseData.is_primary || false),
       is_featured: courseData.isFeatured !== undefined ? courseData.isFeatured : (courseData.is_featured || false),
+      is_active: courseData.isActive !== undefined ? courseData.isActive : (courseData.is_active !== undefined ? courseData.is_active : true),
       display_order: courseData.displayOrder !== undefined ? parseInt(courseData.displayOrder, 10) || 0 : (courseData.display_order || 0),
       duration_mr: courseData.durationMr || courseData.duration_mr || courseData.durationEn,
       duration_en: courseData.durationEn || courseData.duration_en,
@@ -191,6 +192,7 @@ export const AdminRepository = {
       status: serviceData.status || 'Open',
       official_url: serviceData.officialUrl || serviceData.official_url || '',
       is_featured: serviceData.isFeatured !== undefined ? serviceData.isFeatured : (serviceData.is_featured || false),
+      is_active: serviceData.isActive !== undefined ? serviceData.isActive : (serviceData.is_active !== undefined ? serviceData.is_active : true),
       govt_fee_mr: serviceData.govtFeeMr || serviceData.govt_fee_mr || serviceData.govtFeeEn,
       govt_fee_en: serviceData.govtFeeEn || serviceData.govt_fee_en,
       overview_mr: serviceData.overviewMr || serviceData.overview_mr || serviceData.overviewEn,
@@ -264,6 +266,7 @@ export const AdminRepository = {
       badge: serviceData.badge || 'Govt Certificate',
       timeline_mr: serviceData.timelineMr || serviceData.timeline_mr || serviceData.timelineEn,
       timeline_en: serviceData.timelineEn || serviceData.timeline_en,
+      is_active: serviceData.isActive !== undefined ? serviceData.isActive : (serviceData.is_active !== undefined ? serviceData.is_active : true),
       govt_fee_mr: serviceData.govtFeeMr || serviceData.govt_fee_mr || serviceData.govtFeeEn,
       govt_fee_en: serviceData.govtFeeEn || serviceData.govt_fee_en,
       overview_mr: serviceData.overviewMr || serviceData.overview_mr || serviceData.overviewEn,
@@ -384,7 +387,9 @@ export const AdminRepository = {
       desc_mr: itemData.descMr || itemData.desc_mr || itemData.descEn || itemData.desc_en,
       desc_en: itemData.descEn || itemData.desc_en || itemData.descMr || itemData.desc_mr,
       category: itemData.category || 'Campus',
-      image_url: itemData.imageUrl || itemData.image_url
+      image_url: itemData.imageUrl || itemData.image_url,
+      is_active: itemData.isActive !== undefined ? itemData.isActive : (itemData.is_active !== undefined ? itemData.is_active : true),
+      display_order: itemData.displayOrder !== undefined ? itemData.displayOrder : (itemData.display_order || 0)
     };
 
     let targetId = itemData.id;
@@ -715,11 +720,57 @@ export const AdminRepository = {
       .maybeSingle();
 
     if (!error && data) {
+      const defaultSettings = sharedStore.getSiteSettings();
       return {
-        logoUrl: data.logo_url,
-        heroBgUrl: data.hero_bg_url,
-        heroTitleMr: data.hero_title_mr,
-        heroTitleEn: data.hero_title_en
+        ...defaultSettings,
+        logoUrl: data.logo_url || defaultSettings.logoUrl,
+        heroBgUrl: data.hero_bg_url || defaultSettings.heroBgUrl,
+        heroTitleMr: data.hero_title_mr || defaultSettings.heroTitleMr,
+        heroTitleEn: data.hero_title_en || defaultSettings.heroTitleEn,
+        heroSubtitleMr: data.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
+        heroSubtitleEn: data.hero_subtitle_en || defaultSettings.heroSubtitleEn,
+        heroBadgeMr: data.hero_badge_mr || defaultSettings.heroBadgeMr,
+        heroBadgeEn: data.hero_badge_en || defaultSettings.heroBadgeEn,
+        heroCtaTextMr: data.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
+        heroCtaTextEn: data.hero_cta_text_en || defaultSettings.heroCtaTextEn,
+        heroCtaDest: data.hero_cta_dest || defaultSettings.heroCtaDest,
+        contactPhone: data.contact_phone || defaultSettings.contactPhone,
+        contactWhatsapp: data.contact_whatsapp || defaultSettings.contactWhatsapp,
+        contactEmail: data.contact_email || defaultSettings.contactEmail,
+        contactAddressMr: data.contact_address_mr || defaultSettings.contactAddressMr,
+        contactAddressEn: data.contact_address_en || defaultSettings.contactAddressEn,
+        contactHoursMr: data.contact_hours_mr || defaultSettings.contactHoursMr,
+        contactHoursEn: data.contact_hours_en || defaultSettings.contactHoursEn,
+        contactMapUrl: data.contact_map_url || defaultSettings.contactMapUrl,
+        callCtaPhone: data.call_cta_phone || defaultSettings.callCtaPhone,
+        callCtaTextMr: data.call_cta_text_mr || defaultSettings.callCtaTextMr,
+        callCtaTextEn: data.call_cta_text_en || defaultSettings.callCtaTextEn,
+        aboutHeadingMr: data.about_heading_mr || defaultSettings.aboutHeadingMr,
+        aboutHeadingEn: data.about_heading_en || defaultSettings.aboutHeadingEn,
+        aboutDescMr: data.about_desc_mr || defaultSettings.aboutDescMr,
+        aboutDescEn: data.about_desc_en || defaultSettings.aboutDescEn,
+        aboutImageUrl: data.about_image_url || defaultSettings.aboutImageUrl,
+        aboutMissionMr: data.about_mission_mr || defaultSettings.aboutMissionMr,
+        aboutMissionEn: data.about_mission_en || defaultSettings.aboutMissionEn,
+        aboutVisionMr: data.about_vision_mr || defaultSettings.aboutVisionMr,
+        aboutVisionEn: data.about_vision_en || defaultSettings.aboutVisionEn,
+        aboutValues: data.about_values || defaultSettings.aboutValues,
+        aboutTimeline: data.about_timeline || defaultSettings.aboutTimeline,
+        homeSections: data.home_sections && Object.keys(data.home_sections).length > 0 ? data.home_sections : defaultSettings.homeSections,
+        whyChooseUs: data.why_choose_us || defaultSettings.whyChooseUs,
+        navSettings: data.nav_settings || defaultSettings.navSettings,
+        siteTitleMr: data.site_title_mr || defaultSettings.siteTitleMr,
+        siteTitleEn: data.site_title_en || defaultSettings.siteTitleEn,
+        alcCode: data.alc_code || defaultSettings.alcCode,
+        cscId: data.csc_id || defaultSettings.cscId,
+        seoTitle: data.seo_title || defaultSettings.seoTitle,
+        seoDescription: data.seo_description || defaultSettings.seoDescription,
+        seoKeywords: data.seo_keywords || defaultSettings.seoKeywords,
+        socialFacebook: data.social_facebook || defaultSettings.socialFacebook,
+        socialInstagram: data.social_instagram || defaultSettings.socialInstagram,
+        socialYoutube: data.social_youtube || defaultSettings.socialYoutube,
+        footerTagline: data.footer_tagline || defaultSettings.footerTagline,
+        copyrightText: data.copyright_text || defaultSettings.copyrightText
       };
     }
     return sharedStore.getSiteSettings();
@@ -731,13 +782,58 @@ export const AdminRepository = {
       logo_url: settings.logoUrl || null,
       hero_bg_url: settings.heroBgUrl || null,
       hero_title_mr: settings.heroTitleMr || null,
-      hero_title_en: settings.heroTitleEn || null
+      hero_title_en: settings.heroTitleEn || null,
+      hero_subtitle_mr: settings.heroSubtitleMr || null,
+      hero_subtitle_en: settings.heroSubtitleEn || null,
+      hero_badge_mr: settings.heroBadgeMr || null,
+      hero_badge_en: settings.heroBadgeEn || null,
+      hero_cta_text_mr: settings.heroCtaTextMr || null,
+      hero_cta_text_en: settings.heroCtaTextEn || null,
+      hero_cta_dest: settings.heroCtaDest || null,
+      contact_phone: settings.contactPhone || null,
+      contact_whatsapp: settings.contactWhatsapp || null,
+      contact_email: settings.contactEmail || null,
+      contact_address_mr: settings.contactAddressMr || null,
+      contact_address_en: settings.contactAddressEn || null,
+      contact_hours_mr: settings.contactHoursMr || null,
+      contact_hours_en: settings.contactHoursEn || null,
+      contact_map_url: settings.contactMapUrl || null,
+      call_cta_phone: settings.callCtaPhone || null,
+      call_cta_text_mr: settings.callCtaTextMr || null,
+      call_cta_text_en: settings.callCtaTextEn || null,
+      about_heading_mr: settings.aboutHeadingMr || null,
+      about_heading_en: settings.aboutHeadingEn || null,
+      about_desc_mr: settings.aboutDescMr || null,
+      about_desc_en: settings.aboutDescEn || null,
+      about_image_url: settings.aboutImageUrl || null,
+      about_mission_mr: settings.aboutMissionMr || null,
+      about_mission_en: settings.aboutMissionEn || null,
+      about_vision_mr: settings.aboutVisionMr || null,
+      about_vision_en: settings.aboutVisionEn || null,
+      about_values: settings.aboutValues || [],
+      about_timeline: settings.aboutTimeline || [],
+      home_sections: settings.homeSections || {},
+      why_choose_us: settings.whyChooseUs || [],
+      nav_settings: settings.navSettings || [],
+      site_title_mr: settings.siteTitleMr || null,
+      site_title_en: settings.siteTitleEn || null,
+      alc_code: settings.alcCode || null,
+      csc_id: settings.cscId || null,
+      seo_title: settings.seoTitle || null,
+      seo_description: settings.seoDescription || null,
+      seo_keywords: settings.seoKeywords || null,
+      social_facebook: settings.socialFacebook || null,
+      social_instagram: settings.socialInstagram || null,
+      social_youtube: settings.socialYoutube || null,
+      footer_tagline: settings.footerTagline || null,
+      copyright_text: settings.copyrightText || null
     };
 
     const res = await upsertWithColumnFallback('site_settings', payload);
     if (res.success) {
-      sharedStore.saveSiteSettings(res.data || settings);
-      return res;
+      const normalizedData = { ...settings, ...payload };
+      sharedStore.saveSiteSettings(normalizedData);
+      return { success: true, data: normalizedData };
     }
     if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
       console.warn(`[AdminRepository] Table 'site_settings' missing in Supabase schema (${res.error}). Saved to local store.`);

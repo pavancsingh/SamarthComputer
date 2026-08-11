@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Menu, X, MessageCircle, ShieldCheck, Phone } from 'lucide-react';
 import Navbar from './Navbar';
 import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * Header Component — Stitch Design System
- * Sticky glassmorphic top app bar: brand lockup, desktop nav, WhatsApp + Apply Now CTAs.
+ * Sticky glassmorphic top app bar: brand lockup, desktop nav, Call Now + WhatsApp + Apply Now CTAs.
  * Matches Stitch screens: bg-white/80 backdrop-blur-xl h-20 max-w-7xl
  */
 export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOpen, currentView, onNavigate }) {
@@ -66,13 +66,23 @@ export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOp
         <Navbar lang={lang} currentView={currentView} onNavigate={onNavigate} />
 
         {/* Desktop CTAs */}
-        <div className="hidden md:flex items-center gap-md">
+        <div className="hidden md:flex items-center gap-3">
+          {/* Call Now Primary CTA */}
+          <a
+            href={`tel:${settings.callCtaPhone || settings.contactPhone || '+919552345061'}`}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-black text-xs rounded-xl border border-emerald-300/80 shadow-sm transition-all hover:scale-105"
+            title={`Call Institute: ${settings.callCtaPhone || settings.contactPhone || '+91 95523 45061'}`}
+          >
+            <Phone className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600/20" />
+            <span>{isMarathi ? (settings.callCtaTextMr || '📞 कॉल करा') : (settings.callCtaTextEn || 'Call Now')}</span>
+          </a>
+
           {/* WhatsApp */}
           <a
-            href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20want%20information."
+            href={`https://wa.me/${settings.contactWhatsapp || '919552345061'}?text=Hello%20Samarth%20Computers,%20I%20want%20information.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-sm font-label-bold text-secondary hover:text-primary transition-colors duration-200 text-sm"
+            className="flex items-center gap-1.5 px-3 py-2 text-slate-700 hover:text-slate-900 font-bold text-xs rounded-xl hover:bg-slate-100 transition-colors"
             title="WhatsApp"
           >
             <MessageCircle className="w-4 h-4 text-stitch-emerald" />
@@ -87,7 +97,7 @@ export default function Header({ lang = 'mr', onMobileMenuToggle, isMobileMenuOp
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               else if (onNavigate) onNavigate('contact');
             }}
-            className="px-md py-sm text-label-bold font-label-bold bg-primary text-on-primary rounded shadow-sm hover:bg-stitch-red-dark transition-colors border border-primary/20 btn-interactive"
+            className="px-4 py-2 text-xs font-black bg-primary text-white rounded-xl shadow-sm hover:bg-stitch-red-dark transition-all border border-primary/20 btn-interactive"
           >
             {isMarathi ? 'प्रवेश घ्या' : 'Apply Now'}
           </button>

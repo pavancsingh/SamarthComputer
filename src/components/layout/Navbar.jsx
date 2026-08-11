@@ -7,23 +7,38 @@ import React from 'react';
  * Active state: text-primary border-b-2 border-primary font-label-bold
  * Inactive: text-secondary font-label-bold hover:text-primary transition-colors
  */
+import { sharedStore } from '../../repositories/sharedStore';
+
 export default function Navbar({ lang = 'mr', currentView = 'home', onNavigate }) {
   const isMarathi = lang === 'mr';
+  const [settings, setSettings] = React.useState(sharedStore.getSiteSettings());
 
-  const navLinks = [
-    { id: 'home',      labelEn: 'Home',         labelMr: 'मुख्यपृष्ठ' },
-    { id: 'courses',   labelEn: 'Courses',       labelMr: 'कोर्सेस' },
-    { id: 'services',  labelEn: 'Services',      labelMr: 'सेवा' },
-    { id: 'timetable', labelEn: 'Timetable',     labelMr: 'वेळापत्रक' },
-    { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल' },
-    { id: 'faculty',   labelEn: 'Faculty',       labelMr: 'शिक्षक वृंद' },
-    { id: 'contact',   labelEn: 'Contact',       labelMr: 'संपर्क' },
+  React.useEffect(() => {
+    const unsub = sharedStore.subscribe(() => setSettings(sharedStore.getSiteSettings()));
+    return () => unsub();
+  }, []);
+
+  const defaultNavLinks = [
+    { id: 'home',      labelEn: 'Home',         labelMr: 'मुख्यपृष्ठ', visible: true, order: 1 },
+    { id: 'courses',   labelEn: 'Courses',       labelMr: 'कोर्सेस', visible: true, order: 2 },
+    { id: 'services',  labelEn: 'Services',      labelMr: 'सेवा', visible: true, order: 3 },
+    { id: 'timetable', labelEn: 'Timetable',     labelMr: 'वेळापत्रक', visible: true, order: 4 },
+    { id: 'about',     labelEn: 'About Us',      labelMr: 'आमच्याबद्दल', visible: true, order: 5 },
+    { id: 'faculty',   labelEn: 'Faculty',       labelMr: 'शिक्षक वृंद', visible: true, order: 6 },
+    { id: 'contact',   labelEn: 'Contact',       labelMr: 'संपर्क', visible: true, order: 7 },
   ];
 
+  const configuredLinks = settings.navSettings && settings.navSettings.length > 0
+    ? settings.navSettings
+    : defaultNavLinks;
+
+  const activeLinks = configuredLinks
+    .filter((l) => l.visible !== false)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
     <nav className="hidden md:flex items-center gap-lg font-label-bold text-label-bold">
-      {navLinks.map((link) => {
+      {activeLinks.map((link) => {
         const isActive = currentView === link.id;
         return (
           <button
@@ -37,7 +52,7 @@ export default function Navbar({ lang = 'mr', currentView = 'home', onNavigate }
             }`}
           >
             <span className={isMarathi ? 'marathi-text' : ''}>
-              {isMarathi ? link.labelMr : link.labelEn}
+              {isMarathi ? (link.labelMr || link.labelEn) : (link.labelEn || link.labelMr)}
             </span>
           </button>
         );

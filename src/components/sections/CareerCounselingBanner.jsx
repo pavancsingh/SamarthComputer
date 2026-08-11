@@ -32,14 +32,23 @@ export default function CareerCounselingBanner({ lang = 'mr' }) {
             </p>
           </div>
 
-          <div className="shrink-0 relative z-10">
+          <div className="shrink-0 relative z-10 flex flex-col sm:flex-row gap-3">
+            <a
+              href="tel:+919552345061"
+              className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm px-6 py-4 rounded-2xl shadow-stitch-sm transition-all hover:scale-105"
+              title="Call Counselor Directly: +91 95523 45061"
+            >
+              <span className="material-symbols-outlined text-[18px]">call</span>
+              <span>{isMarathi ? '📞 थेट कॉल करा' : 'Call Counselor Now'}</span>
+            </a>
+
             <a
               href="#inquiry-form"
-              className="inline-flex items-center gap-2 bg-stitch-amber hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm px-6 py-4 rounded-2xl shadow-stitch-glow transition-all hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 bg-stitch-amber hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm px-6 py-4 rounded-2xl shadow-stitch-glow transition-all hover:scale-105"
             >
               <MessageSquare className="w-4 h-4 text-slate-950" />
               <span className={isMarathi ? 'marathi-text font-bold' : ''}>
-                {isMarathi ? '🗣️ मोफत करिअर सेशन बुक करा' : 'Book Free Counseling Session'}
+                {isMarathi ? '🗣️ मोफत सेशन बुक करा' : 'Book Free Session'}
               </span>
               <ArrowRight className="w-4 h-4 text-slate-950" />
             </a>

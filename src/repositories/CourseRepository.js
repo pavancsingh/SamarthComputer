@@ -82,7 +82,7 @@ export const CourseRepository = {
 
       if (error || !data || data.length === 0) {
         if (error) console.error('Supabase course fetch error:', error.message);
-        const local = sharedStore.getCourses();
+        let local = sharedStore.getCourses().filter((c) => c.is_active !== false && c.isActive !== false);
         if (category === 'primary') {
           return local.filter((c) => c.isPrimary || c.is_primary || c.slug === 'mscit' || c.slug === 'tally-prime-gst' || c.slug === 'advanced-excel');
         }
@@ -92,27 +92,30 @@ export const CourseRepository = {
         return local;
       }
 
-      return (data || []).map((c) => ({
-        ...c,
-        logoUrl: c.logo_url || c.logoUrl || COURSE_LOGOS[c.slug] || '',
-        isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
-        isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
-        displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
-        subtitleMr: c.subtitle_mr || c.subtitleMr,
-        subtitleEn: c.subtitle_en || c.subtitleEn,
-        durationMr: c.duration_mr || c.durationMr,
-        durationEn: c.duration_en || c.durationEn,
-        certificationMr: c.certification_mr || c.certificationMr,
-        certificationEn: c.certification_en || c.certificationEn,
-        eligibilityMr: c.eligibility_mr || c.eligibilityMr,
-        eligibilityEn: c.eligibility_en || c.eligibilityEn,
-        overviewMr: c.overview_mr || c.overviewMr,
-        overviewEn: c.overview_en || c.overviewEn,
-        modulesMr: c.modules_mr || c.modulesMr || [],
-        modulesEn: c.modules_en || c.modulesEn || [],
-        careersMr: c.careers_mr || c.careersMr || [],
-        careersEn: c.careers_en || c.careersEn || []
-      }));
+      return (data || [])
+        .filter((c) => c.is_active !== false && c.isActive !== false)
+        .map((c) => ({
+          ...c,
+          logoUrl: c.logo_url || c.logoUrl || COURSE_LOGOS[c.slug] || '',
+          isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
+          isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
+          isActive: c.is_active !== undefined ? c.is_active : true,
+          displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
+          subtitleMr: c.subtitle_mr || c.subtitleMr,
+          subtitleEn: c.subtitle_en || c.subtitleEn,
+          durationMr: c.duration_mr || c.durationMr,
+          durationEn: c.duration_en || c.durationEn,
+          certificationMr: c.certification_mr || c.certificationMr,
+          certificationEn: c.certification_en || c.certificationEn,
+          eligibilityMr: c.eligibility_mr || c.eligibilityMr,
+          eligibilityEn: c.eligibility_en || c.eligibilityEn,
+          overviewMr: c.overview_mr || c.overviewMr,
+          overviewEn: c.overview_en || c.overviewEn,
+          modulesMr: c.modules_mr || c.modulesMr || [],
+          modulesEn: c.modules_en || c.modulesEn || [],
+          careersMr: c.careers_mr || c.careersMr || [],
+          careersEn: c.careers_en || c.careersEn || []
+        }));
     } catch (e) {
       console.error('Supabase course fetch exception:', e.message);
       const local = sharedStore.getCourses();

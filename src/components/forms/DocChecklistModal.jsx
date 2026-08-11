@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, X, CheckCircle2, MessageCircle, Clock, ExternalLink, Calendar, Send, AlertCircle } from 'lucide-react';
+import { FileText, X, CheckCircle2, MessageCircle, Clock, ExternalLink, Calendar, Send, AlertCircle, Phone } from 'lucide-react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
 
 /**
@@ -204,30 +204,40 @@ export default function DocChecklistModal({ isOpen, onClose, service = null, lan
 
           {/* Action Links */}
           <div className="pt-2 space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <a
+                href="tel:+919552345061"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-xl shadow transition-transform hover:scale-[1.01] flex items-center justify-center gap-2"
+              >
+                <Phone className="w-4 h-4 text-white fill-white/20" />
+                <span>{isMarathi ? '📞 थेट कॉल करा' : 'Call Center Now'}</span>
+              </a>
+
+              <a
+                href={whatsappMessage}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-slate-900 hover:bg-black text-white font-extrabold text-xs py-3 rounded-xl shadow transition-transform hover:scale-[1.01] flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4 text-emerald-400" />
+                <span>{isMarathi ? 'व्हाट्सॲपवर पाठवा' : 'Send via WhatsApp'}</span>
+              </a>
+            </div>
+
             {officialUrl && (
               <a
                 href={officialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-3 rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-300/80"
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-300/80"
               >
                 <ExternalLink className="w-4 h-4 text-slate-600" />
-                <span>{isMarathi ? 'शासकीय अधिकृत संकेतस्थळ (Official Website)' : 'Visit Official Govt Portal'}</span>
+                <span>{isMarathi ? 'शासकीय अधिकृत संकेतस्थळ' : 'Visit Official Govt Portal'}</span>
               </a>
             )}
 
-            <a
-              href={whatsappMessage}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-xl shadow transition-transform hover:scale-[1.01] flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4 text-white" />
-              <span>{isMarathi ? 'कागदपत्रे व्हाट्सॲपवर पाठवा' : 'Send Documents via WhatsApp'}</span>
-            </a>
-
             <div className="text-center text-[10px] text-slate-400 font-medium">
-              📍 {isMarathi ? 'किंवा समर्थ कॉम्प्युटर्स, एसटी स्टँड जवळ, खंडाळा येथे भेट द्या.' : 'Or visit Samarth Computers near Khandala Bus Stand.'}
+              📍 {isMarathi ? 'किंवा समर्थ कॉम्प्युटर्स, खंडाळा येथे प्रत्यक्ष भेट द्या.' : 'Or visit Samarth Computers near Khandala Bus Stand.'}
             </div>
           </div>
 

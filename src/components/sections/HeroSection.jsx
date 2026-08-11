@@ -56,68 +56,51 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           {/* Badge */}
           <div className="inline-flex items-center gap-sm px-sm py-xs rounded-full bg-stitch-red-light border border-stitch-red-border text-primary font-label-caps hover:shadow-md transition-shadow">
             <span className="w-2 h-2 rounded-full bg-stitch-emerald animate-pulse" />
-            {isMarathi ? 'महाराष्ट्र शासन व MKCL अधिकृत केंद्र' : 'Govt. Recognized Institute'}
+            {isMarathi ? (settings.heroBadgeMr || 'महाराष्ट्र शासन व MKCL अधिकृत केंद्र') : (settings.heroBadgeEn || 'Govt. Recognized Institute')}
           </div>
 
           {/* Headline */}
           <h1 className="text-display-hero-mobile md:text-display-hero font-display-hero-mobile md:font-display-hero text-text-primary">
             {isMarathi ? (
-              <>
-                {settings.heroTitleMr ? settings.heroTitleMr : (
-                  <>
-                    संगणक कौशल्यांमध्ये<br />
-                    <span className="text-primary">प्रभुत्व मिळवा.</span>
-                  </>
-                )}
-              </>
+              <>{settings.heroTitleMr || 'संगणक कौशल्यांमध्ये प्रभुत्व मिळवा.'}</>
             ) : (
-              <>
-                {settings.heroTitleEn ? settings.heroTitleEn : (
-                  <>
-                    Master IT Skills.<br />
-                    <span className="text-primary inline-block hover:scale-105 transition-transform duration-300">
-                      Build Your Future.
-                    </span>
-                  </>
-                )}
-              </>
+              <>{settings.heroTitleEn || 'Master IT Skills. Build Your Future.'}</>
             )}
           </h1>
 
           {/* Body */}
           <p className="text-body-lg font-body-lg text-secondary max-w-lg">
             {isMarathi
-              ? 'समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.'
-              : 'Join thousands of successful students who have transformed their careers with our industry-aligned computer courses. Expert faculty, hands-on labs, and placement assistance.'}
+              ? (settings.heroSubtitleMr || 'समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.')
+              : (settings.heroSubtitleEn || 'Join thousands of successful students who have transformed their careers with our industry-aligned computer courses. Expert faculty, hands-on labs, and placement assistance.')}
           </p>
 
           {/* Marathi Sub-text */}
           <p className="text-sm text-secondary border-l-4 border-primary pl-md font-marathi-body transition-all hover:pl-6 hover:border-l-8 duration-300">
-            📍 राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा — मोफत मार्गदर्शन व लॅब पास उपलब्ध!
+            📍 {isMarathi ? (settings.contactAddressMr || 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा') : (settings.contactAddressEn || 'Near Rajendra Vidhalya, Khandala, Dist. Satara')} — मोफत मार्गदर्शन व लॅब पास उपलब्ध!
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-md">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <a
+              href={`tel:${settings.callCtaPhone || settings.contactPhone || '+919552345061'}`}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2 group"
+              title={`Call Samarth Computers: ${settings.callCtaPhone || settings.contactPhone || '+919552345061'}`}
+            >
+              <span className="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">call</span>
+              <span>{isMarathi ? (settings.callCtaTextMr || '📞 थेट कॉल करा (Call Now)') : (settings.callCtaTextEn || `Call Now (${settings.callCtaPhone || '+91 95523 45061'})`)}</span>
+            </a>
+
             <button
               type="button"
-              onClick={() => onNavigate && onNavigate('courses')}
-              className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold shadow-md hover:bg-stitch-red-dark hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-sm group btn-interactive border border-primary/20"
+              onClick={() => onNavigate && onNavigate(settings.heroCtaDest || 'courses')}
+              className="bg-primary text-white px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-sm hover:bg-stitch-red-dark transition-all flex items-center justify-center gap-2 group border border-primary/20"
             >
-              <span>{isMarathi ? 'कोर्सेसची यादी पहा' : 'Explore Courses'}</span>
+              <span>{isMarathi ? (settings.heroCtaTextMr || 'कोर्सेसची यादी पहा') : (settings.heroCtaTextEn || 'Explore Courses')}</span>
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
                 arrow_forward
               </span>
             </button>
-
-            <a
-              href="tel:+919552345061"
-              className="bg-transparent border border-surface-variant text-text-primary px-lg py-md rounded-lg font-label-bold text-center hover:bg-surface-container-low transition-colors active:scale-95 flex items-center justify-center gap-sm group"
-            >
-              <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">
-                call
-              </span>
-              {isMarathi ? 'मार्गदर्शकास कॉल करा' : 'Contact Counselor'}
-            </a>
           </div>
         </motion.div>
 

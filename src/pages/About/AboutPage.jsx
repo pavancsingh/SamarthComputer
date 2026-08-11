@@ -20,8 +20,16 @@ const TIMELINE = [
   { year: 'TODAY', titleEn: 'Expanding Horizons', titleMr: 'विस्तारती क्षितिजे', descEn: 'Serving thousands of students annually with 20+ specialized courses and strong industry placement partnerships.', descMr: 'वार्षिक हजारो विद्यार्थ्यांना 20+ विशेष अभ्यासक्रमांसह आणि मजबूत उद्योग प्लेसमेंट भागीदारीसह सेवा.', primary: true, right: true },
 ];
 
+import { sharedStore } from '../../repositories/sharedStore';
+
 export default function AboutPage({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
+  const [settings, setSettings] = React.useState(sharedStore.getSiteSettings());
+
+  React.useEffect(() => {
+    const unsub = sharedStore.subscribe(() => setSettings(sharedStore.getSiteSettings()));
+    return () => unsub();
+  }, []);
 
   return (
     <div className="bg-background min-h-screen pb-20 md:pb-0">
@@ -44,24 +52,24 @@ export default function AboutPage({ lang = 'mr', onNavigate }) {
               </div>
               <h1 className="font-display-hero-mobile text-display-hero-mobile lg:font-display-hero lg:text-display-hero text-on-background">
                 {isMarathi ? (
-                  <>मनांना <span className="text-primary">सक्षम</span> करत आहोत<br />२०१० पासून</>
+                  <>{settings.aboutHeadingMr || 'मनांना सक्षम करत आहोत २०१० पासून'}</>
                 ) : (
-                  <>Empowering <span className="text-primary">Minds</span> Since 2010</>
+                  <>{settings.aboutHeadingEn || 'Empowering Minds Since 2010'}</>
                 )}
               </h1>
-              <p className="font-body-lg text-body-lg text-secondary max-w-2xl">
+              <p className="font-body-lg text-body-lg text-secondary">
                 {isMarathi
-                  ? 'समर्थ कॉम्प्युटर्स हे एक प्रमुख MKCL अधिकृत शैक्षणिक केंद्र आहे जे शैक्षणिक सिद्धांत आणि व्यावहारिक उद्योग कौशल्यांमधील अंतर भरून काढण्यासाठी समर्पित आहे.'
-                  : 'Samarth Computers is a premier MKCL-authorized educational center dedicated to bridging the gap between academic theory and practical industry skills. We believe in accessible, high-quality education that transforms careers.'}
+                  ? (settings.aboutDescMr || 'समर्थ कॉम्प्युटर्स हे खंडाळ्यातील अग्रगण्य संगणक प्रशिक्षण केंद्र आहे. आम्ही २०१० पासून विद्यार्थ्यांना उच्च दर्जाचे संगणक शिक्षण आणि शासकीय डिजिटल सेवा पुरवत आहोत.')
+                  : (settings.aboutDescEn || 'Samarth Computers is a premier computer training institute in Khandala. Since 2010, we have been providing high-quality IT education and government digital services to students and citizens.')}
               </p>
             </motion.div>
 
             {/* Right: Institute Image */}
-            <div className="lg:col-span-5 relative h-64 lg:h-96 rounded-xl overflow-hidden shadow-lg">
+            <div className="lg:col-span-5 relative h-64 lg:h-96 rounded-xl overflow-hidden shadow-lg border border-slate-200">
               <div
                 className="absolute inset-0 bg-cover bg-center w-full h-full"
                 style={{
-                  backgroundImage: `url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80')`,
+                  backgroundImage: `url('${settings.aboutImageUrl || 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80'}')`,
                 }}
               />
             </div>

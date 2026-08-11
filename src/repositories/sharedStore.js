@@ -62,8 +62,79 @@ const DEFAULT_FACULTY = [
 const DEFAULT_SETTINGS = {
   logoUrl: getMediaUrl('logos/samarth-main-logo.png'),
   heroBgUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
-  heroTitleMr: 'समर्थ कॉम्प्युटर्स खंडाळा — तुमच्या करिअरचा स्मार्ट निर्णय!',
-  heroTitleEn: 'Samarth Computers Khandala — Smart Decision for Your Career!'
+  heroTitleMr: 'संगणक कौशल्यांमध्ये प्रभुत्व मिळवा.',
+  heroTitleEn: 'Master IT Skills. Build Your Future.',
+  heroSubtitleMr: 'समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.',
+  heroSubtitleEn: 'Join thousands of successful students who have transformed their careers with our industry-aligned computer courses.',
+  heroBadgeMr: 'महाराष्ट्र शासन व MKCL अधिकृत केंद्र',
+  heroBadgeEn: 'Govt. Recognized Institute',
+  heroCtaTextMr: 'कोर्सेसची यादी पहा',
+  heroCtaTextEn: 'Explore Courses',
+  heroCtaDest: 'courses',
+
+  contactPhone: '+919552345061',
+  contactWhatsapp: '919552345061',
+  contactEmail: 'admin@samarthcomputers.in',
+  contactAddressMr: 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा - ४१२८०२',
+  contactAddressEn: 'Near Rajendra Vidhalya, Khandala, Dist. Satara - 412802',
+  contactHoursMr: 'सोमवार - शनिवार: सकाळी ९:०० ते रात्री ७:०० (रविवार सुट्टी)',
+  contactHoursEn: 'Monday - Saturday: 9:00 AM - 7:00 PM (Sunday Closed)',
+  contactMapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3789.0946052295697!2d74.06488181504043!3d18.04649018799785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2f7bf9d34c6f1%3A0xadf7d5d7d5e8e8e8!2sKhandala%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin',
+
+  callCtaPhone: '+919552345061',
+  callCtaTextMr: '📞 कॉल करा',
+  callCtaTextEn: 'Call Now (+91 95523 45061)',
+
+  aboutHeadingMr: 'मनांना सक्षम करत आहोत २०१० पासून',
+  aboutHeadingEn: 'Empowering Minds Since 2010',
+  aboutDescMr: 'समर्थ कॉम्प्युटर्स हे एक प्रमुख MKCL अधिकृत शैक्षणिक केंद्र आहे जे शैक्षणिक सिद्धांत आणि व्यावहारिक उद्योग कौशल्यांमधील अंतर भरून काढण्यासाठी समर्पित आहे.',
+  aboutDescEn: 'Samarth Computers is a premier MKCL-authorized educational center dedicated to bridging the gap between academic theory and practical industry skills.',
+  aboutImageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80',
+  aboutMissionMr: 'सुलभ, उच्च-दर्जाचे व्यावसायिक आणि तांत्रिक शिक्षण प्रदान करणे जे व्यक्तींना आधुनिक कार्यबळात उत्कृष्टतेसाठी आवश्यक कौशल्ये सक्षम करते.',
+  aboutMissionEn: 'To provide accessible, high-quality vocational and technical education that equips individuals with the skills necessary to excel in the modern workforce.',
+  aboutVisionMr: 'प्रशिक्षण पद्धतींमधील नवकल्पनासाठी ओळखले जाणारे आणि उद्योग-तयार व्यावसायिक निर्माण करणारे अग्रणी शासकीय-मान्यताप्राप्त शैक्षणिक संस्था बनणे.',
+  aboutVisionEn: 'To be the leading government-recognized educational institute, recognized for innovation in training methodologies.',
+
+  homeSections: {
+    hero: { visible: true, order: 1, titleMr: 'मुख्य', titleEn: 'Hero' },
+    trust: { visible: true, order: 2, titleMr: 'मान्यता', titleEn: 'Trust Strip' },
+    stats: { visible: true, order: 3, titleMr: 'संख्याशास्त्र', titleEn: 'Statistics' },
+    courses: { visible: true, order: 4, titleMr: 'संगणक कोर्सेस', titleEn: 'Computer Courses' },
+    whyChooseUs: { visible: true, order: 5, titleMr: 'आमची वैशिष्ठ्ये', titleEn: 'Why Choose Us' },
+    services: { visible: true, order: 6, titleMr: 'ऑनलाइन शासकीय सेवा', titleEn: 'Online Govt Services' },
+    timetable: { visible: true, order: 7, titleMr: 'बॅच वेळापत्रक', titleEn: 'Batch Schedule' },
+    workshops: { visible: true, order: 8, titleMr: 'कार्यशाळा व बातम्या', titleEn: 'Workshops & News' },
+    counseling: { visible: true, order: 9, titleMr: 'मोफत मार्गदर्शन banner', titleEn: 'Career Counseling Banner' },
+    stories: { visible: true, order: 10, titleMr: 'यशस्वी विद्यार्थी', titleEn: 'Success Stories' },
+    reviews: { visible: true, order: 11, titleMr: 'विद्यार्थी अभिप्राय', titleEn: 'Reviews' },
+    gallery: { visible: true, order: 12, titleMr: 'फोटो गॅलरी', titleEn: 'Photo Gallery' },
+    faculty: { visible: true, order: 13, titleMr: 'शिक्षक वृंद', titleEn: 'Faculty' },
+    faq: { visible: true, order: 14, titleMr: 'वारंवार विचारले जाणारे प्रश्न', titleEn: 'FAQ' },
+    contact: { visible: true, order: 15, titleMr: 'संपर्क व नकाशा', titleEn: 'Contact & Map' }
+  },
+
+  navSettings: [
+    { id: 'home', labelEn: 'Home', labelMr: 'मुख्यपृष्ठ', visible: true, order: 1 },
+    { id: 'courses', labelEn: 'Courses', labelMr: 'कोर्सेस', visible: true, order: 2 },
+    { id: 'services', labelEn: 'Services', labelMr: 'सेवा', visible: true, order: 3 },
+    { id: 'timetable', labelEn: 'Timetable', labelMr: 'वेळापत्रक', visible: true, order: 4 },
+    { id: 'about', labelEn: 'About Us', labelMr: 'आमच्याबद्दल', visible: true, order: 5 },
+    { id: 'faculty', labelEn: 'Faculty', labelMr: 'शिक्षक वृंद', visible: true, order: 6 },
+    { id: 'contact', labelEn: 'Contact', labelMr: 'संपर्क', visible: true, order: 7 }
+  ],
+
+  siteTitleMr: 'समर्थ कॉम्प्युटर्स खंडाळा',
+  siteTitleEn: 'Samarth Computers Khandala',
+  alcCode: '13210399 / 13210273',
+  cscId: 'CSC-KHANDALA-412802',
+  seoTitle: 'Samarth Computers Khandala | Best Computer Institute & CSC Center',
+  seoDescription: 'Samarth Computers Khandala offers MKCL MS-CIT, Tally Prime GST, Advanced Excel, DTP, and online CSC Aadhaar & Pan Card government services.',
+  seoKeywords: 'MS-CIT Khandala, Tally Prime, Computer Class Khandala, CSC Center Khandala, Samarth Computers',
+  socialFacebook: 'https://facebook.com/samarthcomputers',
+  socialInstagram: 'https://instagram.com/samarthcomputers',
+  socialYoutube: 'https://youtube.com/@samarthcomputers',
+  footerTagline: 'Empowering the next generation of digital leaders through quality computer education and government services.',
+  copyrightText: '© 2026 Samarth Computers Khandala. All rights reserved.'
 };
 
 const DEFAULT_GALLERY = [

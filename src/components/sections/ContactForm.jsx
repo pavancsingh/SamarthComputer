@@ -131,9 +131,17 @@ export default function ContactForm({ lang = 'mr' }) {
                   <MapPin className="w-4 h-4 text-stitch-amber shrink-0 mt-0.5" />
                   <span>Civil Court समोर, खंडाळा, जि. सातारा - ४१२८०२</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-stitch-amber shrink-0" />
-                  <a href="tel:+919552345061" className="font-bold text-white hover:underline">9552345061 / 9850283664</a>
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-stitch-amber shrink-0" />
+                    <a href="tel:+919552345061" className="font-bold text-white hover:underline">9552345061 / 9850283664</a>
+                  </div>
+                  <a
+                    href="tel:+919552345061"
+                    className="px-3 py-1 bg-stitch-amber text-slate-950 font-black text-[11px] rounded-lg shadow-sm hover:scale-105 transition-all"
+                  >
+                    📞 Call Now
+                  </a>
                 </div>
               </div>
             </div>
@@ -157,23 +165,41 @@ export default function ContactForm({ lang = 'mr' }) {
                   <MapPin className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
                   <span>राजेंद्र विद्यालय जवळ, खंडाळा, जि. सातारा - ४१२८०२</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-amber-300 shrink-0" />
-                  <a href="tel:+919850283664" className="font-bold text-white hover:underline">9850283664 / 9158879900</a>
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-amber-300 shrink-0" />
+                    <a href="tel:+919850283664" className="font-bold text-white hover:underline">9850283664 / 9158879900</a>
+                  </div>
+                  <a
+                    href="tel:+919850283664"
+                    className="px-3 py-1 bg-white text-stitch-red font-black text-[11px] rounded-lg shadow-sm hover:scale-105 transition-all"
+                  >
+                    📞 Call Now
+                  </a>
                 </div>
               </div>
             </div>
 
-            {/* WhatsApp Direct CTA */}
-            <a
-              href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 bg-stitch-whatsapp hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 rounded-2xl shadow-stitch-sm transition-all hover:scale-[1.01]"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>थेट व्हाट्सॲप संदेश पाठवा (WhatsApp Helpline)</span>
-            </a>
+            {/* Direct Call & WhatsApp Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <a
+                href="tel:+919552345061"
+                className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-3.5 rounded-2xl shadow-stitch-sm transition-all hover:scale-[1.01]"
+              >
+                <Phone className="w-4 h-4 text-white fill-white/20" />
+                <span>{isMarathi ? '📞 थेट कॉल करा (Call Now)' : 'Call Now (+91 95523 45061)'}</span>
+              </a>
+
+              <a
+                href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-stitch-whatsapp hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 rounded-2xl shadow-stitch-sm transition-all hover:scale-[1.01]"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp Helpline</span>
+              </a>
+            </div>
 
             {/* Compact Short Google Map */}
             <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-stitch-sm space-y-0 relative">

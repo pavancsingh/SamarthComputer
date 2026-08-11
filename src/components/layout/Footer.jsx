@@ -65,9 +65,17 @@ export default function Footer({ lang = 'mr', onNavigate }) {
           <p className="font-body-md text-label-bold text-surface-variant/80 leading-relaxed">
             Empowering the next generation of digital leaders through quality computer education and government services.
           </p>
-          <div className="text-label-bold font-label-bold text-surface-variant/60 mt-sm">
-            <div>📍 Near Rajendra Vidhalya, Khandala, Satara</div>
-            <div>📞 +91 95523 45061</div>
+          <div className="text-label-bold font-label-bold text-surface-variant/80 mt-sm space-y-1">
+            <div>📍 {isMarathi ? (settings?.contactAddressMr || 'Near Rajendra Vidhalya, Khandala, Satara') : (settings?.contactAddressEn || 'Near Rajendra Vidhalya, Khandala, Satara')}</div>
+            <div className="pt-1">
+              <a
+                href={`tel:${settings?.callCtaPhone || settings?.contactPhone || '+919552345061'}`}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all hover:scale-105"
+                title="Call Samarth Computers"
+              >
+                <span>📞 {isMarathi ? (settings?.callCtaTextMr || 'कॉल करा: ' + (settings?.contactPhone || '+91 95523 45061')) : (settings?.callCtaTextEn || 'Call Now: ' + (settings?.contactPhone || '+91 95523 45061'))}</span>
+              </a>
+            </div>
           </div>
         </div>
 

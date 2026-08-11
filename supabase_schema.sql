@@ -15,11 +15,21 @@ CREATE TABLE IF NOT EXISTS public.inquiries (
     course_id TEXT,
     service_id TEXT,
     issue_type TEXT,
-    type TEXT DEFAULT 'course',
+    type TEXT DEFAULT 'course_admission',
     batch_timing TEXT,
     status TEXT DEFAULT 'New Lead',
-    details JSONB
+    details JSONB DEFAULT '{}'::jsonb
 );
+
+-- Ensure optional columns exist if inquiries table was previously created
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'course_admission';
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS batch_timing TEXT;
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'New Lead';
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS details JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS course_id TEXT;
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS service_id TEXT;
+ALTER TABLE public.inquiries ADD COLUMN IF NOT EXISTS issue_type TEXT;
+
 
 -- 2. COURSES TABLE
 CREATE TABLE IF NOT EXISTS public.courses (
@@ -149,8 +159,93 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     logo_url TEXT,
     hero_bg_url TEXT,
     hero_title_mr TEXT,
-    hero_title_en TEXT
+    hero_title_en TEXT,
+    hero_subtitle_mr TEXT,
+    hero_subtitle_en TEXT,
+    hero_badge_mr TEXT,
+    hero_badge_en TEXT,
+    hero_cta_text_mr TEXT,
+    hero_cta_text_en TEXT,
+    hero_cta_dest TEXT,
+    contact_phone TEXT,
+    contact_whatsapp TEXT,
+    contact_email TEXT,
+    contact_address_mr TEXT,
+    contact_address_en TEXT,
+    contact_hours_mr TEXT,
+    contact_hours_en TEXT,
+    contact_map_url TEXT,
+    call_cta_phone TEXT,
+    call_cta_text_mr TEXT,
+    call_cta_text_en TEXT,
+    about_heading_mr TEXT,
+    about_heading_en TEXT,
+    about_desc_mr TEXT,
+    about_desc_en TEXT,
+    about_image_url TEXT,
+    about_mission_mr TEXT,
+    about_mission_en TEXT,
+    about_vision_mr TEXT,
+    about_vision_en TEXT,
+    about_values JSONB DEFAULT '[]'::jsonb,
+    about_timeline JSONB DEFAULT '[]'::jsonb,
+    home_sections JSONB DEFAULT '{}'::jsonb,
+    why_choose_us JSONB DEFAULT '[]'::jsonb,
+    nav_settings JSONB DEFAULT '[]'::jsonb
 );
+
+-- Ensure columns exist if site_settings was previously created
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_subtitle_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_subtitle_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_badge_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_badge_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_cta_text_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_cta_text_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hero_cta_dest TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_phone TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_whatsapp TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_email TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_address_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_address_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_hours_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_hours_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS contact_map_url TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS call_cta_phone TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS call_cta_text_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS call_cta_text_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_heading_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_heading_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_desc_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_desc_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_image_url TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_mission_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_mission_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_vision_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_vision_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_values JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS about_timeline JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS home_sections JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS why_choose_us JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS nav_settings JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS site_title_mr TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS site_title_en TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS alc_code TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS csc_id TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS seo_title TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS seo_description TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS seo_keywords TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS social_facebook TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS social_instagram TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS social_youtube TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS footer_tagline TEXT;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS copyright_text TEXT;
+
+-- Ensure is_active column on courses, csc_services, govt_services, site_gallery
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE public.csc_services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE public.govt_services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE public.site_gallery ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE public.site_gallery ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 -- 8. BATCH TIMETABLE TABLE
 CREATE TABLE IF NOT EXISTS public.batches (
@@ -208,9 +303,23 @@ ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
 
--- Allow Public Read Access
-CREATE POLICY "Public Read Inquiries" ON public.inquiries FOR SELECT USING (true);
-CREATE POLICY "Public Insert Inquiries" ON public.inquiries FOR INSERT WITH CHECK (true);
+-- Drop Existing Policies (Safe Reruns)
+DROP POLICY IF EXISTS "Public Read Inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Public Insert Inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Public All Inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Public All Courses" ON public.courses;
+DROP POLICY IF EXISTS "Public All CSC" ON public.csc_services;
+DROP POLICY IF EXISTS "Public All Govt" ON public.govt_services;
+DROP POLICY IF EXISTS "Public All Faculty" ON public.faculties;
+DROP POLICY IF EXISTS "Public All Gallery" ON public.site_gallery;
+DROP POLICY IF EXISTS "Public All Settings" ON public.site_settings;
+DROP POLICY IF EXISTS "Public All Batches" ON public.batches;
+DROP POLICY IF EXISTS "Public All News" ON public.news;
+DROP POLICY IF EXISTS "Public Read Certificates" ON public.certificates;
+DROP POLICY IF EXISTS "Public Insert Certificates" ON public.certificates;
+
+-- Allow Public Access Policies (Read & Lead Submissions)
+CREATE POLICY "Public All Inquiries" ON public.inquiries FOR ALL USING (true);
 CREATE POLICY "Public All Courses" ON public.courses FOR ALL USING (true);
 CREATE POLICY "Public All CSC" ON public.csc_services FOR ALL USING (true);
 CREATE POLICY "Public All Govt" ON public.govt_services FOR ALL USING (true);
@@ -231,3 +340,4 @@ ON CONFLICT (id) DO NOTHING;
 
 CREATE POLICY "Public Media Storage Access" ON storage.objects
 FOR ALL USING (bucket_id = 'samarth-media');
+

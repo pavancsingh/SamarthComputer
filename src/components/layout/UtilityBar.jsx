@@ -5,8 +5,16 @@ import { MapPin, Phone, Clock, Globe } from 'lucide-react';
  * UtilityBar Component - Google Stitch Design
  * Top utility bar displaying official center location, working hours, phone numbers, and language switcher.
  */
+import { sharedStore } from '../../repositories/sharedStore';
+
 export default function UtilityBar({ lang = 'mr', onLanguageChange }) {
   const isMarathi = lang === 'mr';
+  const [settings, setSettings] = React.useState(sharedStore.getSiteSettings());
+
+  React.useEffect(() => {
+    const unsub = sharedStore.subscribe(() => setSettings(sharedStore.getSiteSettings()));
+    return () => unsub();
+  }, []);
 
   return (
     <div className="bg-stitch-navy text-slate-200 text-xs py-2 border-b border-stitch-slate-card/60 relative z-40">
@@ -17,8 +25,8 @@ export default function UtilityBar({ lang = 'mr', onLanguageChange }) {
             <MapPin className="w-3.5 h-3.5 text-stitch-red shrink-0" aria-hidden="true" />
             <span className={isMarathi ? 'marathi-text font-medium text-slate-200' : 'font-medium text-slate-200'}>
               {isMarathi
-                ? 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा ४१२८०२'
-                : 'Near Rajendra Vidhalya Khandala, Tal Khandala Dist Satara 412802'}
+                ? (settings.contactAddressMr || 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा ४१२८०२')
+                : (settings.contactAddressEn || 'Near Rajendra Vidhalya Khandala, Tal Khandala Dist Satara 412802')}
             </span>
           </div>
 
@@ -26,8 +34,8 @@ export default function UtilityBar({ lang = 'mr', onLanguageChange }) {
             <Clock className="w-3.5 h-3.5 text-stitch-amber shrink-0" aria-hidden="true" />
             <span>
               {isMarathi
-                ? 'सकाळी ८:०० - रात्री ८:०० (सोम-शनि)'
-                : '8:00 AM - 8:00 PM (Mon-Sat)'}
+                ? (settings.contactHoursMr || 'सकाळी ८:०० - रात्री ८:०० (सोम-शनि)')
+                : (settings.contactHoursEn || '8:00 AM - 8:00 PM (Mon-Sat)')}
             </span>
           </div>
         </div>
@@ -35,11 +43,11 @@ export default function UtilityBar({ lang = 'mr', onLanguageChange }) {
         {/* Right Side: Direct Phone & Language Toggle Pill */}
         <div className="flex items-center gap-4">
           <a
-            href="tel:+919552345061"
+            href={`tel:${settings.callCtaPhone || settings.contactPhone || '+919552345061'}`}
             className="flex items-center gap-1.5 font-bold text-white hover:text-stitch-red-border transition-colors shrink-0"
           >
             <Phone className="w-3.5 h-3.5 text-stitch-emerald" aria-hidden="true" />
-            <span>+91 95523 45061</span>
+            <span>{settings.contactPhone || '+91 95523 45061'}</span>
           </a>
 
           {/* Language Switcher Pill */}

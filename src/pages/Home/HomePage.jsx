@@ -18,7 +18,6 @@ import FAQ from '../../components/sections/FAQ';
 
 import ContactForm from '../../components/sections/ContactForm';
 import GoogleMap from '../../components/sections/GoogleMap';
-import AIAssistantWidget from '../../components/common/AIAssistantWidget';
 
 /**
  * HomePage Component
@@ -75,9 +74,6 @@ export default function HomePage({ lang = 'mr', onNavigate }) {
 
       {/* 20. Contact & Multi-Tab Lead Form + Compact Google Map */}
       <ContactForm lang={lang} />
-
-      {/* Persistent Floating AI Assistant Widget */}
-      <AIAssistantWidget lang={lang} />
     </div>
   );
 }

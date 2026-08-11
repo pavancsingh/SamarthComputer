@@ -28,8 +28,23 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
   const modules = (isMarathi ? course.modulesMr : course.modulesEn) || [];
   const careers = (isMarathi ? course.careersMr : course.careersEn) || [];
 
-  const handleSidebarSubmit = (e) => {
+  const handleSidebarSubmit = async (e) => {
     e.preventDefault();
+    const cleanName = applicantName.trim();
+    const cleanMobile = applicantMobile.trim().replace(/\D/g, '');
+    if (!cleanName || !cleanMobile || cleanMobile.length < 10) return;
+
+    try {
+      await CourseRepository.submitAdmissionInquiry({
+        name: cleanName,
+        mobile: cleanMobile,
+        courseId: course.id || course.slug || slug,
+        batchTiming: 'Anytime'
+      });
+    } catch (err) {
+      console.warn('Sidebar enrollment inquiry error:', err);
+    }
+
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
     setApplicantName('');
@@ -213,6 +228,16 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
                   </button>
                 </form>
               )}
+              <div className="mt-4 pt-3 border-t border-surface-variant/40">
+                <a
+                  href="tel:+919552345061"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
+                  title="Call Counselor: +91 95523 45061"
+                >
+                  <span className="material-symbols-outlined text-[16px]">call</span>
+                  <span>{isMarathi ? '📞 थेट बोलण्यासाठी कॉल करा' : 'Call Counselor (+91 95523 45061)'}</span>
+                </a>
+              </div>
               <p className="text-label-caps font-label-caps text-secondary text-center mt-md">
                 Limited seats available per batch
               </p>

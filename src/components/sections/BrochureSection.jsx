@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Download, Send, CheckCircle2, Shield } from 'lucide-react';
 import { sharedStore } from '../../repositories/sharedStore';
 import { CourseRepository } from '../../repositories/CourseRepository';
+import { InquiryRepository } from '../../repositories/InquiryRepository';
 
 /**
  * BrochureSection Component - Google Stitch Design
@@ -30,12 +31,26 @@ export default function BrochureSection({ lang = 'mr' }) {
     return unsubscribe;
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!mobile || mobile.length < 10) return;
+    const cleanMobile = mobile.trim().replace(/\D/g, '');
+    if (!cleanMobile || cleanMobile.length < 10) return;
     setSubmitted(true);
     const selectedCourseName = course || (courses[0]?.title || 'MS-CIT');
-    const text = encodeURIComponent(`Hello Samarth Computers, I want to download the official Syllabus PDF for ${selectedCourseName}. My WhatsApp number is ${mobile}.`);
+
+    try {
+      await InquiryRepository.submitInquiry({
+        name: 'Prospectus Download Student',
+        mobile: cleanMobile,
+        course: selectedCourseName,
+        type: 'brochure_download',
+        details: { course_name: selectedCourseName, source: 'brochure_section' }
+      });
+    } catch (err) {
+      console.warn('Brochure inquiry record error:', err);
+    }
+
+    const text = encodeURIComponent(`Hello Samarth Computers, I want to download the official Syllabus PDF for ${selectedCourseName}. My WhatsApp number is ${cleanMobile}.`);
     window.open(`https://wa.me/919552345061?text=${text}`, '_blank');
   };
 
