@@ -89,8 +89,9 @@ export function AuthProvider({ children }) {
     let cleanEmail = (emailInput || '').trim().toLowerCase();
     const cleanPass = (passwordInput || '').trim();
 
-    // Map default admin usernames to registered Supabase admin email
-    if (!cleanEmail || cleanEmail === 'admin' || cleanEmail === 'pavan' || cleanEmail === 'sagarbhosale') {
+    // Map default admin usernames and aliases to registered Supabase admin email
+    const adminAliases = ['admin', 'pavan', 'sagarbhosale', 'admin@samarth.com', 'admin@samarthcomputers.in', 'pawansingh'];
+    if (!cleanEmail || adminAliases.includes(cleanEmail) || cleanEmail.startsWith('admin@') || cleanEmail.startsWith('pavan@')) {
       cleanEmail = ADMIN_EMAIL;
     }
 
