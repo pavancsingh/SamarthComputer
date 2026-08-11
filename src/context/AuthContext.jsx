@@ -80,22 +80,14 @@ export function AuthProvider({ children }) {
   const [lockoutTime, setLockoutTime] = useState(0);
 
   const loginAdmin = async (emailInput, passwordInput) => {
-    let cleanEmail = (emailInput || '').trim().toLowerCase();
-    const cleanPass = (passwordInput || '').trim();
-
-    // System master passwords
-    const validMasterPasswords = ['pavan@1137', 'pavan@3760', 'samarth123', 'admin123', 'admin'];
-    const isMasterPass = validMasterPasswords.includes(cleanPass.toLowerCase()) || cleanPass === 'Pavan@1137' || cleanPass === 'Pavan@3760';
-
-    // Reset lockout if correct master password entered
     const now = Date.now();
-    if (isMasterPass) {
-      setLockoutTime(0);
-      setFailedAttempts(0);
-    } else if (lockoutTime > now) {
+    if (lockoutTime > now) {
       const remainingSec = Math.ceil((lockoutTime - now) / 1000);
       return { success: false, message: `Too many failed attempts. Please wait ${remainingSec} seconds.` };
     }
+
+    let cleanEmail = (emailInput || '').trim().toLowerCase();
+    const cleanPass = (passwordInput || '').trim();
 
     // Map default admin usernames and aliases to registered Supabase admin email
     const adminAliases = ['admin', 'pavan', 'sagarbhosale', 'admin@samarth.com', 'admin@samarthcomputers.in', 'pawansingh'];
@@ -121,6 +113,9 @@ export function AuthProvider({ children }) {
           setFailedAttempts(0);
           setLockoutTime(0);
           return { success: true };
+        } else {
+          await supabase.auth.signOut();
+          return { success: false, message: 'Access Denied: Account lacks active Admin privileges.' };
         }
       }
 
@@ -129,16 +124,6 @@ export function AuthProvider({ children }) {
       }
     } catch (err) {
       console.warn('[AuthContext] Exception during login:', err.message);
-    }
-
-    // Master password fallback if Supabase Auth network/API error occurs
-    if (isMasterPass) {
-      const masterUser = { email: ADMIN_EMAIL, name: 'Samarth Master Admin', id: '16eaa664-7d6b-4cc3-9c95-99645a45ec7a' };
-      setUser(masterUser);
-      setIsAdmin(true);
-      setFailedAttempts(0);
-      setLockoutTime(0);
-      return { success: true };
     }
 
     // Failed attempt handling
