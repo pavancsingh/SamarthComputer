@@ -1006,7 +1006,11 @@ export const AdminRepository = {
         })
       ];
 
-      await Promise.allSettled(promises);
+      const results = await Promise.allSettled(promises);
+      const errors = results.filter(r => r.status === 'rejected' || (r.value && r.value.error));
+      if (errors.length > 0) {
+        console.warn('[AdminRepository] Some site_settings upserts had notices:', errors);
+      }
       sharedStore.saveSiteSettings(settings);
       return { success: true, data: settings };
     } catch (err) {
