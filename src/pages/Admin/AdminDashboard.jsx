@@ -569,18 +569,12 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
   // Group 3: Expandable Settings & Secondary Config
   const settingsNavItems = [
-    { id: 'nav_control', label: 'Navigation Menu', icon: Menu },
     { id: 'settings', label: 'Branding & Logo', icon: Image },
-    { id: 'govt', label: 'Govt Certificates', icon: Building2, badge: govtServices.length },
-    { id: 'settings_theme', label: 'Theme / Colors', icon: Sparkles },
+    { id: 'settings_social', label: 'Contact & Social', icon: Phone },
     { id: 'settings_info', label: 'Site Information', icon: Info },
-    { id: 'settings_seo', label: 'SEO / Meta', icon: Search },
-    { id: 'settings_social', label: 'Social Links', icon: MessageSquare },
-    { id: 'settings_footer', label: 'Footer Settings', icon: FileText },
-    { id: 'settings_general', label: 'Other Settings / Sync', icon: Database },
   ];
 
-  const isSettingsActive = ['settings', 'nav_control', 'govt', 'settings_theme', 'settings_info', 'settings_seo', 'settings_social', 'settings_footer', 'settings_general'].includes(tab);
+  const isSettingsActive = ['settings', 'settings_social', 'settings_info'].includes(tab);
 
   return (
     <div className="bg-[#F8FAFC] text-slate-800 font-sans h-screen overflow-hidden flex flex-col antialiased">
@@ -2155,13 +2149,13 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
               </div>
             )}
 
-            {/* TAB: CONTACT & CALL CTA CONTROLS */}
-            {tab === 'contact_control' && (
+            {/* TAB: CONTACT & SOCIAL SETTINGS */}
+            {(tab === 'contact_control' || tab === 'settings_social') && (
               <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
                 <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Contact &amp; Call CTA Settings</h1>
+                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Contact &amp; Social Settings</h1>
                   <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Manage primary phone numbers, WhatsApp, email, office address, working hours, map URL, and Call Now CTA button.
+                    Manage primary phone numbers, WhatsApp, email, office address, working hours, Call Now CTA button, and social media handles.
                   </p>
                 </div>
 
@@ -2297,137 +2291,56 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Contact &amp; Call CTA Settings</span>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            {/* TAB: NAVIGATION CONTROLS */}
-            {tab === 'nav_control' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Navigation Menu Controls</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Manage navigation item labels, visibility, and display ordering.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSaveSettings} className="space-y-6">
-                  <div className="space-y-3">
-                    {(siteSettings.navSettings || []).map((navItem, idx) => (
-                      <div key={navItem.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-900">
-                            <input
-                              type="checkbox"
-                              checked={navItem.visible !== false}
-                              onChange={(e) => {
-                                const list = [...(siteSettings.navSettings || [])];
-                                list[idx] = { ...navItem, visible: e.target.checked };
-                                setSiteSettings({ ...siteSettings, navSettings: list });
-                              }}
-                              className="w-4 h-4 rounded text-primary focus:ring-primary"
-                            />
-                            <span>Enabled ({navItem.id})</span>
-                          </label>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
-                          <input
-                            type="text"
-                            placeholder="English Label"
-                            value={navItem.labelEn || ''}
-                            onChange={(e) => {
-                              const list = [...(siteSettings.navSettings || [])];
-                              list[idx] = { ...navItem, labelEn: e.target.value };
-                              setSiteSettings({ ...siteSettings, navSettings: list });
-                            }}
-                            className="p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Marathi Label"
-                            value={navItem.labelMr || ''}
-                            onChange={(e) => {
-                              const list = [...(siteSettings.navSettings || [])];
-                              list[idx] = { ...navItem, labelMr: e.target.value };
-                              setSiteSettings({ ...siteSettings, navSettings: list });
-                            }}
-                            className="p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                          />
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="text-slate-500">Order:</span>
-                            <input
-                              type="number"
-                              value={navItem.order || idx + 1}
-                              onChange={(e) => {
-                                const list = [...(siteSettings.navSettings || [])];
-                                list[idx] = { ...navItem, order: parseInt(e.target.value, 10) || 1 };
-                                setSiteSettings({ ...siteSettings, navSettings: list });
-                              }}
-                              className="w-16 p-1.5 bg-white border border-slate-300 rounded-lg text-center font-bold"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Navigation Menu Settings</span>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            {/* TAB: THEME / COLORS SETTINGS */}
-            {tab === 'settings_theme' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Theme &amp; Visual Design Settings</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Manage website color palette, card styling, and typography appearance.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSaveSettings} className="space-y-6">
-                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                    <h3 className="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2">
-                      Primary Accent &amp; Color Scheme
+                  {/* Social Media Handles Box */}
+                  <div className="p-5 bg-blue-50/50 border border-blue-200 rounded-2xl space-y-4">
+                    <h3 className="text-sm font-extrabold text-blue-900 border-b border-blue-200 pb-2 flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4 text-blue-600" />
+                      <span>Social Media Handles &amp; Links</span>
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-2">
-                        <span className="block text-xs font-bold text-slate-700">Primary Red (Stitch):</span>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#C62828] border border-slate-300 shadow-xs" />
-                          <span className="font-mono text-xs font-bold text-slate-800">#C62828</span>
-                        </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Facebook Page URL:</label>
+                        <input
+                          type="url"
+                          value={siteSettings.socialFacebook || ''}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, socialFacebook: e.target.value })}
+                          placeholder="https://facebook.com/samarthcomputers"
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
+                        />
                       </div>
-                      <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-2">
-                        <span className="block text-xs font-bold text-slate-700">Accent Emerald:</span>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#10B981] border border-slate-300 shadow-xs" />
-                          <span className="font-mono text-xs font-bold text-slate-800">#10B981</span>
-                        </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Instagram Profile URL:</label>
+                        <input
+                          type="url"
+                          value={siteSettings.socialInstagram || ''}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, socialInstagram: e.target.value })}
+                          placeholder="https://instagram.com/samarthcomputers"
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
+                        />
                       </div>
-                      <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-2">
-                        <span className="block text-xs font-bold text-slate-700">Dark Navy Container:</span>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#0F172A] border border-slate-300 shadow-xs" />
-                          <span className="font-mono text-xs font-bold text-slate-800">#0F172A</span>
-                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">YouTube Channel URL:</label>
+                        <input
+                          type="url"
+                          value={siteSettings.socialYoutube || ''}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, socialYoutube: e.target.value })}
+                          placeholder="https://youtube.com/@samarthcomputers"
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Direct Chat Number:</label>
+                        <input
+                          type="text"
+                          value={siteSettings.contactWhatsapp || '919552345061'}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, contactWhatsapp: e.target.value })}
+                          placeholder="919552345061"
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold"
+                        />
                       </div>
                     </div>
                   </div>
@@ -2438,7 +2351,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Save className="w-4 h-4 text-white" />
-                    <span>Save Theme Settings</span>
+                    <span>Save Contact &amp; Social Settings</span>
                   </button>
                 </form>
               </div>
@@ -2508,206 +2421,6 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     <span>Save Institute Information</span>
                   </button>
                 </form>
-              </div>
-            )}
-
-            {/* TAB: SEO & META TAGS */}
-            {tab === 'settings_seo' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">SEO &amp; Meta Tags Configuration</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Optimize Google local search visibility, meta description, and keywords.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSaveSettings} className="space-y-6">
-                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">SEO Title Tag:</label>
-                      <input
-                        type="text"
-                        value={siteSettings.seoTitle || 'Samarth Computers Khandala | Best Computer Institute & CSC Center'}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, seoTitle: e.target.value })}
-                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Meta Description:</label>
-                      <textarea
-                        rows={3}
-                        value={siteSettings.seoDescription || 'Samarth Computers Khandala offers MKCL MS-CIT, Tally Prime GST, Advanced Excel, DTP, and online CSC Aadhaar & Pan Card government services.'}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, seoDescription: e.target.value })}
-                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Meta Keywords (Comma separated):</label>
-                      <input
-                        type="text"
-                        value={siteSettings.seoKeywords || 'MS-CIT Khandala, Tally Prime, Computer Class Khandala, CSC Center Khandala, Samarth Computers'}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, seoKeywords: e.target.value })}
-                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save SEO Configuration</span>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            {/* TAB: SOCIAL LINKS */}
-            {tab === 'settings_social' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Social Media Handles &amp; Links</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Connect official social media pages and WhatsApp direct link.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSaveSettings} className="space-y-6">
-                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Facebook Page URL:</label>
-                        <input
-                          type="url"
-                          value={siteSettings.socialFacebook || ''}
-                          onChange={(e) => setSiteSettings({ ...siteSettings, socialFacebook: e.target.value })}
-                          placeholder="https://facebook.com/samarthcomputers"
-                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Instagram Profile URL:</label>
-                        <input
-                          type="url"
-                          value={siteSettings.socialInstagram || ''}
-                          onChange={(e) => setSiteSettings({ ...siteSettings, socialInstagram: e.target.value })}
-                          placeholder="https://instagram.com/samarthcomputers"
-                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">YouTube Channel URL:</label>
-                        <input
-                          type="url"
-                          value={siteSettings.socialYoutube || ''}
-                          onChange={(e) => setSiteSettings({ ...siteSettings, socialYoutube: e.target.value })}
-                          placeholder="https://youtube.com/@samarthcomputers"
-                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Direct Chat Number:</label>
-                        <input
-                          type="text"
-                          value={siteSettings.contactWhatsapp || '919552345061'}
-                          onChange={(e) => setSiteSettings({ ...siteSettings, contactWhatsapp: e.target.value })}
-                          placeholder="919552345061"
-                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Social Links</span>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            {/* TAB: FOOTER SETTINGS */}
-            {tab === 'settings_footer' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Footer &amp; Copyright Settings</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Manage footer tagline, copyright statement, and accreditation notice.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSaveSettings} className="space-y-6">
-                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Footer Tagline / Bio:</label>
-                      <textarea
-                        rows={2}
-                        value={siteSettings.footerTagline || 'Empowering the next generation of digital leaders through quality computer education and government services.'}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, footerTagline: e.target.value })}
-                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Copyright Text Notice:</label>
-                      <input
-                        type="text"
-                        value={siteSettings.copyrightText || '© 2026 Samarth Computers Khandala. All rights reserved.'}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, copyrightText: e.target.value })}
-                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Footer Settings</span>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            {/* TAB: OTHER SETTINGS / GENERAL & SYNC */}
-            {tab === 'settings_general' && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-                <div>
-                  <h1 className="text-2xl font-black text-slate-900 tracking-tight">Database &amp; General System Control</h1>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Manage local cache synchronization with remote Supabase PostgreSQL database.
-                  </p>
-                </div>
-
-                <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                  <h3 className="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                    <Database className="w-4 h-4 text-primary" />
-                    <span>Supabase Database Synchronization</span>
-                  </h3>
-                  <p className="text-xs text-slate-600">
-                    Push all local cached courses, services, faculty, timetable batches, and site settings directly into your remote Supabase PostgreSQL tables.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={handleSyncToSupabase}
-                    disabled={loading}
-                    className="px-6 py-3 bg-primary hover:bg-stitch-red-dark text-white text-xs font-extrabold rounded-xl shadow-sm transition-all flex items-center gap-2"
-                  >
-                    <DatabaseBackup className="w-4 h-4" />
-                    <span>{loading ? 'Syncing to Supabase...' : 'Trigger Full Supabase Sync Now'}</span>
-                  </button>
-                </div>
               </div>
             )}
 
