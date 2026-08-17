@@ -146,7 +146,7 @@ export default function GovernmentPage({ lang = 'mr' }) {
               {/* Right Column: Accordion Specs */}
               <div className="lg:col-span-5 w-full">
                 <RequirementsAccordion
-                  requirements={isMarathi ? item.requirementsMr : item.requirementsEn}
+                  requirements={isMarathi ? (item.requiredDocsMr || []) : (item.requiredDocsEn || [])}
                   steps={isMarathi ? item.stepsMr : item.stepsEn}
                   lang={lang}
                 />

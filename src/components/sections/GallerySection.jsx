@@ -162,7 +162,7 @@ export default function GallerySection({ lang = 'mr' }) {
             {/* Social Media Follow CTAs */}
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <a
-                href="https://instagram.com"
+                href={sharedStore.getSiteSettings()?.socialInstagram || 'https://instagram.com/samarthcomputers'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-stitch-red hover:bg-stitch-red-dark text-white font-extrabold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-stitch-sm hover:scale-105"
@@ -171,7 +171,7 @@ export default function GallerySection({ lang = 'mr' }) {
                 <span>Instagram Follow</span>
               </a>
               <a
-                href="https://youtube.com"
+                href={sharedStore.getSiteSettings()?.socialYoutube || 'https://youtube.com/@samarthcomputers'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-stitch-slate-dark hover:bg-slate-900 text-white font-extrabold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-stitch-sm hover:scale-105"

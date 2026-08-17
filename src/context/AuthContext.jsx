@@ -3,36 +3,53 @@ import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext({});
 
-export const ADMIN_EMAIL = 'pawansingh3760@gmail.com';
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check if authenticated Supabase user is registered in public.admin_users
+  const ALLOWED_ADMIN_EMAILS = [
+    'pawansingh3760@gmail.com',
+    'admin@samarthcomputers.in',
+    'admin@samarth.com',
+    'admin@samarthcomputers.com'
+  ];
+
+  // Check if authenticated Supabase user is registered as an active admin in public.admin_users
   const verifyAdminRole = async (authUser) => {
-    if (!authUser) return false;
+    if (!authUser || !authUser.id) return false;
     try {
+      const authEmail = (authUser.email || '').toLowerCase().trim();
+
+      // 1. Direct query to admin_users table by user_id or email
       const { data, error } = await supabase
         .from('admin_users')
-        .select('*')
-        .eq('user_id', authUser.id)
+        .select('id, user_id, email, is_active, role')
+        .or(`user_id.eq.${authUser.id},email.eq.${authEmail}`)
         .eq('is_active', true)
         .maybeSingle();
 
       if (!error && data) {
+        // Automatically associate auth user_id if null in admin_users
+        if (!data.user_id && authUser.id) {
+          await supabase
+            .from('admin_users')
+            .update({ user_id: authUser.id })
+            .eq('id', data.id);
+        }
         return true;
       }
 
-      // Fallback email match for master admin account
-      if (authUser.email === ADMIN_EMAIL) {
+      // 2. Allow authenticated users matching designated institute admin emails
+      if (authEmail && ALLOWED_ADMIN_EMAILS.includes(authEmail)) {
         return true;
       }
+
       return false;
     } catch (err) {
       console.warn('[AuthContext] Admin verification notice:', err.message);
-      return authUser.email === ADMIN_EMAIL;
+      const authEmail = (authUser.email || '').toLowerCase().trim();
+      return authEmail && ALLOWED_ADMIN_EMAILS.includes(authEmail);
     }
   };
 
@@ -96,14 +113,19 @@ export function AuthProvider({ children }) {
     let cleanEmail = (emailInput || '').trim().toLowerCase();
     const cleanPass = (passwordInput || '').trim();
 
-    // Map default admin usernames and aliases to registered Supabase admin email
-    const adminAliases = ['admin', 'pavan', 'sagarbhosale', 'admin@samarth.com', 'admin@samarthcomputers.in', 'pawansingh'];
-    if (!cleanEmail || adminAliases.includes(cleanEmail) || cleanEmail.startsWith('admin@') || cleanEmail.startsWith('pavan@')) {
-      cleanEmail = ADMIN_EMAIL;
+    if (!cleanEmail || !cleanPass) {
+      return { success: false, message: 'Please enter a valid admin email and password.' };
     }
 
-    if (!cleanEmail.includes('@') || !cleanPass) {
-      return { success: false, message: 'Please enter a valid admin email and password.' };
+    // Default username shortcuts for admin login
+    if (cleanEmail === 'admin' || cleanEmail === 'samarth') {
+      cleanEmail = 'admin@samarthcomputers.in';
+    } else if (cleanEmail === 'pawansingh' || cleanEmail === 'pavan' || cleanEmail === 'sagarbhosale') {
+      cleanEmail = 'pawansingh3760@gmail.com';
+    }
+
+    if (!cleanEmail.includes('@')) {
+      return { success: false, message: 'Please enter a valid admin email address.' };
     }
 
     try {
@@ -122,6 +144,8 @@ export function AuthProvider({ children }) {
           return { success: true };
         } else {
           await supabase.auth.signOut();
+          setUser(null);
+          setIsAdmin(false);
           return { success: false, message: 'Access Denied: Account lacks active Admin privileges.' };
         }
       }

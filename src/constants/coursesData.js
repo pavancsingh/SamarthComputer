@@ -35,26 +35,44 @@ export const COURSES_DATA = [
     durationEn: '2 Months (2 hrs/day) or 3 Months (1 hr/day)',
     certificationMr: 'महाराष्ट्र ज्ञान महामंडळ (MKCL) व महाराष्ट्र शासन',
     certificationEn: 'Maharashtra Knowledge Corporation Limited (MKCL) & Govt of Maharashtra',
-    eligibilityMr: 'इयत्ता ५ वी पुढील सर्व विद्यार्थी, नागरिक व नोकरदार',
-    eligibilityEn: 'Students 5th Standard & Above, Job Seekers, Housewives & Seniors',
-    overviewMr: 'MS-CIT हा महाराष्ट्र शासनाचा सर्वात लोकप्रिय आंतरराष्ट्रीय दर्जाचा कॉम्प्युटर कोर्स आहे. यामध्ये कम्प्युटर थिअरी, प्रॅक्टिकल, AI पॉवर्ड लर्निंग, Windows 11, MS Office 2021 आणि डिजिटल लाईफ स्किल्स शिकवले जातात.',
-    overviewEn: 'MS-CIT is Maharashtra’s flagship IT literacy program featuring AI-Powered Learning, Windows 11, MS Office 2021, internet safety, and essential digital skills.',
+    eligibilityMr: 'इयत्ता ५ वी पुढील सर्व विद्यार्थी, लिपिक भरती उमेदवार, नोकरदार, गृहिणी व नागरिक',
+    eligibilityEn: 'Students 5th Standard & Above, Govt Clerk Aspirants, Housewives & Job Seekers',
+    overviewMr: 'MS-CIT हा महाराष्ट्र शासनाचा सर्वात लोकप्रिय आंतरराष्ट्रीय दर्जाचा कॉम्प्युटर कोर्स आहे. यामध्ये संगणक पायाभूत ज्ञान, Windows 11, MS Office 2021, AI पॉवर्ड लर्निंग आणि डिजिटल जीवन कौशल्ये शिकवली जातात.',
+    overviewEn: 'MS-CIT is Maharashtra’s flagship IT literacy program featuring AI-Powered Learning, Windows 11, MS Office 2021, internet safety, and essential digital skills for modern career readiness.',
     modulesMr: [
-      { name: 'संगणक पायाभूत ज्ञान (Fundamentals)', desc: 'Windows 11, फाइल मॅनेजमेंट, कॉम्प्युटर सेटिंग्ज' },
-      { name: 'MS Word 2021 (डॉक्युमेंटेशन)', desc: 'पत्रव्यवहार, रिज्युमे बनवणे, रिपोर्ट टायपिंग, मेल मर्ज' },
-      { name: 'MS Excel 2021 (डेटा मॅनेजमेंट)', desc: 'स्प्रेडशीट, फॉर्म्युले, चार्ट्स, बजेट व फिल्टरिंग' },
-      { name: 'MS PowerPoint 2021 (प्रेझेंटेशन)', desc: 'ॲनिमेशन, व्हिज्युअल स्लाइड्स व व्हिडिओ प्रेझेंटेशन' },
-      { name: 'AI & डिजिटल टूल्स', desc: 'ChatGPT, AI सर्च, ऑनलाइन पेमेंट, डिजी लॉकर व महाऑनलाइन सेवा' }
+      { name: '१. संगणक पायाभूत ज्ञान (Computer Fundamentals)', desc: 'संगणक कार्यपद्धती, हार्डवेअर मूलभूत, CPU, RAM आणि स्टोरेजची ओळख' },
+      { name: '२. Windows 11 & फाइल मॅनेजमेंट (File & Windows Management)', desc: 'Windows 11 ऑपरेट करणे, फाइल-फोल्डर रचना, शॉर्टकट्स व सिस्टीम सेटिंग्ज' },
+      { name: '३. इंटरनेट & ऑनलाइन सेवा (Internet & Online Services)', desc: 'वेब ब्राउझिंग, ईमेल, Google Workspace, डिजी लॉकर, महाऑनलाइन व ऑनलाइन बिल पेमेंट' },
+      { name: '४. MS Word 2021 (डॉक्युमेंटेशन & टायपिंग)', desc: 'पत्रव्यवहार, रिपोर्ट टायपिंग, रिज्युमे बनवणे, टेबल फॉरमॅटिंग व मेल मर्ज' },
+      { name: '५. MS Excel 2021 (डेटा मॅनेजमेंट & स्प्रेडशीट)', desc: 'डेटा एंट्री, मूलभूत फॉर्म्युले, तक्ते, चार्ट्स, बजेट व सॉर्टिंग/फिल्टरिंग' },
+      { name: '६. MS PowerPoint 2021 (व्हिज्युअल प्रेझेंटेशन)', desc: 'आकर्षक स्लाइड्स, ॲनिमेशन, ट्रान्झिशन, प्रेझेंटेशन डिझाइन व व्हिडिओ पब्लिशिंग' },
+      { name: '७. डिजिटल जीवन कौशल्ये & ऑनलाइन सुरक्षा (Digital Safety & AI)', desc: 'सायबर सुरक्षा, पासवर्ड सुरक्षा, UPI पेमेंट खबरदारी, ChatGPT व AI सर्च टूल्स' }
     ],
     modulesEn: [
-      { name: 'Computer Operating & Windows 11', desc: 'Operating basics, file management, settings' },
-      { name: 'MS Word 2021', desc: 'Letter drafting, resume building, mail merge' },
-      { name: 'MS Excel 2021', desc: 'Data management, formulas, charts, budgets' },
-      { name: 'MS PowerPoint 2021', desc: 'Slide animations, visual presentations, video export' },
-      { name: 'AI & Digital Life Tools', desc: 'ChatGPT, AI search, UPI safety, DigiLocker & MahaOnline' }
+      { name: '1. Computer Fundamentals', desc: 'Computer architecture, CPU, RAM, storage devices, and operating system principles' },
+      { name: '2. Windows 11 & File Management', desc: 'Operating system navigation, file-folder structure, shortcuts, and system settings' },
+      { name: '3. Internet & Online Services', desc: 'Web browsing, email etiquette, Google Workspace, DigiLocker, MahaOnline & online utility bills' },
+      { name: '4. MS Word 2021 Documentation', desc: 'Letter drafting, report typing, table formatting, Mail Merge, and professional resume building' },
+      { name: '5. MS Excel 2021 Data Management', desc: 'Spreadsheet layout, basic formulas, cell formatting, data sorting, filtering & visual charts' },
+      { name: '6. MS PowerPoint 2021 Presentations', desc: 'Visual slide creation, animations, transitions, presentation styling & video export' },
+      { name: '7. Digital Skills & Cyber Safety', desc: 'Cybersecurity, password protection, secure UPI payments, ChatGPT & AI search tools' }
     ],
-    careersMr: ['सरकारी लिपिक भरतीसाठी आवश्यक', 'डाटा एंट्री ऑपरेटर', 'ऑफिस असिस्टंट'],
-    careersEn: ['Mandatory for Govt Clerk Exams', 'Data Entry Operator', 'Office Assistant']
+    practicalSkillsMr: [
+      'दैनंदिन १-ऑन-१ लॅब संगणक सराव',
+      'शासकीय पोर्टल्स व ऑनलाइन अर्ज भरणे',
+      'रिज्युमे व अधिकृत कागदपत्रे प्रिंट करणे',
+      'डिजिटल दाखले डाऊनलोड व फाइल बॅकअप',
+      'सायबर सुरक्षा व सुरक्षित ऑनलाइन बँकिंग'
+    ],
+    practicalSkillsEn: [
+      'Daily 1-on-1 hands-on lab PC practice',
+      'Filling online government service & exam applications',
+      'Resume typing, document formatting & printing',
+      'Downloading digital certificates & managing cloud backup',
+      'Cybersecurity & safe online payment simulation'
+    ],
+    careersMr: ['सरकारी लिपिक / टंकलेखक नोकरीसाठी अनिवार्य', 'डाटा एंट्री ऑपरेटर', 'ऑफिस असिस्टंट / प्रशासकीय सहाय्यक', 'संगणक ऑपरेटर'],
+    careersEn: ['Mandatory for Govt Clerk & Typing Exams', 'Data Entry Operator', 'Office Assistant / Admin Executive', 'Computer Operator']
   },
   {
     id: 'tally-prime-gst',
@@ -73,26 +91,46 @@ export const COURSES_DATA = [
     durationEn: '2 Months (2 hrs/day)',
     certificationMr: 'टॅली एज्युकेशन प्रा. लि. (Tally Authorized Certificate)',
     certificationEn: 'Tally Education Pvt. Ltd. Authorized Certificate',
-    eligibilityMr: '१० वी / १२ वी / बी.कॉम / एम.कॉम विद्यार्थी व व्यावसायिक',
-    eligibilityEn: 'Commerce Students, Job Seekers, Shopkeepers & Accountants',
-    overviewMr: 'Tally Prime हा प्रॅक्टिकल व्यावसायिक अकाउंटिंग शिकवणारा कोर्स आहे. लेजर क्रिएशन, GST इन्व्हॉईसिंग, E-Way बिल, पेरोल, TDS आणि टॅली ऑडिट शिकून शिरवळ MIDC मध्ये नोकरी मिळवा.',
-    overviewEn: 'Comprehensive practical accounting training. Master Tally Prime, GST invoicing, E-Way bills, payroll, TDS, and corporate financial reporting.',
+    eligibilityMr: '१० वी / १२ वी / बी.कॉम / एम.कॉम विद्यार्थी, व्यापारी, व्यावसायिक व अकाउंटंट्स',
+    eligibilityEn: 'Commerce & Non-Commerce Students, Job Seekers, Shopkeepers & Accountants',
+    overviewMr: 'Tally Prime हा प्रॅक्टिकल व्यावसायिक अकाउंटिंग शिकवणारा कोर्स आहे. लेजर क्रिएशन, GST इन्व्हॉईसिंग, E-Way बिल, इन्व्हेंटरी, पेरोल, TDS आणि आर्थिक ताळेबंद (Balance Sheet) रिपोर्ट्सचे सखोल ज्ञान मिळवून अकाउंटिंग क्षेत्रात करिअर करा.',
+    overviewEn: 'Comprehensive practical computerised accounting training. Master Tally Prime, GST invoicing, E-Way bills, inventory management, manufacturing vouchers, payroll, TDS, and corporate financial reporting.',
     modulesMr: [
-      { name: 'अकाउंटिंग तत्त्वे व नियमावली', desc: 'गोल्डन रूल्स, जर्नल एंट्रीज, लेजर क्लासिफिकेशन' },
-      { name: 'Tally Prime कंपनी सेटअप', desc: 'कंपनी क्रिएशन, लेजर्स, सिक्युरिटीज व F11/F12 फीचर्स' },
-      { name: 'GST इन्व्हॉईसिंग & बिलिंग', desc: 'CGST, SGST, IGST बिलिंग, डेबिट/क्रेडिट नोट्स & E-Way बिल' },
-      { name: 'इन्व्हेंटरी & स्टॉक मॅनेजमेंट', desc: 'स्टॉक ग्रुप्स, युनिट्स, बॅच-वाईज एक्सपायरी ट्रॅकिंग' },
-      { name: 'पेरोल, TDS & फायनान्शियल रिपोर्ट्स', desc: 'पगार पत्रक, PF, TDS कपात, BRS व ताळेबंद (Balance Sheet)' }
+      { name: '१. अकाउंटिंग तत्त्वे व नियमावली (Accounting Fundamentals)', desc: 'अकाउंटिंगचे सुवर्ण नियम (Golden Rules), डेबिट-क्रेडिट, जर्नल नोंदी व लेजर खाती' },
+      { name: '२. कंपनी निर्मिती व सेटअप (Company Creation & Configuration)', desc: 'Tally मध्ये कंपनी तयार करणे, लेजर्स, सिक्युरिटी कंट्रोल व F11/F12 फीचर्स' },
+      { name: '३. लेजर व व्हाऊचर नोंदी (Ledger & Voucher Entries)', desc: 'Payment, Receipt, Sales, Purchase, Journal व Contra व्हाऊचर्सची नोंद' },
+      { name: '४. व्यावसायिक व्यवहार (Trading & Non-Trading Transactions)', desc: 'खरेदी-विक्री व्यवहार, सेवा उद्योग नोंदी व व्यावसायिक बँकिंग व्यवहार' },
+      { name: '५. GST कार्यपद्धती (GST Workflow & Invoicing)', desc: 'CGST, SGST, IGST हिशोब, GST टॅक्स बिलिंग, E-Way बिल व GSTR रिटर्न परिचय' },
+      { name: '६. इन्व्हेंटरी व साठा व्यवस्थापन (Inventory Management)', desc: 'स्टॉक आयटम्स, ग्रुप्स, युनिट्स ऑफ मेजर, गोदाम (Godown) व बॅच-वाईज एक्सपायरी ट्रॅकिंग' },
+      { name: '७. मॅन्युफॅक्चरिंग पायाभूत (Manufacturing Basics)', desc: 'Bill of Materials (BOM), उत्पादनाची नोंद (Stock Journal) व मॅन्युफॅक्चरिंग व्हाऊचर्स' },
+      { name: '८. आर्थिक अहवाल व ताळेबंद (Reports & Financial Statements)', desc: 'नफा-तोटा खाते (P&L), ताळेबंद (Balance Sheet), कॅश फ्लो, BRS व स्टॉक समरी' }
     ],
     modulesEn: [
-      { name: 'Accounting Fundamentals', desc: 'Golden rules, journal entries, ledger setup' },
-      { name: 'Tally Prime Company Setup', desc: 'Company creation, ledger hierarchy & F11/F12 settings' },
-      { name: 'GST Billing & Invoicing', desc: 'CGST, SGST, IGST & E-Way bills generation' },
-      { name: 'Inventory & Stock Management', desc: 'Stock items, batch-wise expiry & warehouse tracking' },
-      { name: 'Payroll, TDS & Financial Auditing', desc: 'Pay slips, PF, TDS, Bank Reconciliation & Balance Sheet' }
+      { name: '1. Accounting Fundamentals', desc: 'Golden rules of accounting, double-entry system, journal entries, ledger setup & trial balance' },
+      { name: '2. Company Creation & Configuration', desc: 'Company creation in Tally Prime, voucher types, security controls & F11/F12 settings' },
+      { name: '3. Ledger & Voucher Entries', desc: 'Payment, Receipt, Sales, Purchase, Journal & Contra voucher posting' },
+      { name: '4. Trading & Non-Trading Transactions', desc: 'Retail, wholesale, service sector accounting & corporate bank transactions' },
+      { name: '5. GST Workflow & Invoicing', desc: 'CGST, SGST, IGST billing, GST tax invoice printing, E-Way bill generation & GSTR summary' },
+      { name: '6. Inventory Management', desc: 'Stock items, groups, categories, units of measure, godown tracking & batch-wise expiry' },
+      { name: '7. Manufacturing Basics', desc: 'Bill of Materials (BOM), stock journal vouchers & production cost allocation' },
+      { name: '8. Reports & Financial Statements', desc: 'Profit & Loss Statement, Balance Sheet, Cash Flow, Bank Reconciliation (BRS) & Stock Summary' }
     ],
-    careersMr: ['टॅली अकाउंटंट (शिरवळ MIDC)', 'अकाउंट्स असिस्टंट', 'GST बिलिंग ऑपरेटर'],
-    careersEn: ['Tally Accountant (Shirwal MIDC)', 'Accounts Executive', 'GST Billing Operator']
+    practicalSkillsMr: [
+      'प्रत्यक्ष GST इन्व्हॉईस बिलिंग व प्रिंटिंग',
+      'महिन्याचे बँक जुळवणी पत्रक (BRS) तयार करणे',
+      'गोदाम साठा (Stock Godown) तपासणी व ट्रॅकिंग',
+      'व्यावसायिक बिलिंग व खरेदी-विक्री रजिस्टर जुळवणी',
+      'ताळेबंद (Balance Sheet) व नफा-तोटा रिपोर्ट विश्लेषण'
+    ],
+    practicalSkillsEn: [
+      'Real-world GST tax invoice creation & printing',
+      'Bank Reconciliation Statement (BRS) practice',
+      'Warehouse godown inventory management',
+      'Sales & Purchase register reconciliation',
+      'Balance Sheet & Profit & Loss statement auditing'
+    ],
+    careersMr: ['टॅली अकाउंटंट (शिरवळ MIDC व स्थानिक बाजारपेठ)', 'अकाउंट्स असिस्टंट / ज्युनियर अकाउंटंट', 'GST बिलिंग ऑपरेटर', 'स्टॉक व इन्व्हेंटरी मॅनेजर'],
+    careersEn: ['Tally Accountant (Shirwal MIDC & Local Businesses)', 'Accounts Assistant / Junior Accountant', 'GST Billing Operator', 'Inventory & Stock Manager']
   },
   {
     id: 'advanced-excel',
@@ -111,26 +149,44 @@ export const COURSES_DATA = [
     durationEn: '1.5 Months',
     certificationMr: 'समर्थ कॉम्प्युटर्स ॲडव्हान्स एक्सल एक्स्पर्ट प्रमाणपत्र',
     certificationEn: 'Samarth Computers Advanced Excel Certificate',
-    eligibilityMr: 'कॉम्प्युटर बेसिक माहित असलेले विद्यार्थी व नोकरदार',
-    eligibilityEn: 'Students, Working Professionals & MIS Aspirants',
-    overviewMr: 'एमआयएस आणि डेटा ॲनालिटिक्स क्षेत्रातील उच्च पगाराच्या नोकऱ्यांसाठी ॲडव्हान्स एक्सल. VLOOKUP, XLOOKUP, Pivot Tables, Conditional Formatting आणि Dynamic Dashboards शिकवले जातात.',
-    overviewEn: 'Master Advanced Excel for high-paying MIS and data analyst roles. Covers VLOOKUP, XLOOKUP, Pivot Tables, Conditional Formatting, and Dynamic KPI Dashboards.',
+    eligibilityMr: 'कॉम्प्युटर बेसिक माहिती असलेले विद्यार्थी, नोकरदार, एमआयएस उमेदवार व डेटा विश्लेषक',
+    eligibilityEn: 'Students, Office Executives, Accountants, MIS Aspirants & Data Analysts',
+    overviewMr: 'एमआयएस आणि डेटा ॲनालिटिक्स क्षेत्रातील उच्च पगाराच्या नोकऱ्यांसाठी ॲडव्हान्स एक्सल. VLOOKUP, XLOOKUP, Pivot Tables, Conditional Formatting आणि Dynamic Dashboards शिकून कॉर्पोरेट विश्लेषक बना.',
+    overviewEn: 'Master Advanced Excel for high-paying MIS and data analyst roles. Covers VLOOKUP, XLOOKUP, IF/SUMIFS, Pivot Tables, Data Cleaning, Conditional Formatting, and Dynamic Executive KPI Dashboards.',
     modulesMr: [
-      { name: 'ॲडव्हान्स फॉर्म्युले & लुकअप्स', desc: 'VLOOKUP, XLOOKUP, INDEX-MATCH, IF-THEN, SUMIFS' },
-      { name: 'डेटा क्लीनिंग & टेक्स टू कॉलम्स', desc: 'Text-to-Columns, Flash Fill, Data Validation ड्रॉपडाउन' },
-      { name: 'पिव्होट टेबल & स्लायसर', desc: 'डेटा विश्लेषणासाठी पिव्होट तक्ते, चार्ट्स व टाइमलाईन' },
-      { name: 'कंडिशनल फॉरमॅटिंग', desc: 'हायलाईट रूल्स, डेटा बार्स, डुप्लिकेट्स फिल्टरिंग' },
-      { name: 'डायनॅमिक डॅशबोर्ड & पॉवर क्वेरी', desc: 'कॉर्पोरेट रिपोर्टिंग डॅशबोर्ड डिझाइन व मॅक्रो ऑटोमेशन' }
+      { name: '१. ॲडव्हान्स फॉर्म्युले व फंक्शन्स (Advanced Formulas & Functions)', desc: 'INDEX-MATCH, HLOOKUP, XLOOKUP, नेस्टेड IF, IFERROR व लॉजिकल फॉर्म्युले' },
+      { name: '२. VLOOKUP व XLOOKUP प्रभुत्व (VLOOKUP & XLOOKUP Masterclass)', desc: 'संतुलित डेटा शोध, मल्टी-टेबल लुकअप, कॉलम इंडेक्सिंग व एरर हाताळणी' },
+      { name: '३. IF, SUMIFS, COUNTIFS व संबंधित फंक्शन्स (Logical & Conditional Functions)', desc: 'अटींनुसार बेरीज (SUMIFS), मोजणी (COUNTIFS), सरासरी (AVERAGEIFS) व AND/OR लॉजिक' },
+      { name: '४. पिव्होट टेबल व स्लायसर (Pivot Tables & Slicers)', desc: 'मोठ्या डेटाचे विश्लेषण, ग्रुपिंग, कॅल्क्युलेटेड फील्ड्स, स्लायसर्स व टाइमलाईन' },
+      { name: '५. चार्ट्स व डायनॅमिक डॅशबोर्ड (Charts & Executive Dashboards)', desc: 'कॉम्बो चार्ट्स, स्पार्कलाइन्स, KPI व्हिज्युअलायझेशन व कॉर्पोरेट डॅशबोर्ड डिझाइन' },
+      { name: '६. MIS रिपोर्टिंग तंत्र (MIS Business Reporting)', desc: 'दैनिक/मासिक व्यावसायिक अहवाल ऑटोमेशन, डेटा तुलना व समरी शीट्स' },
+      { name: '७. डेटा क्लीनिंग व ॲनालिसिस (Data Cleaning & Analysis)', desc: 'Text-to-Columns, Flash Fill, Data Validation ड्रॉपडाउन, डुप्लिकेट्स फिल्टरिंग व कंडिशनल फॉरमॅटिंग' }
     ],
     modulesEn: [
-      { name: 'Advanced Lookup Formulas', desc: 'VLOOKUP, XLOOKUP, INDEX-MATCH, SUMIFS, COUNTIFS' },
-      { name: 'Data Cleaning & Management', desc: 'Text-to-Columns, Flash Fill, Data Validation dropdowns' },
-      { name: 'Pivot Tables & Slicers', desc: 'Large dataset analysis with Pivot Charts & Timelines' },
-      { name: 'Conditional Formatting', desc: 'Data bars, color scales, dynamic formula rules' },
-      { name: 'Executive Dashboards & Power Query', desc: 'Building corporate KPI dashboards & basic Macro automation' }
+      { name: '1. Advanced Formulas & Functions', desc: 'INDEX-MATCH, HLOOKUP, XLOOKUP, nested IF, IFERROR, and dynamic logical arrays' },
+      { name: '2. VLOOKUP & XLOOKUP Masterclass', desc: 'Exact & approximate match, multi-table lookup, column indexing & error handling' },
+      { name: '3. IF, SUMIFS, COUNTIFS & Conditional Functions', desc: 'Multi-criteria summation (SUMIFS), counting (COUNTIFS), AVERAGEIFS & AND/OR logic' },
+      { name: '4. Pivot Tables & Slicers', desc: 'Large dataset analysis, grouping, calculated fields, slicers, timelines & Pivot charts' },
+      { name: '5. Charts & Executive Dashboards', desc: 'Combo charts, sparklines, dynamic chart ranges & KPI executive dashboards' },
+      { name: '6. MIS Business Reporting', desc: 'Automated daily/monthly reporting, variance analysis & executive summaries' },
+      { name: '7. Data Cleaning & Analysis', desc: 'Text-to-Columns, Flash Fill, Data Validation dropdowns, duplicate removal & conditional formatting rules' }
     ],
-    careersMr: ['MIS एक्झिक्युटिव्ह', 'डेटा ॲनालिस्ट ट्रॅनी', 'ऑपरेशनल ॲनालिस्ट'],
-    careersEn: ['MIS Executive', 'Data Analyst Trainee', 'Operations Analyst']
+    practicalSkillsMr: [
+      'मासिक विक्री व महसूल विश्लेषण डॅशबोर्ड',
+      'कर्मचारी उपस्थिती व पगार पत्रक कॅल्क्युलेटर',
+      'इन्व्हेंटरी साठा व री-ऑर्डर ट्रॅकर ऑटोमेशन',
+      'Pivot Slicers सह डायनॅमिक KPI रिपोर्ट',
+      'कॉर्पोरेट डेटा क्लीनिंग व फॉरमॅटिंग सराव'
+    ],
+    practicalSkillsEn: [
+      'Monthly sales & revenue analytics dashboard',
+      'Employee attendance & automated payroll calculation sheet',
+      'Inventory stock tracker with re-order alert automation',
+      'Dynamic KPI executive report using Pivot Slicers & Timelines',
+      'Corporate raw data cleaning & formatting exercises'
+    ],
+    careersMr: ['MIS एक्झिक्युटिव्ह', 'डेटा ॲनालिस्ट ट्रॅनी', 'ऑपरेशनल व फायनान्स ॲनालिस्ट', 'ऑफिस डेटा मॅनेजर'],
+    careersEn: ['MIS Executive', 'Data Analyst Trainee', 'Operations & Finance Analyst', 'Office Data Manager']
   },
   {
     id: 'klic-graphic-design',

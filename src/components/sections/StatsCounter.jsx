@@ -13,10 +13,10 @@ export default function StatsCounter({ lang = 'mr' }) {
     {
       icon: GraduationCap,
       value: "5,000+",
-      labelMr: "प्रमाणित विद्यार्थी",
-      labelEn: "Certified Students",
-      descMr: "MS-CIT, टॅली व टायपिंग",
-      descEn: "MS-CIT, Tally & Typing",
+      labelMr: "प्रशिक्षित विद्यार्थी",
+      labelEn: "Students Trained",
+      descMr: "MS-CIT, टॅली आणि टायपिंग",
+      descEn: "MS-CIT, Tally and Typing",
       accent: "text-stitch-red bg-stitch-red-light border-stitch-red-border"
     },
     {
@@ -31,8 +31,8 @@ export default function StatsCounter({ lang = 'mr' }) {
     {
       icon: Calendar,
       value: "15+ वर्ष",
-      labelMr: "खंडाळ्यात यशस्वी सेवा",
-      labelEn: "Years of Trust",
+      labelMr: "खंडाळ्यातील सेवा",
+      labelEn: "Years Serving Khandala",
       descMr: "२०१० सालापासून विश्वास",
       descEn: "Serving Since 2010",
       accent: "text-stitch-indigo bg-indigo-50 border-indigo-200"
@@ -40,10 +40,10 @@ export default function StatsCounter({ lang = 'mr' }) {
     {
       icon: Trophy,
       value: "98%",
-      labelMr: "परीक्षा उत्तीर्ण निकाल",
-      labelEn: "Exam Pass Rate",
-      descMr: "पहिल्याच प्रयत्नात यश",
-      descEn: "First-Attempt Pass Record",
+      labelMr: "परीक्षेतील उत्तीर्ण निकाल",
+      labelEn: "Exam Pass Record",
+      descMr: "विद्यार्थ्यांच्या निकालांवर आधारित",
+      descEn: "Based on student results",
       accent: "text-stitch-amber bg-amber-50 border-amber-200"
     }
   ];
@@ -87,6 +87,5 @@ export default function StatsCounter({ lang = 'mr' }) {
     </section>
   );
 }
-
 
 

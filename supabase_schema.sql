@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS public.courses (
     modules_en JSONB DEFAULT '[]'::jsonb,
     careers_mr JSONB DEFAULT '[]'::jsonb,
     careers_en JSONB DEFAULT '[]'::jsonb,
+    practical_skills_mr JSONB DEFAULT '[]'::jsonb,
+    practical_skills_en JSONB DEFAULT '[]'::jsonb,
     image_url TEXT,
     is_primary BOOLEAN DEFAULT false,
     is_featured BOOLEAN DEFAULT false,
@@ -67,6 +69,8 @@ ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_primary BOOLEAN DEFAULT f
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
 ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS practical_skills_mr JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.courses ADD COLUMN IF NOT EXISTS practical_skills_en JSONB DEFAULT '[]'::jsonb;
 
 
 -- 3. CSC SERVICES TABLE
@@ -331,15 +335,85 @@ $$;
 -- STRICT ROW LEVEL SECURITY (RLS) POLICIES
 -- ============================================================
 
--- Apply Public SELECT / Admin WRITE Policies to Content & Settings Tables
--- (branding_settings, home_settings, about_settings, contact_settings, navigation_menu, site_information, seo_settings, social_links, footer_settings, site_settings, courses, csc_services, govt_services, faculties, site_gallery, batch_timetable, batches, news, certificates)
+-- 1. Enable RLS on all content and admin tables
+ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.csc_services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.govt_services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.faculties ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_gallery ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 
--- Inquiries Table Policies:
--- Public submit: CREATE POLICY "Public Submit Inquiry" ON public.inquiries FOR INSERT WITH CHECK (true);
--- Admin access: CREATE POLICY "Admin Select Inquiries" ON public.inquiries FOR SELECT USING (is_admin());
+-- 2. Public Read / Admin Write Policies on Content & Settings Tables
+DROP POLICY IF EXISTS "Public Read Courses" ON public.courses;
+DROP POLICY IF EXISTS "Admin Write Courses" ON public.courses;
+CREATE POLICY "Public Read Courses" ON public.courses FOR SELECT USING (true);
+CREATE POLICY "Admin Write Courses" ON public.courses FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
 
--- Storage Bucket Policies ('samarth-media'):
--- Public read: CREATE POLICY "Public Read Storage Access" ON storage.objects FOR SELECT USING (bucket_id = 'samarth-media');
--- Admin write: CREATE POLICY "Admin Insert Storage Access" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'samarth-media' AND is_admin());
+DROP POLICY IF EXISTS "Public Read CSC Services" ON public.csc_services;
+DROP POLICY IF EXISTS "Admin Write CSC Services" ON public.csc_services;
+CREATE POLICY "Public Read CSC Services" ON public.csc_services FOR SELECT USING (true);
+CREATE POLICY "Admin Write CSC Services" ON public.csc_services FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Govt Services" ON public.govt_services;
+DROP POLICY IF EXISTS "Admin Write Govt Services" ON public.govt_services;
+CREATE POLICY "Public Read Govt Services" ON public.govt_services FOR SELECT USING (true);
+CREATE POLICY "Admin Write Govt Services" ON public.govt_services FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Faculties" ON public.faculties;
+DROP POLICY IF EXISTS "Admin Write Faculties" ON public.faculties;
+CREATE POLICY "Public Read Faculties" ON public.faculties FOR SELECT USING (true);
+CREATE POLICY "Admin Write Faculties" ON public.faculties FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Site Gallery" ON public.site_gallery;
+DROP POLICY IF EXISTS "Admin Write Site Gallery" ON public.site_gallery;
+CREATE POLICY "Public Read Site Gallery" ON public.site_gallery FOR SELECT USING (true);
+CREATE POLICY "Admin Write Site Gallery" ON public.site_gallery FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Site Settings" ON public.site_settings;
+DROP POLICY IF EXISTS "Admin Write Site Settings" ON public.site_settings;
+CREATE POLICY "Public Read Site Settings" ON public.site_settings FOR SELECT USING (true);
+CREATE POLICY "Admin Write Site Settings" ON public.site_settings FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Batches" ON public.batches;
+DROP POLICY IF EXISTS "Admin Write Batches" ON public.batches;
+CREATE POLICY "Public Read Batches" ON public.batches FOR SELECT USING (true);
+CREATE POLICY "Admin Write Batches" ON public.batches FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read News" ON public.news;
+DROP POLICY IF EXISTS "Admin Write News" ON public.news;
+CREATE POLICY "Public Read News" ON public.news FOR SELECT USING (true);
+CREATE POLICY "Admin Write News" ON public.news FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+DROP POLICY IF EXISTS "Public Read Certificates" ON public.certificates;
+DROP POLICY IF EXISTS "Admin Write Certificates" ON public.certificates;
+CREATE POLICY "Public Read Certificates" ON public.certificates FOR SELECT USING (true);
+CREATE POLICY "Admin Write Certificates" ON public.certificates FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- 3. Inquiries Table Policies (Public Insert, Admin Manage)
+DROP POLICY IF EXISTS "Public Insert Inquiry" ON public.inquiries;
+DROP POLICY IF EXISTS "Admin Select Inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Admin Update Inquiries" ON public.inquiries;
+DROP POLICY IF EXISTS "Admin Delete Inquiries" ON public.inquiries;
+CREATE POLICY "Public Insert Inquiry" ON public.inquiries FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin Select Inquiries" ON public.inquiries FOR SELECT USING (public.is_admin());
+CREATE POLICY "Admin Update Inquiries" ON public.inquiries FOR UPDATE USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Admin Delete Inquiries" ON public.inquiries FOR DELETE USING (public.is_admin());
+
+-- 4. Admin Users Table (Admin Access Only)
+DROP POLICY IF EXISTS "Admin Manage Admin Users" ON public.admin_users;
+CREATE POLICY "Admin Manage Admin Users" ON public.admin_users FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- 5. Storage Bucket Policies ('samarth-media')
+DROP POLICY IF EXISTS "Public Read Storage Access" ON storage.objects;
+DROP POLICY IF EXISTS "Admin Insert Storage Access" ON storage.objects;
+DROP POLICY IF EXISTS "Admin Delete Storage Access" ON storage.objects;
+CREATE POLICY "Public Read Storage Access" ON storage.objects FOR SELECT USING (bucket_id = 'samarth-media');
+CREATE POLICY "Admin Insert Storage Access" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'samarth-media' AND public.is_admin());
+CREATE POLICY "Admin Delete Storage Access" ON storage.objects FOR DELETE USING (bucket_id = 'samarth-media' AND public.is_admin());
 
 

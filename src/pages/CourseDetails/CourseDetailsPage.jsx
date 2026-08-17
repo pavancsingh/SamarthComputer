@@ -25,8 +25,11 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
 
   if (!course) return null;
 
-  const modules = (isMarathi ? course.modulesMr : course.modulesEn) || [];
-  const careers = (isMarathi ? course.careersMr : course.careersEn) || [];
+  const overview = (isMarathi ? course.overviewMr || course.overview_mr : course.overviewEn || course.overview_en) || '';
+  const modules = (isMarathi ? course.modulesMr || course.modules_mr : course.modulesEn || course.modules_en) || [];
+  const practicalSkills = (isMarathi ? course.practicalSkillsMr || course.practical_skills_mr : course.practicalSkillsEn || course.practical_skills_en) || [];
+  const eligibility = (isMarathi ? course.eligibilityMr || course.eligibility_mr : course.eligibilityEn || course.eligibility_en) || '';
+  const careers = (isMarathi ? course.careersMr || course.careers_mr : course.careersEn || course.careers_en) || [];
 
   const handleSidebarSubmit = async (e) => {
     e.preventDefault();
@@ -116,26 +119,42 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
               </div>
             </section>
 
-            {/* 2. Course Curriculum */}
+            {/* SECTION 1: Overview */}
+            <section className="bg-white rounded-2xl p-lg border border-slate-200/80 shadow-sm space-y-md">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-sm">
+                <span className="material-symbols-outlined text-primary text-2xl">info</span>
+                <h2 className="text-headline-lg font-headline-lg text-text-primary">
+                  {isMarathi ? 'कोर्स परिचय (Overview)' : 'Course Overview'}
+                </h2>
+              </div>
+              <p className="text-body-lg font-body-md text-slate-700 leading-relaxed">
+                {overview}
+              </p>
+            </section>
+
+            {/* SECTION 2: What You'll Learn */}
             <section className="space-y-lg">
-              <h2 className="text-headline-lg font-headline-lg text-text-primary border-b border-surface-variant/50 pb-sm">
-                {isMarathi ? 'अभ्यासक्रम (Course Curriculum)' : 'Course Curriculum'}
-              </h2>
+              <div className="flex items-center gap-2 border-b border-surface-variant/50 pb-sm">
+                <span className="material-symbols-outlined text-primary text-2xl">school</span>
+                <h2 className="text-headline-lg font-headline-lg text-text-primary">
+                  {isMarathi ? 'तुम्ही काय शिकाल (What You\'ll Learn)' : 'What You\'ll Learn'}
+                </h2>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                 {modules.map((m, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-lg p-md border border-slate-200/50 shadow-md hover:-translate-y-1 hover:shadow-stitch-glow transition-all duration-300"
+                    className="bg-white rounded-xl p-md border border-slate-200/70 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300 space-y-1.5"
                   >
                     <div className="flex items-start gap-md">
-                      <div className="bg-primary-container/10 p-sm rounded text-primary flex-shrink-0">
-                        <span className="material-symbols-outlined text-2xl fill">
-                          {idx === 0 ? 'computer' : idx === 1 ? 'description' : idx === 2 ? 'public' : 'security'}
+                      <div className="bg-primary/10 p-sm rounded-lg text-primary flex-shrink-0">
+                        <span className="material-symbols-outlined text-2xl">
+                          {idx === 0 ? 'laptop_chromebook' : idx === 1 ? 'article' : idx === 2 ? 'query_stats' : idx === 3 ? 'monitoring' : 'verified_user'}
                         </span>
                       </div>
                       <div>
-                        <h3 className="text-headline-md font-headline-md mb-xs">{m.name || m}</h3>
-                        <p className="text-body-md font-body-md text-secondary">{m.desc || ''}</p>
+                        <h3 className="text-headline-md font-headline-md text-slate-900 mb-xs">{m.name || m}</h3>
+                        <p className="text-body-md font-body-md text-slate-600 leading-relaxed">{m.desc || ''}</p>
                       </div>
                     </div>
                   </div>
@@ -143,10 +162,66 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
               </div>
             </section>
 
-            {/* 3D MS-CIT Interactive Learning Journey Course Map */}
-            <MSCIT3DCourseMap course={course} lang={lang} onNavigate={onNavigate} />
+            {/* SECTION 3: Practical Skills & Assignments */}
+            {practicalSkills.length > 0 && (
+              <section className="bg-emerald-50/60 rounded-2xl p-lg border border-emerald-200/80 shadow-sm space-y-md">
+                <div className="flex items-center gap-2 border-b border-emerald-200/60 pb-sm">
+                  <span className="material-symbols-outlined text-emerald-700 text-2xl">handshake</span>
+                  <h2 className="text-headline-lg font-headline-lg text-emerald-950">
+                    {isMarathi ? 'प्रत्यक्ष प्रात्यक्षिक कौशल्ये (Practical Skills)' : 'Practical Skills & Exercises'}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  {practicalSkills.map((skill, idx) => (
+                    <div key={idx} className="bg-white p-3.5 rounded-xl border border-emerald-200/60 flex items-center gap-3 shadow-xs">
+                      <span className="material-symbols-outlined text-emerald-600 text-xl shrink-0">check_circle</span>
+                      <span className="text-sm font-extrabold text-slate-800">{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
-            {/* 3. Official Certification Section */}
+            {/* SECTION 4: Who It's For & Career Opportunities */}
+            <section className="bg-white rounded-2xl p-lg border border-slate-200/80 shadow-sm space-y-md">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-sm">
+                <span className="material-symbols-outlined text-primary text-2xl">groups</span>
+                <h2 className="text-headline-lg font-headline-lg text-text-primary">
+                  {isMarathi ? 'हा कोर्स कोणासाठी आहे (Who It\'s For)' : 'Who It\'s For & Career Scope'}
+                </h2>
+              </div>
+
+              {eligibility && (
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-1">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-wider block">
+                    {isMarathi ? 'पात्रता & प्रवेश घेणारे:' : 'Target Audience & Eligibility:'}
+                  </span>
+                  <p className="text-sm font-bold text-slate-900 leading-relaxed">{eligibility}</p>
+                </div>
+              )}
+
+              {careers.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-wider block">
+                    {isMarathi ? '💼 नोकरी व करिअरच्या संधी:' : '💼 Career Opportunities:'}
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {careers.map((car, idx) => (
+                      <span key={idx} className="bg-primary/10 text-primary border border-primary/20 font-bold text-xs px-3.5 py-1.5 rounded-full">
+                        ✓ {car}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* 3D MS-CIT Interactive Learning Journey Course Map — Render only for MS-CIT course */}
+            {(course.slug === 'mscit' || course.id === 'mscit' || slug === 'mscit') && (
+              <MSCIT3DCourseMap course={course} lang={lang} onNavigate={onNavigate} />
+            )}
+
+            {/* Official Certification Section */}
             <section className="bg-surface-container-low rounded-xl p-lg border border-surface-variant/50 flex flex-col md:flex-row gap-lg items-center">
               <div className="flex-1 space-y-md">
                 <h2 className="text-headline-lg font-headline-lg text-text-primary">
@@ -154,19 +229,19 @@ export default function CourseDetailsPage({ slug = 'mscit', lang = 'mr', onNavig
                 </h2>
                 <p className="text-body-md font-body-md text-secondary">
                   {isMarathi
-                    ? 'यशस्वीरीत्या पूर्ण केल्यावर, विद्यार्थ्यांना MKCL आणि महाराष्ट्र राज्य तंत्रशिक्षण मंडळ (MSBTE) कडून संयुक्त प्रमाणपत्र मिळते. हे प्रमाणपत्र महाराष्ट्रातील विविध शासकीय नोकऱ्यांसाठी अनिवार्य आहे.'
-                    : 'Upon successful completion, students receive a joint certificate from MKCL and Maharashtra State Board of Technical Education (MSBTE). This certificate is recognized for government jobs.'}
+                    ? 'यशस्वीरीत्या पूर्ण केल्यावर, विद्यार्थ्यांना अधिकृत मान्यताप्राप्त प्रमाणपत्र मिळते. हे प्रमाणपत्र महाराष्ट्रातील विविध नोकऱ्या व व्यवसायासाठी उपयुक्त आहे.'
+                    : 'Upon successful completion, students receive a government-recognized authorized certificate recognized across Maharashtra.'}
                 </p>
                 <div className="flex items-center gap-sm text-primary font-label-bold">
                   <span className="material-symbols-outlined fill">verified</span>
-                  <span>{isMarathi ? 'महाराष्ट्र शासन मान्यताप्राप्त' : 'Recognized by Govt. of Maharashtra'}</span>
+                  <span>{isMarathi ? 'मान्यताप्राप्त संगणक केंद्र' : 'Government Recognized Institute'}</span>
                 </div>
               </div>
               <div className="w-full md:w-1/3 aspect-video md:aspect-square bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-md shadow-sm">
                 <div className="text-center space-y-2">
                   <span className="material-symbols-outlined text-primary text-5xl fill">workspace_premium</span>
-                  <div className="font-headline-md text-sm text-text-primary">MKCL &amp; MSBTE</div>
-                  <div className="text-xs text-secondary">Joint Certificate</div>
+                  <div className="font-headline-md text-sm text-text-primary">Samarth Computers</div>
+                  <div className="text-xs text-secondary">Authorized Certificate</div>
                 </div>
               </div>
             </section>

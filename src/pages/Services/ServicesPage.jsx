@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
+import { sharedStore } from '../../repositories/sharedStore';
 import ServiceEnquiryModal from '../../components/forms/ServiceEnquiryModal';
 import {
   Search, ChevronRight, ChevronLeft, ArrowRight, ExternalLink,
@@ -196,13 +197,21 @@ const FALLBACK_CSC_SERVICES = [
   }
 ];
 
+
+
 export default function ServicesPage({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
-  // Data
-  const [govtServices, setGovtServices] = useState([]);
-  const [cscServices, setCscServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Data — read from sharedStore first
+  const [govtServices, setGovtServices] = useState(() => {
+    const cached = sharedStore.getGovtServices();
+    return cached && cached.length > 0 ? cached : FALLBACK_GOVT_SERVICES;
+  });
+  const [cscServices, setCscServices] = useState(() => {
+    const cached = sharedStore.getCSCServices();
+    return cached && cached.length > 0 ? cached : FALLBACK_CSC_SERVICES;
+  });
+  const [loading, setLoading] = useState(false);
 
   // Navigation State
   const [selectedCategory, setSelectedCategory] = useState(null); // null = show category cards
@@ -216,23 +225,37 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     async function loadData() {
-      setLoading(true);
       try {
         const [govtData, cscData] = await Promise.all([
           InquiryRepository.getGovtServices('all'),
           InquiryRepository.getCSCServices('all')
         ]);
-        setGovtServices(govtData?.length ? govtData : FALLBACK_GOVT_SERVICES);
-        setCscServices(cscData?.length ? cscData : FALLBACK_CSC_SERVICES);
-      } catch {
-        setGovtServices(FALLBACK_GOVT_SERVICES);
-        setCscServices(FALLBACK_CSC_SERVICES);
-      } finally {
-        setLoading(false);
+        if (isMounted) {
+          if (govtData && govtData.length > 0) setGovtServices(govtData);
+          if (cscData && cscData.length > 0) setCscServices(cscData);
+        }
+      } catch (err) {
+        console.warn('Notice loading services:', err.message);
       }
     }
+
     loadData();
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      if (isMounted) {
+        const govt = sharedStore.getGovtServices();
+        const csc = sharedStore.getCSCServices();
+        if (govt && govt.length > 0) setGovtServices(govt);
+        if (csc && csc.length > 0) setCscServices(csc);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
 
   // Resolve services for selected category
@@ -268,24 +291,24 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
   const selectedCat = SERVICE_CATEGORIES.find(c => c.id === selectedCategory);
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen pb-24 md:pb-12">
+    <div className="bg-slate-50/70 min-h-screen pb-24 md:pb-12">
       {/* Background decoration */}
-      <div className="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-indigo-50/80 via-slate-50/30 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-rose-50/60 via-slate-50/30 to-transparent pointer-events-none" />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
 
         {/* ── Hero / Header ── */}
         <section className="text-center mb-10 max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-black shadow-sm">
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200/80 text-primary text-xs font-black shadow-xs">
+            <Sparkles className="w-4 h-4 text-primary" />
             <span>{isMarathi ? 'अधिकृत सेतू, CSC व ऑनलाइन सेवा केंद्र' : 'Official Setu, CSC & Online Services Center'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             {isMarathi ? (
-              <>सरकारी व <span className="text-indigo-600">ऑनलाइन सेवा</span></>
+              <>सरकारी व <span className="text-primary">ऑनलाइन सेवा</span></>
             ) : (
-              <>Government & <span className="text-indigo-600">Online Services</span></>
+              <>Government &amp; <span className="text-primary">Online Services</span></>
             )}
           </h1>
 
@@ -296,12 +319,12 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
           </p>
 
           {/* Workflow badge */}
-          <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500">
-            <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">📋 {isMarathi ? 'विनंती करा' : 'Request'}</span>
-            <span className="text-slate-300">→</span>
-            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">⚙️ {isMarathi ? 'प्रक्रिया' : 'Processing'}</span>
-            <span className="text-slate-300">→</span>
-            <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">✅ {isMarathi ? 'पूर्ण' : 'Completion'}</span>
+          <div className="flex items-center justify-center gap-2 text-xs font-extrabold text-slate-600">
+            <span className="bg-slate-100 border border-slate-200 text-slate-800 px-3 py-1 rounded-full">📋 {isMarathi ? 'विनंती करा' : 'Request'}</span>
+            <span className="text-slate-400">→</span>
+            <span className="bg-purple-50 border border-purple-200 text-purple-800 px-3 py-1 rounded-full">⚙️ {isMarathi ? 'प्रक्रिया' : 'Processing'}</span>
+            <span className="text-slate-400">→</span>
+            <span className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1 rounded-full">✅ {isMarathi ? 'पूर्ण' : 'Completion'}</span>
           </div>
         </section>
 
@@ -317,39 +340,41 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                     key={cat.id}
                     type="button"
                     onClick={() => setSelectedCategory(cat.id)}
-                    className="group bg-white rounded-3xl border border-slate-200/90 p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4 relative overflow-hidden"
+                    className="group bg-white rounded-3xl border border-slate-200/90 p-6 md:p-7 text-left shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
                   >
                     {/* Gradient top accent */}
                     <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${cat.color} rounded-t-3xl`} />
 
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-md shrink-0`}>
-                      <Icon className="w-7 h-7 text-white" />
+                    <div className="space-y-4">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-md shrink-0`}>
+                        <Icon className="w-7 h-7 text-white" />
+                      </div>
+
+                      <div>
+                        <div className="text-2xl mb-1">{cat.emoji}</div>
+                        <h3 className="text-lg font-black text-slate-900 group-hover:text-primary transition-colors leading-snug mb-1">
+                          {isMarathi ? cat.labelMr : cat.labelEn}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                          {isMarathi ? cat.descMr : cat.descEn}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex-1">
-                      <div className="text-2xl mb-1">{cat.emoji}</div>
-                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-700 transition-colors leading-snug mb-1">
-                        {isMarathi ? cat.labelMr : cat.labelEn}
-                      </h3>
-                      <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                        {isMarathi ? cat.descMr : cat.descEn}
-                      </p>
-                    </div>
-
-                    <div className={`flex items-center gap-1.5 text-xs font-extrabold ${cat.textColor} ${cat.bgLight} px-3 py-1.5 rounded-xl self-start border ${cat.borderColor}`}>
+                    <div className={`flex items-center gap-1.5 text-xs font-black ${cat.textColor} ${cat.bgLight} px-4 py-2 rounded-xl self-start border ${cat.borderColor} mt-4`}>
                       <span>{isMarathi ? 'सेवा पहा' : 'View Services'}</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-4 h-4" />
                     </div>
                   </button>
                 );
               })}
             </div>
 
-            {/* Quick WhatsApp CTA */}
-            <div className="mt-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-white text-center sm:text-left">
-                <h3 className="text-lg font-extrabold">{isMarathi ? 'तात्काळ मदत हवी आहे?' : 'Need Immediate Assistance?'}</h3>
-                <p className="text-sm text-white/80 font-medium mt-0.5">
+            {/* Quick WhatsApp CTA Banner */}
+            <div className="mt-10 bg-slate-900 text-white rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
+              <div className="text-center sm:text-left space-y-1">
+                <h3 className="text-xl font-black text-white">{isMarathi ? 'तात्काळ मदत हवी आहे?' : 'Need Immediate Assistance?'}</h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium">
                   {isMarathi ? 'WhatsApp वर मेसेज करा — लगेच उत्तर मिळेल!' : 'WhatsApp us — we reply instantly!'}
                 </p>
               </div>
@@ -357,10 +382,10 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                 href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20need%20help%20with%20a%20service."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-white text-emerald-700 font-extrabold text-sm px-5 py-3 rounded-xl hover:bg-emerald-50 transition-colors shadow-sm shrink-0"
+                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm px-6 py-3.5 rounded-2xl transition-all shadow-md shrink-0 hover:scale-105"
               >
-                <MessageCircle className="w-5 h-5 text-emerald-600" />
-                {isMarathi ? 'WhatsApp करा' : 'WhatsApp Now'}
+                <MessageCircle className="w-5 h-5 text-white" />
+                <span>{isMarathi ? 'WhatsApp करा' : 'WhatsApp Now'}</span>
               </a>
             </div>
           </section>
@@ -372,15 +397,15 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
               <button
                 type="button"
                 onClick={() => { setSelectedCategory(null); setSearchQuery(''); setDetailService(null); }}
-                className="flex items-center gap-1.5 text-xs font-extrabold text-slate-600 hover:text-indigo-600 bg-white border border-slate-200 px-3 py-2 rounded-xl transition-colors shadow-sm"
+                className="flex items-center gap-1.5 text-xs font-black text-slate-700 hover:text-primary bg-white border border-slate-300 px-4 py-2.5 rounded-xl transition-all shadow-xs"
               >
                 <ChevronLeft className="w-4 h-4" />
-                {isMarathi ? 'सर्व सेवा' : 'All Services'}
+                <span>{isMarathi ? 'सर्व सेवा' : 'All Services'}</span>
               </button>
               {selectedCat && (
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{selectedCat.emoji}</span>
-                  <h2 className="text-lg font-extrabold text-slate-900">
+                  <h2 className="text-xl font-black text-slate-900">
                     {isMarathi ? selectedCat.labelMr : selectedCat.labelEn}
                   </h2>
                 </div>
@@ -395,7 +420,7 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder={isMarathi ? 'सेवेचे नाव शोधा...' : 'Search services...'}
-                className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                className="w-full pl-10 pr-10 py-3 bg-white border border-slate-300 rounded-2xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
               />
               {searchQuery && (
                 <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600">
@@ -406,22 +431,22 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
 
             {loading ? (
               <div className="text-center py-16">
-                <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4" />
+                <div className="w-10 h-10 border-4 border-rose-200 border-t-primary rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-sm font-bold text-slate-500">{isMarathi ? 'सेवा लोड होत आहे...' : 'Loading services...'}</p>
               </div>
             ) : filteredServices.length === 0 ? (
-              <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-3">
+              <div className="bg-white rounded-3xl border border-slate-200/90 p-12 text-center space-y-3 shadow-xs">
                 <FileText className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="text-base font-bold text-slate-700">
+                <h3 className="text-base font-black text-slate-900">
                   {isMarathi ? 'कोणतीही सेवा सापडली नाही' : 'No services found'}
                 </h3>
-                <p className="text-xs text-slate-500">{isMarathi ? 'वेगळा शब्द वापरून शोधा.' : 'Try a different search term.'}</p>
-                <button onClick={() => setSearchQuery('')} className="text-xs font-bold text-indigo-600 hover:underline">
+                <p className="text-xs text-slate-500 font-medium">{isMarathi ? 'वेगळा शब्द वापरून शोधा.' : 'Try a different search term.'}</p>
+                <button onClick={() => setSearchQuery('')} className="text-xs font-black text-primary hover:underline">
                   {isMarathi ? 'सर्व दाखवा' : 'Show All'}
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredServices.map(service => {
                   const title = isMarathi ? (service.titleMr || service.title_mr || service.titleEn) : (service.titleEn || service.title_en);
                   const overview = isMarathi ? (service.overviewMr || service.overview_mr || service.overviewEn) : (service.overviewEn || service.overview_en);
@@ -434,51 +459,51 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                   return (
                     <div
                       key={service.id || service.slug}
-                      className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                      className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
                     >
-                      <div className="space-y-3">
+                      <div className="space-y-3.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-primary bg-rose-50 px-3 py-1 rounded-full border border-rose-200/80">
                             {service.badge || (isMarathi ? 'शासकीय सेवा' : 'Service')}
                           </span>
                           {isClosed ? (
-                            <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg border border-rose-200 flex items-center gap-1">
+                            <span className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 flex items-center gap-1">
                               <AlertCircle className="w-3 h-3" /> {isMarathi ? 'बंद' : 'Closed'}
                             </span>
                           ) : (
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200 flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                               {isMarathi ? 'उपलब्ध' : 'Open'}
                             </span>
                           )}
                         </div>
 
-                        <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-700 transition-colors leading-snug">
+                        <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-primary transition-colors leading-snug">
                           {title}
                         </h3>
 
-                        <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">{overview}</p>
+                        <p className="text-xs sm:text-sm text-slate-600 font-medium line-clamp-2 leading-relaxed">{overview}</p>
 
                         {timeline && (
-                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1.5 rounded-xl border border-amber-200">
+                          <div className="flex items-center gap-1.5 text-xs font-black text-amber-800 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200/80">
                             <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                             <span>{isMarathi ? 'वेळ:' : 'Timeline:'} {timeline}</span>
                           </div>
                         )}
 
                         {docs.length > 0 && (
-                          <div className="pt-2 border-t border-slate-100">
-                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                              {isMarathi ? 'कागदपत्रे:' : 'Documents:'}
+                          <div className="pt-3 border-t border-slate-100">
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+                              {isMarathi ? 'आवश्यक कागदपत्रे:' : 'Required Documents:'}
                             </div>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1.5">
                               {docs.slice(0, 3).map((d, idx) => (
-                                <span key={idx} className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                                <span key={idx} className="text-[11px] font-bold text-slate-800 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-xl shadow-xs">
                                   ✓ {d}
                                 </span>
                               ))}
                               {docs.length > 3 && (
-                                <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                                <span className="text-[11px] font-bold text-primary bg-rose-50 px-2.5 py-1 rounded-xl border border-rose-200/80">
                                   +{docs.length - 3} {isMarathi ? 'अधिक' : 'more'}
                                 </span>
                               )}
@@ -487,10 +512,10 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                         )}
                       </div>
 
-                      <div className="pt-4 mt-3 border-t border-slate-100 flex flex-wrap sm:flex-nowrap gap-2">
+                      <div className="pt-4 mt-4 border-t border-slate-100 flex items-center gap-2">
                         <a
                           href="tel:+919552345061"
-                          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs px-3 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shrink-0"
+                          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs px-3 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 shadow-xs shrink-0"
                           title="Call Now: +91 95523 45061"
                         >
                           <Phone className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600/20" />
@@ -499,16 +524,16 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                         <button
                           type="button"
                           onClick={() => setDetailService(service)}
-                          className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs py-2.5 rounded-xl transition-colors"
+                          className="flex-1 bg-white text-slate-800 border border-slate-300 font-extrabold text-xs py-2.5 px-2.5 rounded-xl hover:bg-slate-50 transition-colors text-center"
                         >
-                          {isMarathi ? 'तपशील पहा' : 'View Details'}
+                          {isMarathi ? 'तपशील' : 'Details'}
                         </button>
                         <button
                           type="button"
                           onClick={() => openEnquiry(service)}
-                          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                          className="flex-1 bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-2.5 px-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-xs"
                         >
-                          <span>{isMarathi ? 'विनंती करा' : 'Request'}</span>
+                          <span>{isMarathi ? 'विनंती' : 'Request'}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                         {service.officialUrl && (
@@ -539,21 +564,21 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
         >
           <div className="w-full max-w-md bg-white h-full overflow-y-auto shadow-2xl animate-in slide-in-from-right duration-250">
             {/* Panel Header */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white sticky top-0 z-10">
+            <div className="bg-slate-900 p-6 text-white sticky top-0 z-10 border-b border-slate-800">
               <div className="flex justify-between items-start mb-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full">
+                <span className="text-[11px] font-black uppercase tracking-wider bg-rose-500/20 border border-rose-500/30 text-rose-300 px-3 py-1 rounded-full">
                   {detailService.badge || 'Service'}
                 </span>
-                <button onClick={() => setDetailService(null)} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                <button onClick={() => setDetailService(null)} className="p-1.5 hover:bg-white/10 rounded-xl transition-colors">
                   <X className="w-5 h-5 text-white" />
                 </button>
               </div>
-              <h2 className="text-xl font-extrabold mt-3 leading-snug">
+              <h2 className="text-xl font-black mt-3 leading-snug">
                 {isMarathi ? (detailService.titleMr || detailService.title_mr) : (detailService.titleEn || detailService.title_en)}
               </h2>
               <div className="flex items-center gap-2 mt-2">
-                <Clock className="w-4 h-4 text-white/70" />
-                <span className="text-sm font-bold text-white/80">
+                <Clock className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-black text-amber-300">
                   {isMarathi ? (detailService.timelineMr || detailService.timeline_mr) : (detailService.timelineEn || detailService.timeline_en)}
                 </span>
               </div>
@@ -562,7 +587,7 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
             <div className="p-6 space-y-6">
               {/* Overview */}
               <div>
-                <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider mb-2">
                   {isMarathi ? 'माहिती' : 'Overview'}
                 </h3>
                 <p className="text-sm font-medium text-slate-700 leading-relaxed">
@@ -577,14 +602,14 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                   : (detailService.requiredDocsEn || detailService.required_docs_en || []);
                 return docs.length > 0 ? (
                   <div>
-                    <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-3">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">
                       {isMarathi ? 'आवश्यक कागदपत्रे' : 'Required Documents'}
                     </h3>
                     <ul className="space-y-2">
                       {docs.map((doc, idx) => (
                         <li key={idx} className="flex items-start gap-2.5">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                          <span className="text-sm font-medium text-slate-700">{doc}</span>
+                          <span className="text-sm font-bold text-slate-800">{doc}</span>
                         </li>
                       ))}
                     </ul>
@@ -599,16 +624,16 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
                   : (detailService.stepsEn || detailService.steps_en || []);
                 return steps.length > 0 ? (
                   <div>
-                    <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-3">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">
                       {isMarathi ? 'प्रक्रिया पायऱ्या' : 'Process Steps'}
                     </h3>
                     <ol className="space-y-3">
                       {steps.map((step, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 font-extrabold text-xs flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded-full bg-rose-50 text-primary border border-rose-200 font-black text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
-                          <span className="text-sm font-medium text-slate-700 leading-snug">{step}</span>
+                          <span className="text-sm font-semibold text-slate-800 leading-snug">{step}</span>
                         </li>
                       ))}
                     </ol>
@@ -620,28 +645,29 @@ export default function ServicesPage({ lang = 'mr', onNavigate }) {
               <div className="space-y-3 pt-2">
                 <a
                   href="tel:+919552345061"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                   <Phone className="w-4 h-4 text-white fill-white/20" />
-                  {isMarathi ? '📞 थेट कॉल करा (Call Now)' : 'Call Now (+91 95523 45061)'}
+                  <span>{isMarathi ? '📞 थेट कॉल करा (Call Now)' : 'Call Now (+91 95523 45061)'}</span>
                 </a>
 
                 <button
                   type="button"
                   onClick={() => { openEnquiry(detailService); setDetailService(null); }}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+                  className="w-full bg-primary hover:bg-stitch-red-dark text-white font-black text-sm py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                   <Wrench className="w-4 h-4" />
-                  {isMarathi ? 'सेवा विनंती सादर करा' : 'Request This Service'}
+                  <span>{isMarathi ? 'सेवा विनंती सादर करा' : 'Request This Service'}</span>
                 </button>
+
                 <a
                   href={`https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20need%20help%20with%20${encodeURIComponent(isMarathi ? (detailService.titleMr || '') : (detailService.titleEn || ''))}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-extrabold text-sm py-3 rounded-xl transition-colors"
+                  className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-emerald-600 text-white font-extrabold text-sm py-3.5 rounded-2xl transition-colors"
                 >
-                  <MessageCircle className="w-4 h-4 text-emerald-600" />
-                  {isMarathi ? 'WhatsApp वर अर्ज करा' : 'Apply via WhatsApp'}
+                  <MessageCircle className="w-4 h-4 text-emerald-400" />
+                  <span>{isMarathi ? 'WhatsApp वर अर्ज करा' : 'Apply via WhatsApp'}</span>
                 </a>
               </div>
             </div>

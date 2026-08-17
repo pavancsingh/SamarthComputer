@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Share2, Video, Globe, PlayCircle } from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
 
 /**
  * SocialFeedSection Component
@@ -7,6 +8,14 @@ import { Share2, Video, Globe, PlayCircle } from 'lucide-react';
  */
 export default function SocialFeedSection({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
+  const [settings, setSettings] = useState(sharedStore.getSiteSettings());
+
+  useEffect(() => {
+    const unsub = sharedStore.subscribe(() => {
+      setSettings(sharedStore.getSiteSettings());
+    });
+    return () => unsub();
+  }, []);
 
   const reels = [
     {
@@ -47,13 +56,17 @@ export default function SocialFeedSection({ lang = 'mr' }) {
 
           <div className="flex items-center gap-2">
             <a
-              href="#"
+              href={settings?.socialInstagram || 'https://instagram.com/samarthcomputers'}
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-transform hover:scale-105"
             >
               Instagram Follow
             </a>
             <a
-              href="#"
+              href={settings?.socialYoutube || 'https://youtube.com/@samarthcomputers'}
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-transform hover:scale-105"
             >
               YouTube Channel

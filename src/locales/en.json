@@ -2,7 +2,7 @@
   "brand": {
     "name": "Samarth Computers",
     "location": "Khandala, Satara",
-    "tagline": "MKCL Authorized Computer Institute & CSC Government Online Services Center"
+    "tagline": "MKCL Authorized Computer Institute & MahaOnline CSC Government Services Center"
   },
   "nav": {
     "home": "Home",
@@ -11,7 +11,7 @@
     "govtServices": "Govt Services",
     "salesRepair": "Sales & Repair",
     "gallery": "Gallery",
-    "blog": "News & Blog",
+    "blog": "News & Updates",
     "about": "About Us",
     "contact": "Contact Us",
     "verifyCertificate": "Verify Certificate"
@@ -21,6 +21,17 @@
     "applyService": "Apply for Govt Service",
     "getEstimate": "Get Repair Estimate",
     "whatsAppHelp": "WhatsApp Instant Help",
-    "callNow": "Call Now"
+    "callNow": "Call Now",
+    "submitInquiry": "Submit Inquiry & Connect",
+    "exploreCourses": "Explore Courses",
+    "viewAllServices": "View All Online Services"
+  },
+  "messages": {
+    "loading": "Loading, please wait...",
+    "noCoursesFound": "No courses found matching your query.",
+    "noServicesFound": "No online services found matching your query.",
+    "submitSuccess": "Inquiry submitted successfully! Our representative will contact you shortly.",
+    "submitError": "Failed to submit inquiry. Please try again or call us directly.",
+    "networkError": "Network connection error. Please check your internet connection."
   }
 }

@@ -81,6 +81,17 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
+/* Marathi copy needs a Devanagari-capable face and more vertical breathing room. */
+:lang(mr), .marathi-text, .marathi-heading {
+  font-family: var(--font-marathi);
+}
+
+:lang(mr) h1, :lang(mr) h2, :lang(mr) h3, :lang(mr) h4, :lang(mr) h5, :lang(mr) h6 {
+  font-family: var(--font-marathi);
+  line-height: 1.42;
+  letter-spacing: 0.005em;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -91,6 +102,109 @@ button {
   border: none;
   background: none;
   font-family: inherit;
+}
+
+/* ─── Public home: premium editorial presentation ─────────────── */
+/* Kept deliberately scoped: this is a visual layer over the existing live
+   homepage components and does not affect admin, repositories, or routes. */
+.homepage-editorial {
+  --editorial-ink: #182433;
+  --editorial-muted: #607086;
+  --editorial-line: rgba(24, 36, 51, 0.12);
+  --editorial-paper: #fbfcff;
+  background:
+    radial-gradient(circle at 95% 4%, rgba(183, 0, 14, 0.075), transparent 23rem),
+    linear-gradient(180deg, #ffffff 0%, var(--editorial-paper) 100%);
+  color: var(--editorial-ink);
+}
+
+.homepage-editorial > section {
+  position: relative;
+}
+
+/* The page uses a calm editorial cadence: paper, pale blue, then white.
+   Individual component colors remain intact for their functional meanings. */
+.homepage-editorial > section:nth-child(4n + 1),
+.homepage-editorial > section:nth-child(4n + 4) {
+  background-color: #fff;
+}
+
+.homepage-editorial > section:nth-child(4n + 2) {
+  background-color: #f4f7fb;
+}
+
+.homepage-editorial > section:nth-child(4n + 3) {
+  background-color: #fbfcfe;
+}
+
+.homepage-editorial .rounded-3xl {
+  border-radius: 0.9rem;
+}
+
+.homepage-editorial .rounded-2xl {
+  border-radius: 0.65rem;
+}
+
+.homepage-editorial .shadow-stitch-md,
+.homepage-editorial .shadow-stitch-lg {
+  box-shadow: 0 16px 35px -25px rgba(24, 36, 51, 0.38);
+}
+
+.homepage-editorial .bg-white {
+  border-color: var(--editorial-line);
+}
+
+.homepage-editorial h2 {
+  letter-spacing: -0.035em;
+}
+
+.homepage-editorial .text-slate-500,
+.homepage-editorial .text-slate-600 {
+  color: var(--editorial-muted);
+}
+
+.homepage-editorial #home {
+  min-height: min(720px, calc(100vh - 6rem));
+}
+
+.homepage-editorial #home h1 {
+  color: var(--editorial-ink);
+  max-width: 13ch;
+}
+
+.homepage-editorial #home h1::first-line {
+  color: var(--primary);
+}
+
+.homepage-editorial #home > .grid {
+  padding-top: clamp(1rem, 3vw, 3rem);
+}
+
+.homepage-editorial #courses,
+.homepage-editorial #csc {
+  border-top: 1px solid var(--editorial-line);
+  border-bottom: 1px solid var(--editorial-line);
+}
+
+.homepage-editorial input:focus-visible,
+.homepage-editorial button:focus-visible,
+.homepage-editorial a:focus-visible {
+  outline: 3px solid rgba(183, 0, 14, 0.28);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .homepage-editorial #home {
+    min-height: auto;
+  }
+
+  .homepage-editorial #home h1 {
+    max-width: none;
+  }
+
+  .homepage-editorial .rounded-3xl {
+    border-radius: 0.75rem;
+  }
 }
 
 /* ─── Material Symbols ───────────────────────────────────────────── */
@@ -183,9 +297,18 @@ button {
 }
 
 /* ─── Marathi / Devanagari Text ──────────────────────────────────── */
-.marathi-text {
+.marathi-text, [lang="mr"] {
   font-family: var(--font-marathi);
-  line-height: 1.7;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
+
+h1.marathi-text, h2.marathi-text, h3.marathi-text, h4.marathi-text,
+.marathi-heading {
+  font-family: var(--font-marathi);
+  line-height: 1.42;
+  letter-spacing: 0.005em;
+  font-weight: 700;
 }
 
 /* ─── Utility: Hide Scrollbar (for chips) ────────────────────────── */

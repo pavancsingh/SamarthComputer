@@ -5,7 +5,7 @@ import { Star, CheckCircle2, ExternalLink } from 'lucide-react';
  * Reviews Component - Google Stitch Design
  * 4.9/5-star Google reviews feed widget with verified local student & customer reviews.
  */
-export default function Reviews({ lang = 'mr' }) {
+export default function Reviews({ lang = 'mr', embedded = false }) {
   const isMarathi = lang === 'mr';
 
   const reviews = [
@@ -32,8 +32,8 @@ export default function Reviews({ lang = 'mr' }) {
     }
   ];
 
-  return (
-    <section id="reviews" className="py-20 bg-white border-b border-slate-200/80">
+  const content = (
+    <div id="reviews" className={embedded ? 'mt-16 pt-16 border-t border-slate-200/80' : 'py-20 bg-white border-b border-slate-200/80'}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header with Rating Badge */}
@@ -95,7 +95,8 @@ export default function Reviews({ lang = 'mr' }) {
         </div>
 
       </div>
-    </section>
+    </div>
   );
-}
 
+  return embedded ? content : <section>{content}</section>;
+}

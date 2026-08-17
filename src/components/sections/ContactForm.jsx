@@ -117,9 +117,9 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="flex items-center justify-between border-b border-slate-700/80 pb-3.5">
                 <div>
                   <h3 className="font-black text-base text-white">
-                    IT Professional Lab (मुख्य शाखा)
+                    {isMarathi ? 'समर्थ कॉम्प्युटर्स (मुख्य शाखा)' : 'Samarth Computers (Main Branch)'}
                   </h3>
-                  <div className="text-[11px] text-slate-400 font-semibold">Main Branch • Khandala</div>
+                  <div className="text-[11px] text-slate-400 font-semibold">{isMarathi ? 'मुख्य शाखा • खंडाळा' : 'Main Branch • Khandala'}</div>
                 </div>
                 <span className="bg-stitch-amber/20 text-stitch-amber text-[10px] font-black px-3 py-1 rounded-full border border-stitch-amber/40 uppercase">
                   ALC: 13210399
@@ -129,7 +129,7 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="space-y-2.5 text-xs text-slate-300 font-medium">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-stitch-amber shrink-0 mt-0.5" />
-                  <span>Civil Court समोर, खंडाळा, जि. सातारा - ४१२८०२</span>
+                  <span>{isMarathi ? 'Civil Court समोर, खंडाळा, जि. सातारा - ४१२८०२' : 'Opp. Civil Court, Khandala, Dist. Satara - 412802'}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2 pt-1">
                   <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export default function ContactForm({ lang = 'mr' }) {
                     href="tel:+919552345061"
                     className="px-3 py-1 bg-stitch-amber text-slate-950 font-black text-[11px] rounded-lg shadow-sm hover:scale-105 transition-all"
                   >
-                    📞 Call Now
+                    📞 {isMarathi ? 'कॉल करा' : 'Call Now'}
                   </a>
                 </div>
               </div>
@@ -151,9 +151,9 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="flex items-center justify-between border-b border-red-400/30 pb-3.5">
                 <div>
                   <h3 className="font-black text-base text-white">
-                    Samarth Computers (शाखा क्र. २)
+                    {isMarathi ? 'समर्थ कॉम्प्युटर्स (शाखा क्र. २)' : 'Samarth Computers (Branch 2)'}
                   </h3>
-                  <div className="text-[11px] text-red-200 font-semibold">Branch 2 • Khandala</div>
+                  <div className="text-[11px] text-red-200 font-semibold">{isMarathi ? 'शाखा क्र. २ • खंडाळा' : 'Branch 2 • Khandala'}</div>
                 </div>
                 <span className="bg-white/20 text-white text-[10px] font-black px-3 py-1 rounded-full border border-white/30 uppercase">
                   ALC: 13210273
@@ -163,7 +163,7 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="space-y-2.5 text-xs text-red-100 font-medium">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
-                  <span>राजेंद्र विद्यालय जवळ, खंडाळा, जि. सातारा - ४१२८०२</span>
+                  <span>{isMarathi ? 'राजेंद्र विद्यालयाजवळ, खंडाळा, जि. सातारा - ४१२८०२' : 'Near Rajendra Vidhalya, Khandala, Dist. Satara - 412802'}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2 pt-1">
                   <div className="flex items-center gap-2">

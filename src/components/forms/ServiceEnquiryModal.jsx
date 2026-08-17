@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, CheckCircle, Phone, User, MessageSquare, Clock, Wrench } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, CheckCircle, Phone, User, MessageSquare, Clock, Wrench, Loader2 } from 'lucide-react';
 import { InquiryRepository } from '../../repositories/InquiryRepository';
 
 /**
@@ -23,6 +23,17 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen && !submitting) {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, submitting]);
+
   const PREFERRED_TIMES = [
     { value: 'morning', labelEn: 'Morning (9AM–12PM)', labelMr: 'सकाळ (९–१२)' },
     { value: 'afternoon', labelEn: 'Afternoon (12–4PM)', labelMr: 'दुपारी (१२–४)' },
@@ -37,15 +48,27 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim()) { setError(isMarathi ? 'कृपया आपले नाव टाका.' : 'Please enter your name.'); return; }
-    if (!form.mobile.trim() || form.mobile.length < 10) { setError(isMarathi ? 'कृपया वैध मोबाइल नंबर टाका.' : 'Please enter a valid mobile number.'); return; }
+    if (submitting) return; // Prevent double submission
+
+    const trimmedName = form.name.trim();
+    const cleanMobile = form.mobile.replace(/\D/g, '');
+
+    // 1. Validation Checks
+    if (!trimmedName) { 
+      setError(isMarathi ? 'कृपया आपले संपूर्ण नाव टाका.' : 'Please enter your full name.'); 
+      return; 
+    }
+    if (cleanMobile.length !== 10 || !/^[6-9]\d{9}$/.test(cleanMobile)) { 
+      setError(isMarathi ? 'कृपया १०-अंकी वैध मोबाईल नंबर टाका (उदा. 9876543210).' : 'Please enter a valid 10-digit mobile number starting with 6-9.'); 
+      return; 
+    }
 
     setSubmitting(true);
     setError('');
     try {
       const res = await InquiryRepository.submitServiceRequest({
-        name: form.name.trim(),
-        mobile: form.mobile.trim(),
+        name: trimmedName,
+        mobile: cleanMobile,
         serviceId: defaultService?.id || defaultService?.slug || '',
         serviceName: serviceTitle,
         notes: form.notes.trim(),
@@ -54,16 +77,18 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
       if (res && res.success) {
         setSubmitted(true);
       } else {
-        setError(isMarathi ? 'काही तांत्रिक अडचण आली. पुन्हा प्रयत्न करा.' : 'Submission failed. Please try again.');
+        setError(isMarathi ? 'काही तांत्रिक अडचण आली. कृपया पुन्हा प्रयत्न करा.' : 'Submission failed. Please check your network and try again.');
       }
-    } catch {
-      setError(isMarathi ? 'काही तांत्रिक अडचण आली. पुन्हा प्रयत्न करा.' : 'Submission failed. Please try again.');
+    } catch (err) {
+      console.error('[ServiceEnquiryModal] Error:', err);
+      setError(isMarathi ? 'काही तांत्रिक अडचण आली. कृपया पुन्हा प्रयत्न करा.' : 'Submission failed. Please check your network and try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleClose = () => {
+    if (submitting) return;
     setForm({ name: '', mobile: '', notes: '', preferredTime: 'anytime' });
     setSubmitted(false);
     setError('');
@@ -74,89 +99,103 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/70 backdrop-blur-sm overflow-y-auto"
       onClick={(e) => e.target === e.currentTarget && handleClose()}
+      role="dialog"
+      aria-modal="true"
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden my-auto animate-in zoom-in-95 duration-200 border border-slate-200">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white relative">
+        <div className="bg-slate-900 p-6 text-white relative border-b border-slate-800">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center">
-                <Wrench className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-rose-500/20 border border-rose-500/30 rounded-2xl flex items-center justify-center shrink-0">
+                <Wrench className="w-6 h-6 text-rose-400" />
               </div>
               <div>
-                <h2 className="text-lg font-extrabold leading-tight">
+                <h2 className="text-lg sm:text-xl font-black leading-tight text-white">
                   {isMarathi ? 'सेवा विनंती अर्ज' : 'Service Request'}
                 </h2>
-                <p className="text-xs text-white/80 font-medium mt-0.5">
+                <p className="text-xs text-slate-300 font-medium mt-0.5">
                   {isMarathi ? 'आम्ही २ तासात संपर्क करू.' : 'We will contact you within 2 hours.'}
                 </p>
               </div>
             </div>
-            <button type="button" onClick={handleClose} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+            <button 
+              type="button" 
+              onClick={handleClose} 
+              disabled={submitting}
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors disabled:opacity-50"
+              aria-label="Close modal"
+            >
               <X className="w-5 h-5 text-white" />
             </button>
           </div>
           {/* Workflow breadcrumb */}
-          <div className="flex items-center gap-1.5 mt-4 text-[11px] font-bold text-white/70">
-            <span className="bg-white/20 px-2 py-0.5 rounded-full">📋 {isMarathi ? 'विनंती' : 'Request'}</span>
+          <div className="flex items-center gap-1.5 mt-4 text-[11px] font-bold text-slate-400">
+            <span className="bg-white/10 px-2.5 py-0.5 rounded-full text-slate-200">📋 {isMarathi ? 'विनंती' : 'Request'}</span>
             <span>→</span>
-            <span className="bg-white/20 px-2 py-0.5 rounded-full">⚙️ {isMarathi ? 'प्रक्रिया' : 'Processing'}</span>
+            <span className="bg-white/10 px-2.5 py-0.5 rounded-full text-slate-200">⚙️ {isMarathi ? 'प्रक्रिया' : 'Processing'}</span>
             <span>→</span>
-            <span className="bg-white/20 px-2 py-0.5 rounded-full">✅ {isMarathi ? 'पूर्ण' : 'Completion'}</span>
+            <span className="bg-white/10 px-2.5 py-0.5 rounded-full text-slate-200">✅ {isMarathi ? 'पूर्ण' : 'Completion'}</span>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-6 md:p-8">
           {submitted ? (
             <div className="text-center py-6 space-y-4">
-              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-9 h-9 text-indigo-600" />
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
+                <CheckCircle className="w-9 h-9 text-emerald-600" />
               </div>
-              <div>
-                <h3 className="text-lg font-extrabold text-slate-900">
+              <div className="space-y-1">
+                <h3 className="text-xl font-black text-slate-900">
                   {isMarathi ? 'सेवा विनंती यशस्वी!' : 'Service Request Received!'}
                 </h3>
-                <p className="text-sm text-slate-500 font-medium mt-1">
+                <p className="text-xs sm:text-sm text-slate-600 font-medium">
                   {isMarathi
-                    ? 'आमचा प्रतिनिधी लवकरच तुमच्याशी संपर्क करेल. धन्यवाद!'
+                    ? 'आमचा प्रतिनिधी लवकरच तुमच्याशी संपर्क साधेल. धन्यवाद!'
                     : 'Our representative will contact you within 2 hours. Thank you!'}
                 </p>
               </div>
-              <a
-                href={`https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20need%20help%20with%20${encodeURIComponent(serviceTitle || 'a service')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
-              >
-                <span>💬</span>
-                {isMarathi ? 'WhatsApp वर संपर्क करा' : 'Chat on WhatsApp'}
-              </a>
-              <button onClick={handleClose} className="block w-full mt-2 text-sm text-slate-500 hover:text-slate-700 font-semibold">
-                {isMarathi ? 'बंद करा' : 'Close'}
-              </button>
+              <div className="pt-2 space-y-2">
+                <a
+                  href={`https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20need%20help%20with%20${encodeURIComponent(serviceTitle || 'a service')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm px-6 py-3.5 rounded-2xl transition-all shadow-md"
+                >
+                  <span>💬</span>
+                  <span>{isMarathi ? 'WhatsApp वर थेट बोला' : 'Chat on WhatsApp'}</span>
+                </a>
+                <button 
+                  type="button"
+                  onClick={handleClose} 
+                  className="w-full py-3 text-xs sm:text-sm text-slate-600 hover:text-slate-900 font-bold border border-slate-200 rounded-2xl transition-colors"
+                >
+                  {isMarathi ? 'बंद करा' : 'Close'}
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Selected Service Display */}
               {serviceTitle && (
-                <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 flex items-center gap-2">
-                  <Wrench className="w-4 h-4 text-indigo-600 shrink-0" />
+                <div className="bg-rose-50/60 border border-rose-200/80 rounded-2xl px-4 py-3 flex items-center gap-3">
+                  <Wrench className="w-4 h-4 text-primary shrink-0" />
                   <div>
-                    <div className="text-[10px] font-extrabold text-indigo-500 uppercase tracking-wider">
+                    <div className="text-[10px] font-black text-primary uppercase tracking-wider">
                       {isMarathi ? 'निवडलेली सेवा' : 'Selected Service'}
                     </div>
-                    <div className="text-sm font-bold text-indigo-800">{serviceTitle}</div>
+                    <div className="text-sm font-black text-slate-900">{serviceTitle}</div>
                   </div>
                 </div>
               )}
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                  <User className="w-3.5 h-3.5 inline mr-1 text-indigo-600" />
+                <label className="block text-xs font-black text-slate-800 mb-1.5">
+                  <User className="w-3.5 h-3.5 inline mr-1 text-primary" />
                   {isMarathi ? 'पूर्ण नाव *' : 'Full Name *'}
                 </label>
                 <input
@@ -164,31 +203,33 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
                   value={form.name}
                   onChange={e => handleChange('name', e.target.value)}
                   placeholder={isMarathi ? 'उदा. सुनीता शिंदे' : 'e.g. Sunita Shinde'}
-                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50"
+                  className="w-full border border-slate-300 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-slate-50/50"
                   required
+                  autoFocus
                 />
               </div>
 
               {/* Mobile */}
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                  <Phone className="w-3.5 h-3.5 inline mr-1 text-indigo-600" />
-                  {isMarathi ? 'मोबाइल नंबर *' : 'Mobile Number *'}
+                <label className="block text-xs font-black text-slate-800 mb-1.5">
+                  <Phone className="w-3.5 h-3.5 inline mr-1 text-primary" />
+                  {isMarathi ? 'मोबाइल नंबर (१० अंकी) *' : 'Mobile Number (10 Digits) *'}
                 </label>
                 <input
                   type="tel"
                   value={form.mobile}
                   onChange={e => handleChange('mobile', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  placeholder="+91 XXXXX XXXXX"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50"
+                  placeholder="9876543210"
+                  maxLength={10}
+                  className="w-full border border-slate-300 rounded-2xl px-4 py-3 text-sm font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-slate-50/50"
                   required
                 />
               </div>
 
               {/* Preferred Time */}
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                  <Clock className="w-3.5 h-3.5 inline mr-1 text-indigo-600" />
+                <label className="block text-xs font-black text-slate-800 mb-1.5">
+                  <Clock className="w-3.5 h-3.5 inline mr-1 text-primary" />
                   {isMarathi ? 'संपर्काची वेळ' : 'Preferred Contact Time'}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -197,10 +238,10 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
                       key={pt.value}
                       type="button"
                       onClick={() => handleChange('preferredTime', pt.value)}
-                      className={`text-xs font-bold px-3 py-2 rounded-lg border text-left transition-all ${
+                      className={`text-xs font-black px-3 py-2.5 rounded-xl border text-left transition-all ${
                         form.preferredTime === pt.value
-                          ? 'bg-indigo-600 text-white border-indigo-600'
-                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-indigo-300'
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400'
                       }`}
                     >
                       {isMarathi ? pt.labelMr : pt.labelEn}
@@ -211,7 +252,7 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
 
               {/* Notes (optional) */}
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
+                <label className="block text-xs font-black text-slate-800 mb-1.5">
                   <MessageSquare className="w-3.5 h-3.5 inline mr-1 text-slate-400" />
                   {isMarathi ? 'अतिरिक्त माहिती (ऐच्छिक)' : 'Additional Notes (Optional)'}
                 </label>
@@ -220,28 +261,35 @@ export default function ServiceEnquiryModal({ isOpen, onClose, defaultService = 
                   onChange={e => handleChange('notes', e.target.value)}
                   rows={2}
                   placeholder={isMarathi ? 'तुमच्या सेवेबद्दल अधिक माहिती द्या...' : 'Any additional details about your service request...'}
-                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 resize-none"
+                  className="w-full border border-slate-300 rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-slate-50/50 resize-none"
                 />
               </div>
 
               {error && (
-                <p className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
-                  ⚠️ {error}
-                </p>
+                <div className="text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-3.5 py-2.5 rounded-xl flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{error}</span>
+                </div>
               )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full bg-primary hover:bg-stitch-red-dark text-white font-black text-sm py-3.5 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {submitting ? (
-                  <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{isMarathi ? 'पाठवत आहे...' : 'Submitting...'}</>
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span>{isMarathi ? 'पाठवत आहे...' : 'Submitting...'}</span>
+                  </>
                 ) : (
-                  <><Wrench className="w-4 h-4" />{isMarathi ? 'सेवा विनंती सादर करा' : 'Submit Service Request'}</>
+                  <>
+                    <Wrench className="w-4 h-4 text-white" />
+                    <span>{isMarathi ? 'सेवा विनंती सादर करा' : 'Submit Service Request'}</span>
+                  </>
                 )}
               </button>
-              <p className="text-center text-[10px] text-slate-400 font-medium">
+              <p className="text-center text-[11px] text-slate-500 font-semibold">
                 🔒 {isMarathi ? 'तुमची माहिती पूर्णपणे सुरक्षित आहे.' : 'Your information is 100% secure and private.'}
               </p>
             </form>

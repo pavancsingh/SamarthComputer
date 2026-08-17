@@ -81,11 +81,12 @@ export const AdminRepository = {
       error = retry.error;
     }
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase fetch courses error:', error.message);
+    if (error) {
+      console.error('Supabase fetch courses error:', error.message);
       return sharedStore.getCourses();
     }
-    return data;
+    sharedStore.syncCoursesFromRemote(data || [], false);
+    return data || [];
   },
 
   async saveCourse(courseData) {
@@ -111,6 +112,8 @@ export const AdminRepository = {
       overview_en: courseData.overviewEn || courseData.overview_en,
       modules_mr: courseData.modulesMr || courseData.modules_mr || [],
       modules_en: courseData.modulesEn || courseData.modules_en || [],
+      practical_skills_mr: courseData.practicalSkillsMr || courseData.practical_skills_mr || [],
+      practical_skills_en: courseData.practicalSkillsEn || courseData.practical_skills_en || [],
       careers_mr: courseData.careersMr || courseData.careers_mr || [],
       careers_en: courseData.careersEn || courseData.careers_en || [],
       image_url: courseData.imageUrl || courseData.image_url || null
@@ -170,11 +173,12 @@ export const AdminRepository = {
       error = retry.error;
     }
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase fetch CSC error:', error.message);
+    if (error) {
+      console.error('Supabase fetch CSC error:', error.message);
       return sharedStore.getCSCServices();
     }
-    return data;
+    sharedStore.syncCSCServicesFromRemote(data || [], false);
+    return data || [];
   },
 
   async saveCSCService(serviceData) {
@@ -249,11 +253,12 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase fetch Govt services error:', error.message);
+    if (error) {
+      console.error('Supabase fetch Govt services error:', error.message);
       return sharedStore.getGovtServices();
     }
-    return data;
+    sharedStore.syncGovtServicesFromRemote(data || [], false);
+    return data || [];
   },
 
   async saveGovtService(serviceData) {
@@ -271,8 +276,8 @@ export const AdminRepository = {
       govt_fee_en: serviceData.govtFeeEn || serviceData.govt_fee_en,
       overview_mr: serviceData.overviewMr || serviceData.overview_mr || serviceData.overviewEn,
       overview_en: serviceData.overviewEn || serviceData.overview_en,
-      required_docs_mr: serviceData.requiredDocsMr || serviceData.required_docs_mr || serviceData.requirementsMr || serviceData.requirements_mr || [],
-      required_docs_en: serviceData.requiredDocsEn || serviceData.required_docs_en || serviceData.requirementsEn || serviceData.requirements_en || [],
+      required_docs_mr: serviceData.requiredDocsMr || serviceData.required_docs_mr || [],
+      required_docs_en: serviceData.requiredDocsEn || serviceData.required_docs_en || [],
       steps_mr: serviceData.stepsMr || serviceData.steps_mr || [],
       steps_en: serviceData.stepsEn || serviceData.steps_en || [],
       image_url: serviceData.imageUrl || serviceData.image_url || null
@@ -322,11 +327,12 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase fetch inquiries error:', error.message);
+    if (error) {
+      console.error('Supabase fetch inquiries error:', error.message);
       return sharedStore.getInquiries();
     }
-    return data;
+    sharedStore.syncInquiriesFromRemote(data || []);
+    return data || [];
   },
 
   async saveInquiry(inquiryData) {
@@ -373,11 +379,12 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase gallery fetch error:', error.message);
+    if (error) {
+      console.error('Supabase gallery fetch error:', error.message);
       return sharedStore.getSiteGallery();
     }
-    return data;
+    sharedStore.syncGalleryFromRemote(data || []);
+    return data || [];
   },
 
   async saveSiteGalleryItem(itemData) {
@@ -569,11 +576,12 @@ export const AdminRepository = {
       }
     }
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase batch fetch error:', error.message);
+    if (error) {
+      console.error('Supabase batch fetch error:', error.message);
       return sharedStore.getBatches();
     }
-    return data;
+    sharedStore.syncBatchesFromRemote(data || []);
+    return data || [];
   },
 
   async saveBatchItem(itemData) {
@@ -629,12 +637,13 @@ export const AdminRepository = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase news fetch error:', error.message);
+    if (error) {
+      console.error('Supabase news fetch error:', error.message);
       return sharedStore.getNews();
     }
+    sharedStore.syncNewsFromRemote(data || []);
 
-    return data.map((item) => ({
+    return (data || []).map((item) => ({
       ...item,
       titleEn: item.titleEn || item.title_en || '',
       titleMr: item.titleMr || item.title_mr || item.titleEn || item.title_en || '',
@@ -715,142 +724,101 @@ export const AdminRepository = {
   async getSiteSettings() {
     const defaultSettings = sharedStore.getSiteSettings();
     try {
-      const [
-        brandingRes,
-        homeRes,
-        aboutRes,
-        contactRes,
-        infoRes,
-        seoRes,
-        socialRes,
-        footerRes
-      ] = await Promise.all([
-        supabase.from('branding_settings').select('*').eq('id', 'main_branding').maybeSingle(),
-        supabase.from('home_settings').select('*').eq('id', 'main_home').maybeSingle(),
-        supabase.from('about_settings').select('*').eq('id', 'main_about').maybeSingle(),
-        supabase.from('contact_settings').select('*').eq('id', 'main_contact').maybeSingle(),
-        supabase.from('site_information').select('*').eq('id', 'main_info').maybeSingle(),
-        supabase.from('seo_settings').select('*').eq('id', 'main_seo').maybeSingle(),
-        supabase.from('social_links').select('*').eq('id', 'main_social').maybeSingle(),
-        supabase.from('footer_settings').select('*').eq('id', 'main_footer').maybeSingle()
-      ]);
-
-      const branding = brandingRes.data || {};
-      const home = homeRes.data || {};
-      const about = aboutRes.data || {};
-      const contact = contactRes.data || {};
-      const info = infoRes.data || {};
-      const seo = seoRes.data || {};
-      const social = socialRes.data || {};
-      const footer = footerRes.data || {};
-
-      // If new tables empty, fallback to legacy site_settings row
-      if (!brandingRes.data && !homeRes.data) {
-        const { data: legacy } = await supabase.from('site_settings').select('*').eq('id', 'main_settings').maybeSingle();
-        if (legacy) {
-          return {
-            ...defaultSettings,
-            logoUrl: legacy.logo_url || defaultSettings.logoUrl,
-            heroBgUrl: legacy.hero_bg_url || defaultSettings.heroBgUrl,
-            heroTitleMr: legacy.hero_title_mr || defaultSettings.heroTitleMr,
-            heroTitleEn: legacy.hero_title_en || defaultSettings.heroTitleEn,
-            heroSubtitleMr: legacy.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
-            heroSubtitleEn: legacy.hero_subtitle_en || defaultSettings.heroSubtitleEn,
-            heroBadgeMr: legacy.hero_badge_mr || defaultSettings.heroBadgeMr,
-            heroBadgeEn: legacy.hero_badge_en || defaultSettings.heroBadgeEn,
-            heroCtaTextMr: legacy.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
-            heroCtaTextEn: legacy.hero_cta_text_en || defaultSettings.heroCtaTextEn,
-            heroCtaDest: legacy.hero_cta_dest || defaultSettings.heroCtaDest,
-            contactPhone: legacy.contact_phone || defaultSettings.contactPhone,
-            contactWhatsapp: legacy.contact_whatsapp || defaultSettings.contactWhatsapp,
-            contactEmail: legacy.contact_email || defaultSettings.contactEmail,
-            contactAddressMr: legacy.contact_address_mr || defaultSettings.contactAddressMr,
-            contactAddressEn: legacy.contact_address_en || defaultSettings.contactAddressEn,
-            contactHoursMr: legacy.contact_hours_mr || defaultSettings.contactHoursMr,
-            contactHoursEn: legacy.contact_hours_en || defaultSettings.contactHoursEn,
-            contactMapUrl: legacy.contact_map_url || defaultSettings.contactMapUrl,
-            callCtaPhone: legacy.call_cta_phone || defaultSettings.callCtaPhone,
-            callCtaTextMr: legacy.call_cta_text_mr || defaultSettings.callCtaTextMr,
-            callCtaTextEn: legacy.call_cta_text_en || defaultSettings.callCtaTextEn,
-            aboutHeadingMr: legacy.about_heading_mr || defaultSettings.aboutHeadingMr,
-            aboutHeadingEn: legacy.about_heading_en || defaultSettings.aboutHeadingEn,
-            aboutDescMr: legacy.about_desc_mr || defaultSettings.aboutDescMr,
-            aboutDescEn: legacy.about_desc_en || defaultSettings.aboutDescEn,
-            aboutImageUrl: legacy.about_image_url || defaultSettings.aboutImageUrl,
-            aboutMissionMr: legacy.about_mission_mr || defaultSettings.aboutMissionMr,
-            aboutMissionEn: legacy.about_mission_en || defaultSettings.aboutMissionEn,
-            aboutVisionMr: legacy.about_vision_mr || defaultSettings.aboutVisionMr,
-            aboutVisionEn: legacy.about_vision_en || defaultSettings.aboutVisionEn,
-            aboutValues: legacy.about_values || defaultSettings.aboutValues,
-            aboutTimeline: legacy.about_timeline || defaultSettings.aboutTimeline,
-            homeSections: legacy.home_sections && Object.keys(legacy.home_sections).length > 0 ? legacy.home_sections : defaultSettings.homeSections,
-            whyChooseUs: legacy.why_choose_us || defaultSettings.whyChooseUs,
-            navSettings: legacy.nav_settings || defaultSettings.navSettings,
-            siteTitleMr: legacy.site_title_mr || defaultSettings.siteTitleMr,
-            siteTitleEn: legacy.site_title_en || defaultSettings.siteTitleEn,
-            alcCode: legacy.alc_code || defaultSettings.alcCode,
-            cscId: legacy.csc_id || defaultSettings.cscId,
-            seoTitle: legacy.seo_title || defaultSettings.seoTitle,
-            seoDescription: legacy.seo_description || defaultSettings.seoDescription,
-            seoKeywords: legacy.seo_keywords || defaultSettings.seoKeywords,
-            socialFacebook: legacy.social_facebook || defaultSettings.socialFacebook,
-            socialInstagram: legacy.social_instagram || defaultSettings.socialInstagram,
-            socialYoutube: legacy.social_youtube || defaultSettings.socialYoutube,
-            footerTagline: legacy.footer_tagline || defaultSettings.footerTagline,
-            copyrightText: legacy.copyright_text || defaultSettings.copyrightText
-          };
-        }
+      const { data: rows, error } = await supabase.from('site_settings').select('*');
+      if (error || !rows || rows.length === 0) {
+        if (error) console.warn('[AdminRepository] site_settings fetch notice:', error.message);
+        return defaultSettings;
       }
+
+      const rowsMap = {};
+      rows.forEach((r) => {
+        if (r && r.id) {
+          rowsMap[r.id] = r;
+        }
+      });
+
+      const legacy = rowsMap['main_settings'] || {};
+      const branding = rowsMap['branding'] || {};
+      const home = rowsMap['home'] || {};
+      const about = rowsMap['about'] || {};
+      const contact = rowsMap['contact'] || {};
+      const seo = rowsMap['seo'] || {};
+      const social = rowsMap['social'] || {};
+      const footer = rowsMap['footer'] || {};
+
+      const getVal = (groupObj, key, legacyObj, defaultVal) => {
+        if (groupObj && groupObj[key] !== undefined && groupObj[key] !== null) {
+          return groupObj[key];
+        }
+        if (legacyObj && legacyObj[key] !== undefined && legacyObj[key] !== null) {
+          return legacyObj[key];
+        }
+        return defaultVal !== undefined ? defaultVal : '';
+      };
 
       const mergedSettings = {
         ...defaultSettings,
-        logoUrl: branding.logo_url || defaultSettings.logoUrl,
-        heroBgUrl: branding.hero_bg_url || defaultSettings.heroBgUrl,
-        heroTitleMr: home.hero_title_mr || defaultSettings.heroTitleMr,
-        heroTitleEn: home.hero_title_en || defaultSettings.heroTitleEn,
-        heroSubtitleMr: home.hero_subtitle_mr || defaultSettings.heroSubtitleMr,
-        heroSubtitleEn: home.hero_subtitle_en || defaultSettings.heroSubtitleEn,
-        heroBadgeMr: home.hero_badge_mr || defaultSettings.heroBadgeMr,
-        heroBadgeEn: home.hero_badge_en || defaultSettings.heroBadgeEn,
-        heroCtaTextMr: home.hero_cta_text_mr || defaultSettings.heroCtaTextMr,
-        heroCtaTextEn: home.hero_cta_text_en || defaultSettings.heroCtaTextEn,
-        heroCtaDest: home.hero_cta_dest || defaultSettings.heroCtaDest,
-        homeSections: home.home_sections && Object.keys(home.home_sections).length > 0 ? home.home_sections : defaultSettings.homeSections,
-        whyChooseUs: home.why_choose_us || defaultSettings.whyChooseUs,
-        aboutHeadingMr: about.about_heading_mr || defaultSettings.aboutHeadingMr,
-        aboutHeadingEn: about.about_heading_en || defaultSettings.aboutHeadingEn,
-        aboutDescMr: about.about_desc_mr || defaultSettings.aboutDescMr,
-        aboutDescEn: about.about_desc_en || defaultSettings.aboutDescEn,
-        aboutImageUrl: about.about_image_url || defaultSettings.aboutImageUrl,
-        aboutMissionMr: about.about_mission_mr || defaultSettings.aboutMissionMr,
-        aboutMissionEn: about.about_mission_en || defaultSettings.aboutMissionEn,
-        aboutVisionMr: about.about_vision_mr || defaultSettings.aboutVisionMr,
-        aboutVisionEn: about.about_vision_en || defaultSettings.aboutVisionEn,
-        aboutValues: about.about_values || defaultSettings.aboutValues,
-        aboutTimeline: about.about_timeline || defaultSettings.aboutTimeline,
-        contactPhone: contact.contact_phone || defaultSettings.contactPhone,
-        contactWhatsapp: contact.contact_whatsapp || defaultSettings.contactWhatsapp,
-        contactEmail: contact.contact_email || defaultSettings.contactEmail,
-        contactAddressMr: contact.contact_address_mr || defaultSettings.contactAddressMr,
-        contactAddressEn: contact.contact_address_en || defaultSettings.contactAddressEn,
-        contactHoursMr: contact.contact_hours_mr || defaultSettings.contactHoursMr,
-        contactHoursEn: contact.contact_hours_en || defaultSettings.contactHoursEn,
-        contactMapUrl: contact.contact_map_url || defaultSettings.contactMapUrl,
-        callCtaPhone: contact.call_cta_phone || defaultSettings.callCtaPhone,
-        callCtaTextMr: contact.call_cta_text_mr || defaultSettings.callCtaTextMr,
-        callCtaTextEn: contact.call_cta_text_en || defaultSettings.callCtaTextEn,
-        siteTitleMr: info.site_title_mr || defaultSettings.siteTitleMr,
-        siteTitleEn: info.site_title_en || defaultSettings.siteTitleEn,
-        alcCode: info.alc_code || defaultSettings.alcCode,
-        cscId: info.csc_id || defaultSettings.cscId,
-        seoTitle: seo.seo_title || defaultSettings.seoTitle,
-        seoDescription: seo.seo_description || defaultSettings.seoDescription,
-        seoKeywords: seo.seo_keywords || defaultSettings.seoKeywords,
-        socialFacebook: social.social_facebook || defaultSettings.socialFacebook,
-        socialInstagram: social.social_instagram || defaultSettings.socialInstagram,
-        socialYoutube: social.social_youtube || defaultSettings.socialYoutube,
-        footerTagline: footer.footer_tagline || defaultSettings.footerTagline,
-        copyrightText: footer.copyright_text || defaultSettings.copyrightText
+        // 1. Branding
+        logoUrl: getVal(branding, 'logo_url', legacy, defaultSettings.logoUrl),
+        heroBgUrl: getVal(branding, 'hero_bg_url', legacy, defaultSettings.heroBgUrl),
+        siteTitleMr: getVal(branding, 'site_title_mr', legacy, defaultSettings.siteTitleMr),
+        siteTitleEn: getVal(branding, 'site_title_en', legacy, defaultSettings.siteTitleEn),
+        alcCode: getVal(branding, 'alc_code', legacy, defaultSettings.alcCode),
+        cscId: getVal(branding, 'csc_id', legacy, defaultSettings.cscId),
+
+        // 2. Home
+        heroTitleMr: getVal(home, 'hero_title_mr', legacy, defaultSettings.heroTitleMr),
+        heroTitleEn: getVal(home, 'hero_title_en', legacy, defaultSettings.heroTitleEn),
+        heroSubtitleMr: getVal(home, 'hero_subtitle_mr', legacy, defaultSettings.heroSubtitleMr),
+        heroSubtitleEn: getVal(home, 'hero_subtitle_en', legacy, defaultSettings.heroSubtitleEn),
+        heroBadgeMr: getVal(home, 'hero_badge_mr', legacy, defaultSettings.heroBadgeMr),
+        heroBadgeEn: getVal(home, 'hero_badge_en', legacy, defaultSettings.heroBadgeEn),
+        heroCtaTextMr: getVal(home, 'hero_cta_text_mr', legacy, defaultSettings.heroCtaTextMr),
+        heroCtaTextEn: getVal(home, 'hero_cta_text_en', legacy, defaultSettings.heroCtaTextEn),
+        heroCtaDest: getVal(home, 'hero_cta_dest', legacy, defaultSettings.heroCtaDest),
+        homeSections: getVal(home, 'home_sections', legacy, defaultSettings.homeSections),
+        whyChooseUs: getVal(home, 'why_choose_us', legacy, defaultSettings.whyChooseUs),
+        navSettings: getVal(home, 'nav_settings', legacy, defaultSettings.navSettings),
+
+        // 3. About
+        aboutHeadingMr: getVal(about, 'about_heading_mr', legacy, defaultSettings.aboutHeadingMr),
+        aboutHeadingEn: getVal(about, 'about_heading_en', legacy, defaultSettings.aboutHeadingEn),
+        aboutDescMr: getVal(about, 'about_desc_mr', legacy, defaultSettings.aboutDescMr),
+        aboutDescEn: getVal(about, 'about_desc_en', legacy, defaultSettings.aboutDescEn),
+        aboutImageUrl: getVal(about, 'about_image_url', legacy, defaultSettings.aboutImageUrl),
+        aboutMissionMr: getVal(about, 'about_mission_mr', legacy, defaultSettings.aboutMissionMr),
+        aboutMissionEn: getVal(about, 'about_mission_en', legacy, defaultSettings.aboutMissionEn),
+        aboutVisionMr: getVal(about, 'about_vision_mr', legacy, defaultSettings.aboutVisionMr),
+        aboutVisionEn: getVal(about, 'about_vision_en', legacy, defaultSettings.aboutVisionEn),
+        aboutValues: getVal(about, 'about_values', legacy, defaultSettings.aboutValues),
+        aboutTimeline: getVal(about, 'about_timeline', legacy, defaultSettings.aboutTimeline),
+
+        // 4. Contact
+        contactPhone: getVal(contact, 'contact_phone', legacy, defaultSettings.contactPhone),
+        contactWhatsapp: getVal(contact, 'contact_whatsapp', legacy, defaultSettings.contactWhatsapp),
+        contactEmail: getVal(contact, 'contact_email', legacy, defaultSettings.contactEmail),
+        contactAddressMr: getVal(contact, 'contact_address_mr', legacy, defaultSettings.contactAddressMr),
+        contactAddressEn: getVal(contact, 'contact_address_en', legacy, defaultSettings.contactAddressEn),
+        contactHoursMr: getVal(contact, 'contact_hours_mr', legacy, defaultSettings.contactHoursMr),
+        contactHoursEn: getVal(contact, 'contact_hours_en', legacy, defaultSettings.contactHoursEn),
+        contactMapUrl: getVal(contact, 'contact_map_url', legacy, defaultSettings.contactMapUrl),
+        callCtaPhone: getVal(contact, 'call_cta_phone', legacy, defaultSettings.callCtaPhone),
+        callCtaTextMr: getVal(contact, 'call_cta_text_mr', legacy, defaultSettings.callCtaTextMr),
+        callCtaTextEn: getVal(contact, 'call_cta_text_en', legacy, defaultSettings.callCtaTextEn),
+
+        // 5. SEO
+        seoTitle: getVal(seo, 'seo_title', legacy, defaultSettings.seoTitle),
+        seoDescription: getVal(seo, 'seo_description', legacy, defaultSettings.seoDescription),
+        seoKeywords: getVal(seo, 'seo_keywords', legacy, defaultSettings.seoKeywords),
+
+        // 6. Social
+        socialFacebook: getVal(social, 'social_facebook', legacy, defaultSettings.socialFacebook),
+        socialInstagram: getVal(social, 'social_instagram', legacy, defaultSettings.socialInstagram),
+        socialYoutube: getVal(social, 'social_youtube', legacy, defaultSettings.socialYoutube),
+
+        // 7. Footer
+        footerTagline: getVal(footer, 'footer_tagline', legacy, defaultSettings.footerTagline),
+        copyrightText: getVal(footer, 'copyright_text', legacy, defaultSettings.copyrightText)
       };
 
       sharedStore.saveSiteSettings(mergedSettings);
@@ -863,99 +831,87 @@ export const AdminRepository = {
 
   async saveSiteSettings(settings) {
     try {
-      const promises = [
-        // 1. Branding Settings
-        supabase.from('branding_settings').upsert({
-          id: 'main_branding',
-          logo_url: settings.logoUrl || null,
-          hero_bg_url: settings.heroBgUrl || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 2. Home Settings
-        supabase.from('home_settings').upsert({
-          id: 'main_home',
-          hero_title_mr: settings.heroTitleMr || null,
-          hero_title_en: settings.heroTitleEn || null,
-          hero_subtitle_mr: settings.heroSubtitleMr || null,
-          hero_subtitle_en: settings.heroSubtitleEn || null,
-          hero_badge_mr: settings.heroBadgeMr || null,
-          hero_badge_en: settings.heroBadgeEn || null,
-          hero_cta_text_mr: settings.heroCtaTextMr || null,
-          hero_cta_text_en: settings.heroCtaTextEn || null,
+      const groupRecords = [
+        // 1. Branding group
+        {
+          id: 'branding',
+          logo_url: settings.logoUrl ?? '',
+          hero_bg_url: settings.heroBgUrl ?? '',
+          site_title_mr: settings.siteTitleMr ?? '',
+          site_title_en: settings.siteTitleEn ?? '',
+          alc_code: settings.alcCode ?? '',
+          csc_id: settings.cscId ?? ''
+        },
+        // 2. Home group
+        {
+          id: 'home',
+          hero_title_mr: settings.heroTitleMr ?? '',
+          hero_title_en: settings.heroTitleEn ?? '',
+          hero_subtitle_mr: settings.heroSubtitleMr ?? '',
+          hero_subtitle_en: settings.heroSubtitleEn ?? '',
+          hero_badge_mr: settings.heroBadgeMr ?? '',
+          hero_badge_en: settings.heroBadgeEn ?? '',
+          hero_cta_text_mr: settings.heroCtaTextMr ?? '',
+          hero_cta_text_en: settings.heroCtaTextEn ?? '',
           hero_cta_dest: settings.heroCtaDest || 'courses',
           home_sections: settings.homeSections || {},
           why_choose_us: settings.whyChooseUs || [],
-          updated_at: new Date().toISOString()
-        }),
-        // 3. About Settings
-        supabase.from('about_settings').upsert({
-          id: 'main_about',
-          about_heading_mr: settings.aboutHeadingMr || null,
-          about_heading_en: settings.aboutHeadingEn || null,
-          about_desc_mr: settings.aboutDescMr || null,
-          about_desc_en: settings.aboutDescEn || null,
-          about_image_url: settings.aboutImageUrl || null,
-          about_mission_mr: settings.aboutMissionMr || null,
-          about_mission_en: settings.aboutMissionEn || null,
-          about_vision_mr: settings.aboutVisionMr || null,
-          about_vision_en: settings.aboutVisionEn || null,
+          nav_settings: settings.navSettings || []
+        },
+        // 3. About group
+        {
+          id: 'about',
+          about_heading_mr: settings.aboutHeadingMr ?? '',
+          about_heading_en: settings.aboutHeadingEn ?? '',
+          about_desc_mr: settings.aboutDescMr ?? '',
+          about_desc_en: settings.aboutDescEn ?? '',
+          about_image_url: settings.aboutImageUrl ?? '',
+          about_mission_mr: settings.aboutMissionMr ?? '',
+          about_mission_en: settings.aboutMissionEn ?? '',
+          about_vision_mr: settings.aboutVisionMr ?? '',
+          about_vision_en: settings.aboutVisionEn ?? '',
           about_values: settings.aboutValues || [],
-          about_timeline: settings.aboutTimeline || [],
-          updated_at: new Date().toISOString()
-        }),
-        // 4. Contact Settings
-        supabase.from('contact_settings').upsert({
-          id: 'main_contact',
-          contact_phone: settings.contactPhone || null,
-          contact_whatsapp: settings.contactWhatsapp || null,
-          contact_email: settings.contactEmail || null,
-          contact_address_mr: settings.contactAddressMr || null,
-          contact_address_en: settings.contactAddressEn || null,
-          contact_hours_mr: settings.contactHoursMr || null,
-          contact_hours_en: settings.contactHoursEn || null,
-          contact_map_url: settings.contactMapUrl || null,
-          call_cta_phone: settings.callCtaPhone || null,
-          call_cta_text_mr: settings.callCtaTextMr || null,
-          call_cta_text_en: settings.callCtaTextEn || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 5. Site Information
-        supabase.from('site_information').upsert({
-          id: 'main_info',
-          site_title_mr: settings.siteTitleMr || null,
-          site_title_en: settings.siteTitleEn || null,
-          alc_code: settings.alcCode || null,
-          csc_id: settings.cscId || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 6. SEO Settings
-        supabase.from('seo_settings').upsert({
-          id: 'main_seo',
-          seo_title: settings.seoTitle || null,
-          seo_description: settings.seoDescription || null,
-          seo_keywords: settings.seoKeywords || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 7. Social Links
-        supabase.from('social_links').upsert({
-          id: 'main_social',
-          social_facebook: settings.socialFacebook || null,
-          social_instagram: settings.socialInstagram || null,
-          social_youtube: settings.socialYoutube || null,
-          social_whatsapp: settings.contactWhatsapp || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 8. Footer Settings
-        supabase.from('footer_settings').upsert({
-          id: 'main_footer',
-          footer_tagline: settings.footerTagline || null,
-          copyright_text: settings.copyrightText || null,
-          updated_at: new Date().toISOString()
-        }),
-        // 9. Legacy site_settings table backup (Zero Data Loss)
-        supabase.from('site_settings').upsert({
+          about_timeline: settings.aboutTimeline || []
+        },
+        // 4. Contact group
+        {
+          id: 'contact',
+          contact_phone: settings.contactPhone ?? '',
+          contact_whatsapp: settings.contactWhatsapp ?? '',
+          contact_email: settings.contactEmail ?? '',
+          contact_address_mr: settings.contactAddressMr ?? '',
+          contact_address_en: settings.contactAddressEn ?? '',
+          contact_hours_mr: settings.contactHoursMr ?? '',
+          contact_hours_en: settings.contactHoursEn ?? '',
+          contact_map_url: settings.contactMapUrl ?? '',
+          call_cta_phone: settings.callCtaPhone ?? '',
+          call_cta_text_mr: settings.callCtaTextMr ?? '',
+          call_cta_text_en: settings.callCtaTextEn ?? ''
+        },
+        // 5. SEO group
+        {
+          id: 'seo',
+          seo_title: settings.seoTitle ?? '',
+          seo_description: settings.seoDescription ?? '',
+          seo_keywords: settings.seoKeywords ?? ''
+        },
+        // 6. Social group
+        {
+          id: 'social',
+          social_facebook: settings.socialFacebook ?? '',
+          social_instagram: settings.socialInstagram ?? '',
+          social_youtube: settings.socialYoutube ?? ''
+        },
+        // 7. Footer group
+        {
+          id: 'footer',
+          footer_tagline: settings.footerTagline ?? '',
+          copyright_text: settings.copyrightText ?? ''
+        },
+        // 8. Legacy main_settings row (Backward Compatibility)
+        {
           id: 'main_settings',
-          logo_url: settings.logoUrl || null,
+          logo_url: settings.logoUrl ?? '',
           hero_bg_url: settings.heroBgUrl || null,
           hero_title_mr: settings.heroTitleMr || null,
           hero_title_en: settings.heroTitleEn || null,
@@ -998,18 +954,17 @@ export const AdminRepository = {
           seo_title: settings.seoTitle || null,
           seo_description: settings.seoDescription || null,
           seo_keywords: settings.seoKeywords || null,
-          social_facebook: settings.socialFacebook || null,
-          social_instagram: settings.socialInstagram || null,
-          social_youtube: settings.socialYoutube || null,
+          social_facebook: settings.socialFacebook !== undefined ? settings.socialFacebook : '',
+          social_instagram: settings.socialInstagram !== undefined ? settings.socialInstagram : '',
+          social_youtube: settings.socialYoutube !== undefined ? settings.socialYoutube : '',
           footer_tagline: settings.footerTagline || null,
           copyright_text: settings.copyrightText || null
-        })
+        }
       ];
 
-      const results = await Promise.allSettled(promises);
-      const errors = results.filter(r => r.status === 'rejected' || (r.value && r.value.error));
-      if (errors.length > 0) {
-        console.warn('[AdminRepository] Some site_settings upserts had notices:', errors);
+      const { data, error } = await supabase.from('site_settings').upsert(groupRecords);
+      if (error) {
+        console.warn('[AdminRepository] site_settings group upsert notice:', error.message);
       }
       sharedStore.saveSiteSettings(settings);
       return { success: true, data: settings };

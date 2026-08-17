@@ -9,6 +9,9 @@ import { sharedStore } from './sharedStore';
  * Data Access Layer for computer training courses with direct Supabase DB integration.
  * Uses Supabase as single source of truth and auto-populates missing courses safely (no duplicates).
  */
+// In-flight deduplication cache
+const inFlightCoursesMap = new Map();
+
 export const CourseRepository = {
   /**
    * Duplicate-safe check to populate missing default courses into Supabase
@@ -54,73 +57,97 @@ export const CourseRepository = {
 
   /**
    * Fetch all courses with optional category filtering from Supabase DB.
+   * Deduplicates concurrent requests for the same category.
    */
   async getCourses(category = 'all') {
-    try {
-      let query = supabase.from('courses').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
-      if (category !== 'all') {
-        if (category === 'primary') {
-          query = query.eq('is_primary', true);
-        } else {
-          query = query.eq('category', category);
-        }
-      }
-      let { data, error } = await query;
-      if (error && error.message.includes('display_order')) {
-        let retryQuery = supabase.from('courses').select('*').order('created_at', { ascending: false });
+    if (inFlightCoursesMap.has(category)) {
+      return inFlightCoursesMap.get(category);
+    }
+
+    const fetchPromise = (async () => {
+      try {
+        let query = supabase.from('courses').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
         if (category !== 'all') {
           if (category === 'primary') {
-            retryQuery = retryQuery.eq('is_primary', true);
+            query = query.eq('is_primary', true);
           } else {
-            retryQuery = retryQuery.eq('category', category);
+            query = query.eq('category', category);
           }
         }
-        const retry = await retryQuery;
-        data = retry.data;
-        error = retry.error;
-      }
+        let { data, error } = await query;
+        if (error && error.message.includes('display_order')) {
+          let retryQuery = supabase.from('courses').select('*').order('created_at', { ascending: false });
+          if (category !== 'all') {
+            if (category === 'primary') {
+              retryQuery = retryQuery.eq('is_primary', true);
+            } else {
+              retryQuery = retryQuery.eq('category', category);
+            }
+          }
+          const retry = await retryQuery;
+          data = retry.data;
+          error = retry.error;
+        }
 
-      if (error || !data || data.length === 0) {
-        if (error) console.error('Supabase course fetch error:', error.message);
-        let local = sharedStore.getCourses().filter((c) => c.is_active !== false && c.isActive !== false);
-        if (category === 'primary') {
-          return local.filter((c) => c.isPrimary || c.is_primary || c.slug === 'mscit' || c.slug === 'tally-prime-gst' || c.slug === 'advanced-excel');
+        if (error) {
+          console.error('Supabase course fetch error:', error.message);
+          let local = sharedStore.getCourses();
+          if (!local || local.length === 0) local = COURSES_DATA;
+          local = local.filter((c) => c.is_active !== false && c.isActive !== false);
+
+          if (category === 'primary') {
+            return local.filter((c) => c.isPrimary || c.is_primary || c.slug === 'mscit' || c.slug === 'tally-prime-gst' || c.slug === 'advanced-excel');
+          }
+          if (category !== 'all') {
+            return local.filter((c) => c.category === category);
+          }
+          return local;
         }
-        if (category !== 'all') {
-          return local.filter((c) => c.category === category);
+
+        if (category === 'all') {
+          sharedStore.syncCoursesFromRemote(data || [], false);
         }
+
+        return (data || [])
+          .filter((c) => c.is_active !== false && c.isActive !== false)
+          .map((c) => ({
+            ...c,
+            logoUrl: c.logo_url || c.logoUrl || COURSE_LOGOS[c.slug] || '',
+            isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
+            isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
+            isActive: c.is_active !== undefined ? c.is_active : true,
+            displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
+            subtitleMr: c.subtitle_mr || c.subtitleMr,
+            subtitleEn: c.subtitle_en || c.subtitleEn,
+            durationMr: c.duration_mr || c.durationMr,
+            durationEn: c.duration_en || c.durationEn,
+            certificationMr: c.certification_mr || c.certificationMr,
+            certificationEn: c.certification_en || c.certificationEn,
+            eligibilityMr: c.eligibility_mr || c.eligibilityMr,
+            eligibilityEn: c.eligibility_en || c.eligibilityEn,
+            overviewMr: c.overview_mr || c.overviewMr,
+            overviewEn: c.overview_en || c.overviewEn,
+            modulesMr: c.modules_mr || c.modulesMr || [],
+            modulesEn: c.modules_en || c.modulesEn || [],
+            practicalSkillsMr: c.practical_skills_mr || c.practicalSkillsMr || [],
+            practicalSkillsEn: c.practical_skills_en || c.practicalSkillsEn || [],
+            careersMr: c.careers_mr || c.careersMr || [],
+            careersEn: c.careers_en || c.careersEn || []
+          }));
+      } catch (e) {
+        console.error('Supabase course fetch exception:', e.message);
+        let local = sharedStore.getCourses();
+        if (!local || local.length === 0) local = COURSES_DATA;
         return local;
       }
+    })();
 
-      return (data || [])
-        .filter((c) => c.is_active !== false && c.isActive !== false)
-        .map((c) => ({
-          ...c,
-          logoUrl: c.logo_url || c.logoUrl || COURSE_LOGOS[c.slug] || '',
-          isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
-          isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
-          isActive: c.is_active !== undefined ? c.is_active : true,
-          displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
-          subtitleMr: c.subtitle_mr || c.subtitleMr,
-          subtitleEn: c.subtitle_en || c.subtitleEn,
-          durationMr: c.duration_mr || c.durationMr,
-          durationEn: c.duration_en || c.durationEn,
-          certificationMr: c.certification_mr || c.certificationMr,
-          certificationEn: c.certification_en || c.certificationEn,
-          eligibilityMr: c.eligibility_mr || c.eligibilityMr,
-          eligibilityEn: c.eligibility_en || c.eligibilityEn,
-          overviewMr: c.overview_mr || c.overviewMr,
-          overviewEn: c.overview_en || c.overviewEn,
-          modulesMr: c.modules_mr || c.modulesMr || [],
-          modulesEn: c.modules_en || c.modulesEn || [],
-          careersMr: c.careers_mr || c.careersMr || [],
-          careersEn: c.careers_en || c.careersEn || []
-        }));
-    } catch (e) {
-      console.error('Supabase course fetch exception:', e.message);
-      const local = sharedStore.getCourses();
-      return local;
-    }
+    inFlightCoursesMap.set(category, fetchPromise);
+    fetchPromise.finally(() => {
+      inFlightCoursesMap.delete(category);
+    });
+
+    return fetchPromise;
   },
 
   /**
@@ -148,6 +175,8 @@ export const CourseRepository = {
           overviewEn: data.overview_en || data.overviewEn,
           modulesMr: data.modules_mr || data.modulesMr || [],
           modulesEn: data.modules_en || data.modulesEn || [],
+          practicalSkillsMr: data.practical_skills_mr || data.practicalSkillsMr || [],
+          practicalSkillsEn: data.practical_skills_en || data.practicalSkillsEn || [],
           careersMr: data.careers_mr || data.careersMr || [],
           careersEn: data.careers_en || data.careersEn || []
         };

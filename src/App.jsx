@@ -21,25 +21,58 @@ import SmoothScroll from './components/common/SmoothScroll';
 import BatchTimetableWidget from './components/sections/BatchTimetableWidget';
 import './styles/tailwind.css';
 
+const getViewFromPath = (path) => {
+  const cleanPath = path.replace(/^\//, '').trim().toLowerCase();
+  if (!cleanPath) return 'home';
+  const validViews = ['home', 'courses', 'details', 'services', 'csc', 'govt', 'about', 'faculty', 'gallery', 'contact', 'timetable', 'verification', 'admin'];
+  return validViews.includes(cleanPath) ? cleanPath : 'home';
+};
+
 function MainApp() {
   const [lang, setLang] = useState('mr');
-  const [currentView, setCurrentView] = useState('home'); // home|courses|details|services|csc|govt|about|faculty|gallery|contact|timetable|verification|admin
+  const [currentView, setCurrentView] = useState(() => getViewFromPath(window.location.pathname));
   const [selectedSlug, setSelectedSlug] = useState('mscit');
   const { isAdmin, loading: authLoading } = useAuth();
 
-  const handleNavigate = (view, slug = 'mscit') => {
+  const handleNavigate = (view, slug = 'mscit', updateHistory = true) => {
     // Redirect old csc/govt direct links to unified services hub
     const resolvedView = (view === 'csc' || view === 'govt') ? 'services' : view;
     setCurrentView(resolvedView);
     if (slug) setSelectedSlug(slug);
+    if (updateHistory) {
+      const newPath = resolvedView === 'home' ? '/' : `/${resolvedView}`;
+      if (window.location.pathname !== newPath) {
+        window.history.pushState({ view: resolvedView }, '', newPath);
+      }
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
-    // 1. Initial sync of site settings from DB
-    const syncSiteSettings = async () => {
+    let isSyncing = false;
+    let lastSyncTime = 0;
+    const SYNC_COOLDOWN_MS = 5000;
+
+    // 1. Initial full data sync from Supabase DB to sharedStore with cooldown lock
+    const syncAllDataFromDB = async (force = false) => {
+      const now = Date.now();
+      if (isSyncing) return;
+      if (!force && (now - lastSyncTime < SYNC_COOLDOWN_MS)) return;
+
+      isSyncing = true;
+      lastSyncTime = now;
       try {
-        const settings = await AdminRepository.getSiteSettings();
+        const [settings] = await Promise.all([
+          AdminRepository.getSiteSettings(),
+          AdminRepository.getAllCourses(),
+          AdminRepository.getAllCSCServices(),
+          AdminRepository.getAllGovtServices(),
+          AdminRepository.getAllFaculty(),
+          AdminRepository.getAllSiteGallery(),
+          AdminRepository.getAllBatches(),
+          AdminRepository.getAllNews()
+        ]);
+
         if (settings) {
           sharedStore.saveSiteSettings(settings);
           if (settings.seoTitle) {
@@ -65,20 +98,30 @@ function MainApp() {
           }
         }
       } catch (err) {
-        console.warn('[App] site_settings sync notice:', err.message);
+        console.warn('[App] Data sync notice:', err.message);
+      } finally {
+        isSyncing = false;
       }
     };
-    syncSiteSettings();
+
+    syncAllDataFromDB(true);
 
     // 2. Refresh when window regains focus across tabs/devices
-    const handleFocus = () => syncSiteSettings();
+    const handleFocus = () => syncAllDataFromDB(false);
     window.addEventListener('focus', handleFocus);
 
-    // 3. Supabase Realtime channel for site_settings updates
+    // 3. Handle browser back/forward buttons (popstate)
+    const handlePopState = () => {
+      const view = getViewFromPath(window.location.pathname);
+      setCurrentView(view);
+    };
+    window.addEventListener('popstate', handlePopState);
+
+    // 4. Supabase Realtime channel for live updates
     const channel = supabase
-      .channel('public:site_settings_realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, async () => {
-        syncSiteSettings();
+      .channel('public:db_changes_realtime')
+      .on('postgres_changes', { event: '*', schema: 'public' }, async () => {
+        syncAllDataFromDB();
       })
       .subscribe();
 
@@ -89,6 +132,7 @@ function MainApp() {
 
     return () => {
       window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('openAdminPortal', handleOpenAdmin);
       supabase.removeChannel(channel);
     };

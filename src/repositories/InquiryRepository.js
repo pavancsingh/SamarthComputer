@@ -8,6 +8,10 @@ import { AdminRepository } from './AdminRepository';
  * InquiryRepository
  * Data Access Layer for CSC & Government Portal services and lead submissions with direct Supabase DB access.
  */
+// In-flight deduplication caches
+const inFlightCSCMap = new Map();
+const inFlightGovtMap = new Map();
+
 export const InquiryRepository = {
   /**
    * Duplicate-safe check to seed missing CSC services into Supabase
@@ -53,96 +57,138 @@ export const InquiryRepository = {
 
   /**
    * Fetch all CSC services with optional category filtering from Supabase DB.
+   * Deduplicates concurrent requests for the same category.
    */
   async getCSCServices(category = 'all') {
-    try {
-      let query = supabase.from('csc_services').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
-      if (category !== 'all') {
-        query = query.eq('category', category);
-      }
-      let { data, error } = await query;
-      if (error && error.message.includes('display_order')) {
-        let fallbackQuery = supabase.from('csc_services').select('*').order('created_at', { ascending: false });
+    if (inFlightCSCMap.has(category)) {
+      return inFlightCSCMap.get(category);
+    }
+
+    const fetchPromise = (async () => {
+      try {
+        let query = supabase.from('csc_services').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
         if (category !== 'all') {
-          fallbackQuery = fallbackQuery.eq('category', category);
+          query = query.eq('category', category);
         }
-        const retry = await fallbackQuery;
-        data = retry.data;
-        error = retry.error;
-      }
-      if (error || !data || data.length === 0) {
-        if (error) console.error('Supabase CSC service fetch error:', error.message);
-        let local = sharedStore.getCSCServices().filter(s => s.is_active !== false && s.isActive !== false);
+        let { data, error } = await query;
+        if (error && error.message.includes('display_order')) {
+          let fallbackQuery = supabase.from('csc_services').select('*').order('created_at', { ascending: false });
+          if (category !== 'all') {
+            fallbackQuery = fallbackQuery.eq('category', category);
+          }
+          const retry = await fallbackQuery;
+          data = retry.data;
+          error = retry.error;
+        }
+        if (error) {
+          console.error('Supabase CSC service fetch error:', error.message);
+          let local = sharedStore.getCSCServices();
+          if (!local || local.length === 0) local = CSC_SERVICES_DATA;
+          local = local.filter(s => s.is_active !== false && s.isActive !== false);
+          return category !== 'all' ? local.filter(s => s.category === category) : local;
+        }
+        if (category === 'all') {
+          sharedStore.syncCSCServicesFromRemote(data || [], false);
+        }
+        return (data || [])
+          .filter(s => s.is_active !== false && s.isActive !== false)
+          .map((s) => ({
+            ...s,
+            titleMr: s.title_mr || s.titleMr,
+            titleEn: s.title_en || s.titleEn,
+            timelineMr: s.timeline_mr || s.timelineMr,
+            timelineEn: s.timeline_en || s.timelineEn,
+            deadlineMr: s.deadline_mr || s.deadlineMr || 'सदैव उपलब्ध',
+            deadlineEn: s.deadline_en || s.deadlineEn || 'Always Available',
+            status: s.status || 'Open',
+            officialUrl: s.official_url || s.officialUrl || '',
+            isFeatured: s.is_featured !== undefined ? s.is_featured : (s.isFeatured || false),
+            isActive: s.is_active !== undefined ? s.is_active : true,
+            displayOrder: s.display_order !== undefined ? s.display_order : (s.displayOrder || 0),
+            govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
+            govtFeeEn: s.govt_fee_en || s.govtFeeEn,
+            overviewMr: s.overview_mr || s.overviewMr,
+            overviewEn: s.overview_en || s.overviewEn,
+            requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
+            requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
+            stepsMr: s.steps_mr || s.stepsMr || [],
+            stepsEn: s.steps_en || s.stepsEn || []
+          }));
+      } catch (e) {
+        console.error('Supabase CSC service fetch exception:', e.message);
+        let local = sharedStore.getCSCServices();
+        if (!local || local.length === 0) local = CSC_SERVICES_DATA;
+        local = local.filter(s => s.is_active !== false && s.isActive !== false);
         return category !== 'all' ? local.filter(s => s.category === category) : local;
       }
-      return (data || [])
-        .filter(s => s.is_active !== false && s.isActive !== false)
-        .map((s) => ({
-          ...s,
-          titleMr: s.title_mr || s.titleMr,
-          titleEn: s.title_en || s.titleEn,
-          timelineMr: s.timeline_mr || s.timelineMr,
-          timelineEn: s.timeline_en || s.timelineEn,
-          deadlineMr: s.deadline_mr || s.deadlineMr || 'सदैव उपलब्ध',
-          deadlineEn: s.deadline_en || s.deadlineEn || 'Always Available',
-          status: s.status || 'Open',
-          officialUrl: s.official_url || s.officialUrl || '',
-          isFeatured: s.is_featured !== undefined ? s.is_featured : (s.isFeatured || false),
-          isActive: s.is_active !== undefined ? s.is_active : true,
-          displayOrder: s.display_order !== undefined ? s.display_order : (s.displayOrder || 0),
-          govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
-          govtFeeEn: s.govt_fee_en || s.govtFeeEn,
-          overviewMr: s.overview_mr || s.overviewMr,
-          overviewEn: s.overview_en || s.overviewEn,
-          requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
-          requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
-          stepsMr: s.steps_mr || s.stepsMr || [],
-          stepsEn: s.steps_en || s.stepsEn || []
-        }));
-    } catch (e) {
-      console.error('Supabase CSC service fetch exception:', e.message);
-      const local = sharedStore.getCSCServices().filter(s => s.is_active !== false && s.isActive !== false);
-      return category !== 'all' ? local.filter(s => s.category === category) : local;
-    }
+    })();
+
+    inFlightCSCMap.set(category, fetchPromise);
+    fetchPromise.finally(() => {
+      inFlightCSCMap.delete(category);
+    });
+
+    return fetchPromise;
   },
 
   /**
    * Fetch all Government Portal Services from Supabase DB.
+   * Deduplicates concurrent requests for the same category.
    */
   async getGovtServices(category = 'all') {
-    try {
-      let query = supabase.from('govt_services').select('*').order('created_at', { ascending: false });
-      if (category !== 'all') {
-        query = query.eq('category', category);
-      }
-      const { data, error } = await query;
-      if (error || !data || data.length === 0) {
-        if (error) console.error('Supabase Govt service fetch error:', error.message);
-        let local = sharedStore.getGovtServices().filter(g => g.is_active !== false && g.isActive !== false);
+    if (inFlightGovtMap.has(category)) {
+      return inFlightGovtMap.get(category);
+    }
+
+    const fetchPromise = (async () => {
+      try {
+        let query = supabase.from('govt_services').select('*').order('created_at', { ascending: false });
+        if (category !== 'all') {
+          query = query.eq('category', category);
+        }
+        const { data, error } = await query;
+        if (error) {
+          console.error('Supabase Govt service fetch error:', error.message);
+          let local = sharedStore.getGovtServices();
+          if (!local || local.length === 0) local = GOVT_SERVICES_DATA;
+          local = local.filter(g => g.is_active !== false && g.isActive !== false);
+          return category !== 'all' ? local.filter(g => g.category === category) : local;
+        }
+        if (category === 'all') {
+          sharedStore.syncGovtServicesFromRemote(data || [], false);
+        }
+        return (data || [])
+          .filter(g => g.is_active !== false && g.isActive !== false)
+          .map((g) => ({
+            ...g,
+            titleMr: g.title_mr || g.titleMr,
+            titleEn: g.title_en || g.titleEn,
+            timelineMr: g.timeline_mr || g.timelineMr,
+            timelineEn: g.timeline_en || g.timelineEn,
+            govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
+            govtFeeEn: g.govt_fee_en || g.govtFeeEn,
+            overviewMr: g.overview_mr || g.overviewMr,
+            overviewEn: g.overview_en || g.overviewEn,
+            requiredDocsMr: g.required_docs_mr || g.requiredDocsMr || [],
+            requiredDocsEn: g.required_docs_en || g.requiredDocsEn || [],
+            stepsMr: g.steps_mr || g.stepsMr || [],
+            stepsEn: g.steps_en || g.stepsEn || []
+          }));
+      } catch (e) {
+        console.error('Supabase Govt service fetch exception:', e.message);
+        let local = sharedStore.getGovtServices();
+        if (!local || local.length === 0) local = GOVT_SERVICES_DATA;
+        local = local.filter(g => g.is_active !== false && g.isActive !== false);
         return category !== 'all' ? local.filter(g => g.category === category) : local;
       }
-      return (data || [])
-        .filter(g => g.is_active !== false && g.isActive !== false)
-        .map((g) => ({
-          ...g,
-          titleMr: g.title_mr || g.titleMr,
-          titleEn: g.title_en || g.titleEn,
-          timelineMr: g.timeline_mr || g.timelineMr,
-          timelineEn: g.timeline_en || g.timelineEn,
-          govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
-          govtFeeEn: g.govt_fee_en || g.govtFeeEn,
-          overviewMr: g.overview_mr || g.overviewMr,
-          overviewEn: g.overview_en || g.overviewEn,
-          requiredDocsMr: g.required_docs_mr || g.requiredDocsMr || g.requirementsMr || g.requirements_mr || [],
-          requiredDocsEn: g.required_docs_en || g.requiredDocsEn || g.requirementsEn || g.requirements_en || [],
-          stepsMr: g.steps_mr || g.stepsMr || [],
-          stepsEn: g.steps_en || g.stepsEn || []
-        }));
-    } catch (e) {
-      console.error('Supabase Govt service fetch exception:', e.message);
-      const local = sharedStore.getGovtServices();
-      return category !== 'all' ? local.filter(g => g.category === category) : local;
-    }
+    })();
+
+    inFlightGovtMap.set(category, fetchPromise);
+    fetchPromise.finally(() => {
+      inFlightGovtMap.delete(category);
+    });
+
+    return fetchPromise;
   },
 
   /**

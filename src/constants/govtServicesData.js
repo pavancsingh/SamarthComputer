@@ -16,13 +16,13 @@ export const GOVT_SERVICES_DATA = [
     govtFeeEn: '₹56 (Aaple Sarkar Portal Fee)',
     overviewMr: 'शासकीय नोकरी सवलत, शैक्षणिक प्रवेश आरक्षण व सवलतीसाठी उपविभागीय अधिकारी (SDO) यांच्याकडून जारी केला जाणारा अधिकृत जातीचा दाखला.',
     overviewEn: 'Official Caste Certificate issued by Sub-Divisional Officer (SDO). Essential for educational seat reservations, scholarship fee concessions, and government job quota applications.',
-    requirementsMr: [
+    requiredDocsMr: [
       'अर्जदाराचे आधार कार्ड व शाळा सोडल्याचा दाखला (TC/LC)',
       'वडिलांचे किंवा आजोबांचे शाळा सोडल्याचा दाखला / जन्म नोंद',
       '१९६७ पूर्वीचा महसुली पुरावा किंवा जातीची नोंद (SC/ST/OBC/VJNT)',
       'स्वयंघोषणा पत्र व वंशावळ शपथपत्र (सेतू केंद्रात उपलब्ध)'
     ],
-    requirementsEn: [
+    requiredDocsEn: [
       'Applicant Aadhaar Card & School Leaving Certificate (TC/LC)',
       'Father’s or Grandfather’s School Leaving Certificate / Birth Proof',
       'Pre-1967/1961 Revenue Proof or Caste Record Entry',
@@ -52,13 +52,13 @@ export const GOVT_SERVICES_DATA = [
     govtFeeEn: '₹56 (Portal Fee)',
     overviewMr: 'महाराष्ट्र राज्यात सलग १५ वर्षे किंवा त्याहून अधिक काळ राहणाऱ्या नागरिकांसाठी तहसीलदार स्वाक्षरीचे अधिवास व भारतीय राष्ट्रीयत्व प्रमाणपत्र.',
     overviewEn: 'Official Domicile & Nationality Certificate issued by Tehsildar for citizens residing in Maharashtra for 15+ years. Mandatory for Engineering, Medical, & Govt job admissions.',
-    requirementsMr: [
+    requiredDocsMr: [
       'अर्जदाराचे आधार कार्ड व शाळा सोडल्याचा दाखला',
       'मागील १५ वर्षांचा रहिवासी पुरावा (लाइट बिल / रेशन कार्ड / कर पावती)',
       'वडिलांचे आधार कार्ड व रहिवासी पुरावा',
       'स्वयंघोषणा पत्र'
     ],
-    requirementsEn: [
+    requiredDocsEn: [
       'Applicant Aadhaar Card & School Leaving Certificate',
       '15 Years Residence Proof (Electricity Bill / Ration Card / Property Tax Receipt)',
       'Father’s Aadhaar Card & Residence Proof',
@@ -88,13 +88,13 @@ export const GOVT_SERVICES_DATA = [
     govtFeeEn: 'As per Sarathi RTO Norms',
     overviewMr: 'टू-व्हीलर व फोर-व्हीलर गाड्यांसाठी लर्निंग ड्रायव्हिंग लायसन्स (LL) ऑनलाईन काढणे, पक्क्या लायसन्ससाठी RTO स्लॉट बुकिंग करणे आणि लायसन्स नूतनीकरण.',
     overviewEn: 'Online Learning Driving License (LL) test booking and issuing for 2-wheelers & 4-wheelers. Slot booking for Permanent DL test at RTO and DL renewal assistance.',
-    requirementsMr: [
+    requiredDocsMr: [
       'आधार कार्ड (मोबाईल नंबर लिंक)',
       'वयाचा पुरावा (शाळा सोडल्याचा दाखला किंवा टीसी)',
       'ब्लड ग्रुप रिपोर्ट',
       'पासपोर्ट साईझ फोटो'
     ],
-    requirementsEn: [
+    requiredDocsEn: [
       'Aadhaar Card (Mobile Linked)',
       'Age Proof (School Leaving Certificate or Birth Certificate)',
       'Blood Group Report',
@@ -124,13 +124,13 @@ export const GOVT_SERVICES_DATA = [
     govtFeeEn: 'Govt Portal Fee',
     overviewMr: 'नवीन रेशन कार्ड काढणे, रेशन कार्डमध्ये नवीन बाळाचे किंवा पत्नीचे नाव समाविष्ट करणे, किंवा नाव वगळणे.',
     overviewEn: 'Addition of new family member names (newborn child or married wife) in existing Ration Card, address updates, or split ration card applications.',
-    requirementsMr: [
+    requiredDocsMr: [
       'मूळ रेशन कार्ड (Original Ration Card)',
       'समाविष्ट करायच्या व्यक्तीचे आधार कार्ड',
       'जन्म दाखला (बाळासाठी) किंवा विवाह नोंदणी दाखला (पत्नीसाठी)',
       'कमी केल्याचा दाखला (नवीन नाव समाविष्ट करत असल्यास)'
     ],
-    requirementsEn: [
+    requiredDocsEn: [
       'Original Ration Card',
       'Aadhaar Card of the member to be added',
       'Birth Certificate (For child) or Marriage Certificate (For wife)',

@@ -10,7 +10,10 @@ export default function SyllabusModal({ isOpen, onClose, course, lang = 'mr' }) 
   if (!isOpen || !course) return null;
 
   const isMarathi = lang === 'mr';
+  const overview = isMarathi ? (course.overviewMr || course.overview_mr) : (course.overviewEn || course.overview_en);
   const modules = isMarathi ? (course.modulesMr || course.modules_mr || []) : (course.modulesEn || course.modules_en || []);
+  const practicalSkills = isMarathi ? (course.practicalSkillsMr || course.practical_skills_mr || []) : (course.practicalSkillsEn || course.practical_skills_en || []);
+  const eligibility = isMarathi ? (course.eligibilityMr || course.eligibility_mr) : (course.eligibilityEn || course.eligibility_en);
   const careers = isMarathi ? (course.careersMr || course.careers_mr || []) : (course.careersEn || course.careers_en || []);
 
   const handleWhatsAppSyllabus = () => {
@@ -84,7 +87,7 @@ export default function SyllabusModal({ isOpen, onClose, course, lang = 'mr' }) 
           </div>
           <div>
             <span className="text-charcoal-muted block text-[10px] uppercase tracking-wider font-bold">{isMarathi ? 'प्रमाणपत्र:' : 'Certification:'}</span>
-            <span className="font-extrabold text-rose-red truncate block">{isMarathi ? (course.certificationMr || 'MKCL & Govt Certified') : (course.certificationEn || 'MKCL & Govt Certified')}</span>
+            <span className="font-extrabold text-rose-red truncate block">{isMarathi ? (course.certificationMr || 'Govt Recognized Certified') : (course.certificationEn || 'Govt Recognized Certified')}</span>
           </div>
           <div>
             <span className="text-charcoal-muted block text-[10px] uppercase tracking-wider font-bold">{isMarathi ? 'पात्रता:' : 'Eligibility:'}</span>
@@ -96,22 +99,22 @@ export default function SyllabusModal({ isOpen, onClose, course, lang = 'mr' }) 
           </div>
         </div>
 
-        {/* Full Overview */}
+        {/* SECTION 1: Overview */}
         <div className="space-y-2">
           <h4 className="font-black text-sm text-charcoal uppercase tracking-wider flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-rose-red" />
-            <span>{isMarathi ? 'अभ्यासक्रम सविस्तर परिचय (Course Overview):' : 'Detailed Course Overview:'}</span>
+            <span>{isMarathi ? 'कोर्स परिचय (Overview):' : 'Course Overview:'}</span>
           </h4>
           <p className="text-xs text-charcoal-muted font-medium leading-relaxed bg-white p-3.5 rounded-2xl border border-rose-red-light/40">
-            {isMarathi ? (course.overviewMr || course.overview_mr) : (course.overviewEn || course.overview_en)}
+            {overview}
           </p>
         </div>
 
-        {/* Full Detailed Curriculum Modules List */}
+        {/* SECTION 2: What You'll Learn (Modules) */}
         <div className="space-y-3">
           <h4 className="font-black text-sm text-charcoal uppercase tracking-wider flex items-center gap-2">
             <FileText className="w-4 h-4 text-rose-red" />
-            <span>{isMarathi ? 'परिपूर्ण अभ्यासक्रम मॉड्यूल्स व प्रात्यक्षिक विषय:' : 'Complete Curriculum Modules & Practical Topics:'}</span>
+            <span>{isMarathi ? 'तुम्ही काय शिकाल (What You\'ll Learn):' : 'What You\'ll Learn (Curriculum):'}</span>
           </h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -121,53 +124,59 @@ export default function SyllabusModal({ isOpen, onClose, course, lang = 'mr' }) 
                   <div className="w-6 h-6 rounded-lg bg-rose-red-soft text-rose-red-deep flex items-center justify-center text-xs font-black shrink-0">
                     {idx + 1}
                   </div>
-                  <span>{mod.name}</span>
+                  <span>{mod.name || mod}</span>
                 </div>
-                <p className="text-[11px] text-charcoal-muted font-medium pl-8 leading-relaxed">
-                  {mod.desc}
-                </p>
+                {mod.desc && (
+                  <p className="text-[11px] text-charcoal-muted font-medium pl-8 leading-relaxed">
+                    {mod.desc}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Exam & Assessment Structure */}
-        <div className="bg-rose-red-soft/60 border border-rose-red-light p-4 rounded-2xl space-y-2 text-xs">
-          <h4 className="font-black text-charcoal uppercase tracking-wider flex items-center gap-2 text-xs">
-            <Award className="w-4 h-4 text-rose-red" />
-            <span>{isMarathi ? 'परीक्षा पद्धती व गुण विभाजन (Exam & Assessment Scheme):' : 'Exam & Marks Assessment Pattern:'}</span>
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-[11px]">
-            <div className="bg-white p-2.5 rounded-xl border border-rose-red-light">
-              <span className="font-bold block text-charcoal">{isMarathi ? '१. अंतर्गत मूल्यमापन (50 Marks)' : '1. Internal Assessment (50 Marks)'}</span>
-              <span className="text-charcoal-muted">{isMarathi ? 'दैनिक सराव चाचण्या & असाइनमेंट्स' : 'Daily Lab Tests & Course Assignments'}</span>
-            </div>
-            <div className="bg-white p-2.5 rounded-xl border border-rose-red-light">
-              <span className="font-bold block text-charcoal">{isMarathi ? '२. अंतिम ऑनलाइन परीक्षा (50 Marks)' : '2. Final Online Exam (50 Marks)'}</span>
-              <span className="text-charcoal-muted">{isMarathi ? 'ऑब्जेक्टिव्ह & प्रॅक्टिकल प्रश्न' : 'MKCL Online Examination Center'}</span>
-            </div>
-            <div className="bg-white p-2.5 rounded-xl border border-rose-red-light">
-              <span className="font-bold block text-emerald-700">{isMarathi ? '३. अधिकृत उत्तीर्ण गुण (40 Marks)' : '3. Passing Criteria (40 Marks)'}</span>
-              <span className="text-charcoal-muted">{isMarathi ? 'प्रमाणपत्र & ग्रेड मिळवण्यासाठी' : 'For Authorized Govt Certificate'}</span>
+        {/* SECTION 3: Practical Skills & Assignments */}
+        {practicalSkills.length > 0 && (
+          <div className="space-y-2 bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200">
+            <h4 className="font-black text-xs text-emerald-950 uppercase tracking-wider flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>{isMarathi ? 'प्रत्यक्ष प्रात्यक्षिक कौशल्ये (Practical Skills):' : 'Practical Skills & Exercises:'}</span>
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              {practicalSkills.map((skill, idx) => (
+                <div key={idx} className="bg-white p-2.5 rounded-xl border border-emerald-200 text-xs font-bold text-slate-800 flex items-center gap-2">
+                  <span className="text-emerald-600 font-black">✓</span>
+                  <span>{skill}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Career Opportunities */}
-        {careers.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-black text-xs text-charcoal uppercase tracking-wider">
-              {isMarathi ? '💼 हा कोर्स पूर्ण केल्यानंतर नोकरीच्या संधी:' : '💼 Career Opportunities After Course:'}
-            </h4>
-            <div className="flex flex-wrap gap-2">
+        {/* SECTION 4: Who It's For & Career Opportunities */}
+        <div className="space-y-3 bg-ivory-warm p-4 rounded-2xl border border-rose-red-light/60">
+          <h4 className="font-black text-xs text-charcoal uppercase tracking-wider flex items-center gap-2">
+            <Award className="w-4 h-4 text-rose-red" />
+            <span>{isMarathi ? 'हा कोर्स कोणासाठी आहे & नोकरीच्या संधी:' : 'Who It\'s For & Career Scope:'}</span>
+          </h4>
+
+          {eligibility && (
+            <p className="text-xs text-charcoal font-medium">
+              <strong className="text-rose-red">{isMarathi ? 'पात्रता:' : 'Eligibility:'}</strong> {eligibility}
+            </p>
+          )}
+
+          {careers.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
               {careers.map((car, idx) => (
                 <span key={idx} className="bg-white border border-rose-red-light text-rose-red-deep font-bold text-xs px-3 py-1 rounded-full shadow-sm">
                   ✓ {car}
                 </span>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Action Buttons & Print Triggers */}
         <div className="pt-4 border-t border-rose-red-light/40 flex flex-col sm:flex-row items-center gap-3 print:hidden">

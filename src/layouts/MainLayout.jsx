@@ -3,6 +3,7 @@ import EmergencyBanner from '../components/EmergencyBanner';
 import UtilityBar from '../components/layout/UtilityBar';
 import Header from '../components/layout/Header';
 import MobileNav from '../components/layout/MobileNav';
+import MobileBottomBar from '../components/layout/MobileBottomBar';
 import Footer from '../components/layout/Footer';
 
 /**
@@ -46,15 +47,18 @@ export default function MainLayout({ children, lang = 'mr', onLanguageChange, cu
         onNavigate={onNavigate}
       />
 
-      {/* 4. Main Page View Content */}
-      <main className="flex-1">
+      {/* 4. Main Page View Content with safe bottom padding for MobileBottomBar */}
+      <main className="flex-1 pb-20 md:pb-0">
         {children}
       </main>
 
       {/* 5. Footer */}
       <Footer lang={lang} onNavigate={onNavigate} />
 
-      {/* 6. Mobile Drawer & Persistent Bottom Action Bar */}
+      {/* 6. Mobile-Only Fixed Bottom Action Bar */}
+      <MobileBottomBar lang={lang} />
+
+      {/* 7. Mobile Navigation Drawer */}
       <MobileNav 
         isOpen={isMobileMenuOpen} 
         onClose={() => setIsMobileMenuOpen(false)} 

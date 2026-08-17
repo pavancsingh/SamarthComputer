@@ -1,9 +1,10 @@
 import React from 'react';
 import { Quote, Award, CheckCircle2 } from 'lucide-react';
+import Reviews from './Reviews';
 
 /**
  * SuccessStories Component - Google Stitch Design
- * Student outcome cards and placement success stories.
+ * Combined student outcome cards and Google reviews.
  */
 export default function SuccessStories({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
@@ -49,7 +50,7 @@ export default function SuccessStories({ lang = 'mr' }) {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-stitch-emerald font-extrabold text-xs px-4 py-1.5 rounded-full border border-emerald-200 shadow-stitch-sm">
             <Award className="w-4 h-4 text-stitch-emerald" />
-            <span>{isMarathi ? 'विद्यार्थी यशोगाथा & प्लेसमेंट' : 'Student Success Stories & Placements'}</span>
+            <span>{isMarathi ? 'विद्यार्थी यशोगाथा व अभिप्राय' : 'Student Success Stories & Reviews'}</span>
           </div>
 
           <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
@@ -97,8 +98,10 @@ export default function SuccessStories({ lang = 'mr' }) {
           ))}
         </div>
 
+        {/* Reviews stay on the page as part of the student-success section. */}
+        <Reviews lang={lang} embedded />
+
       </div>
     </section>
   );
 }
-

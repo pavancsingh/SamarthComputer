@@ -1,9 +1,10 @@
 import React from 'react';
 import { Award, Target, Check, ShieldCheck } from 'lucide-react';
+import HomeAboutSection from './HomeAboutSection';
 
 /**
  * WhyChooseUs Component - Google Stitch Design
- * Showcase Institute Mission & Key Highlights from official center accreditation.
+ * Combined About Samarth, key highlights, and mission content.
  */
 export default function WhyChooseUs({ lang = 'mr' }) {
   const isMarathi = lang === 'mr';
@@ -63,22 +64,25 @@ export default function WhyChooseUs({ lang = 'mr' }) {
   ];
 
   return (
-    <section className="py-20 bg-white border-b border-slate-200/80">
+    <section className="py-16 md:py-24 bg-slate-50/70 border-b border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 font-extrabold text-xs px-4 py-1.5 rounded-full border border-amber-200 shadow-stitch-sm">
             <ShieldCheck className="w-3.5 h-3.5 text-stitch-amber" />
-            <span>{isMarathi ? 'यशस्वी करिअरसाठी योग्य पर्याय' : 'Right Choice for a Successful Career'}</span>
+            <span>{isMarathi ? 'संस्थेविषयी व आमची वैशिष्ट्ये' : 'About Samarth & Why Choose Us'}</span>
           </span>
 
           <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'समर्थ कॉम्प्युटर्स खंडाळा — आमचे वैशिष्ट्ये' : 'Why Choose Samarth Computers, Khandala'}
+            {isMarathi ? 'समर्थ कॉम्प्युटर्स खंडाळा' : 'Samarth Computers, Khandala'}
           </h2>
         </div>
 
-        {/* 2-Column Split: Highlights vs Mission */}
+        {/* Keeps the admin-controlled institute introduction and image in this combined section. */}
+        <HomeAboutSection lang={lang} embedded />
+
+        {/* Why Samarth and mission are presented together, not as separate homepage sections. */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           
           {/* Column 1: Why Choose Us */}
@@ -117,14 +121,14 @@ export default function WhyChooseUs({ lang = 'mr' }) {
                 <h3 className="font-black text-xl text-white">
                   {isMarathi ? 'आमचे ध्येय (Our Mission)' : 'Our Mission'}
                 </h3>
-                <div className="text-xs text-slate-400 font-semibold">आयटी प्रोफेशनल लॅब & कॉम्प्युटर अकॅडमी</div>
+                <div className="text-xs text-slate-400 font-semibold">समर्थ कॉम्प्युटर्स खंडाळा & C.S.C. केंद्र</div>
               </div>
             </div>
 
             <p className="text-xs text-slate-300 italic leading-relaxed bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60">
               {isMarathi
-                ? 'आयटी प्रोफेशनल लॅबमध्ये आम्ही केवळ संगणक शिक्षण देत नाही, तर विद्यार्थ्यांच्या उज्ज्वल करिअरची भक्कम पायाभरणी करतो.'
-                : 'At IT Professional Lab, we don’t just teach computers — we build a solid foundation for bright student careers.'}
+                ? 'समर्थ कॉम्प्युटर्स खंडाळा मध्ये आम्ही केवळ संगणक शिक्षण देत नाही, तर विद्यार्थ्यांच्या उज्ज्वल करिअरची भक्कम पायाभरणी करतो.'
+                : 'At Samarth Computers, Khandala, we don’t just teach computers — we build a solid foundation for your career.'}
             </p>
 
             <ul className="space-y-3.5 text-xs text-slate-200">
@@ -144,4 +148,3 @@ export default function WhyChooseUs({ lang = 'mr' }) {
     </section>
   );
 }
-

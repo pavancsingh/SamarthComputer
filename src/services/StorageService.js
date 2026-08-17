@@ -25,21 +25,26 @@ export const StorageService = {
   async uploadImage(file, folder = 'general') {
     if (!file) return null;
 
-    // Generate unique filename
-    const fileExt = file.name ? file.name.split('.').pop() : 'jpg';
+    // Clean file extension & filename
+    const fileExt = file.name ? file.name.split('.').pop().toLowerCase() : 'jpg';
     const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
 
     try {
-      // 1. Attempt upload to Supabase Storage
+      // 1. Upload to Supabase Storage bucket 'samarth-media'
       const { data, error } = await supabase.storage
         .from('samarth-media')
         .upload(fileName, file, {
-          cacheControl: '0',
+          cacheControl: '3600',
           upsert: true,
         });
 
-      if (!error && data) {
-        // Retrieve public URL
+      if (error) {
+        console.error('[StorageService] Supabase storage upload error:', error.message);
+        return null;
+      }
+
+      if (data) {
+        // Retrieve public URL from samarth-media bucket
         const { data: urlData } = supabase.storage
           .from('samarth-media')
           .getPublicUrl(fileName);
@@ -47,24 +52,12 @@ export const StorageService = {
         if (urlData && urlData.publicUrl) {
           return toVersionedUrl(urlData.publicUrl);
         }
-      } else {
-        console.warn('Supabase storage upload notice (using fallback):', error?.message);
       }
     } catch (err) {
-      console.warn('Supabase storage error (using fallback):', err.message);
+      console.error('[StorageService] Supabase storage exception:', err.message);
     }
 
-    // 2. Client-side Base64 Data URL Fallback
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = () => {
-        resolve(null);
-      };
-      reader.readAsDataURL(file);
-    });
+    return null;
   },
 
   /**

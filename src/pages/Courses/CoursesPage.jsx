@@ -83,7 +83,10 @@ const FALLBACK_COURSES = [
 
 
 export default function CoursesPage({ lang = 'mr', onNavigate }) {
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState(() => {
+    const cached = sharedStore.getCourses();
+    return cached && cached.length > 0 ? cached : FALLBACK_COURSES;
+  });
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -93,21 +96,30 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
 
   useEffect(() => {
+    let isMounted = true;
     async function load() {
       try {
         const data = await CourseRepository.getCourses(filter === 'all' ? 'all' : filter);
-        if (data && data.length > 0) {
+        if (isMounted && data && data.length > 0) {
           setCourses(data);
-        } else {
-          setCourses(FALLBACK_COURSES);
         }
-      } catch {
-        setCourses(FALLBACK_COURSES);
+      } catch (err) {
+        console.warn('Notice loading courses:', err.message);
       }
     }
     load();
-    const unsubscribe = sharedStore.subscribe(load);
-    return unsubscribe;
+
+    const unsubscribe = sharedStore.subscribe(() => {
+      if (isMounted) {
+        const updated = sharedStore.getCourses();
+        if (updated && updated.length > 0) setCourses(updated);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, [filter]);
 
   const filtered = courses.filter((c) => {
@@ -125,37 +137,35 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
       (c.subtitleEn || c.subtitle_en || c.overviewEn || c.overview_en || '').toLowerCase().includes(q);
   });
 
-  const displayCourses = filtered;
-
   return (
-    <div className="bg-background min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
-      {/* Ambient Background */}
+    <div className="bg-slate-50/70 min-h-screen relative overflow-x-hidden pb-20 md:pb-0">
+      {/* Ambient Background Orbs */}
       <div className="ambient-glow glow-orb-red w-[600px] h-[600px] top-[-200px] left-[-200px]" />
-      <div className="ambient-glow glow-orb-slate w-[500px] h-[500px] top-[40%] right-[-100px]" style={{ opacity: 0.1 }} />
+      <div className="ambient-glow glow-orb-slate w-[500px] h-[500px] top-[40%] right-[-100px]" style={{ opacity: 0.08 }} />
 
-      <main className="relative z-10 pb-2xl">
+      <main className="relative z-10 pb-16 md:pb-24">
         {/* Hero Section */}
-        <section className="max-w-7xl mx-auto px-4 md:px-gutter pt-xl pb-2xl flex flex-col items-center text-center">
-          {/* Badge */}
-          <span className="bg-stitch-red-light text-primary border border-stitch-red-border px-md py-xs rounded-full font-label-caps text-label-caps mb-lg inline-flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[16px] fill">school</span>
-            {isMarathi ? 'सर्व संगणक अभ्यासक्रम' : 'All Computer Courses'}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 md:pt-16 pb-12 flex flex-col items-center text-center">
+          {/* Official Badge Tag */}
+          <span className="bg-rose-50 text-primary border border-rose-200/80 px-4 py-1.5 rounded-full font-black text-xs mb-4 inline-flex items-center gap-1.5 shadow-xs">
+            <span className="material-symbols-outlined text-[18px] text-primary">school</span>
+            <span>{isMarathi ? 'सर्व संगणक अभ्यासक्रम' : 'All Computer Courses'}</span>
           </span>
 
-          <h1 className="font-display-hero-mobile text-display-hero-mobile md:font-display-hero md:text-display-hero text-text-primary mb-md max-w-4xl">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-4 max-w-4xl">
             {isMarathi ? 'डिजिटल जगात प्रभुत्व मिळवा' : 'Master the Digital World'}
           </h1>
 
-          <p className="font-body-lg text-body-lg text-secondary max-w-2xl mb-xl">
+          <p className="text-base sm:text-lg text-slate-600 font-medium max-w-2xl mb-8 leading-relaxed">
             {isMarathi
               ? 'MS-CIT, टॅली प्राइम, ॲडव्हान्स एक्सल आणि MKCL KLiC करिअर कोर्सेससह तुमचे उज्ज्वल भविष्य घडवा.'
               : 'Explore government-certified MS-CIT, Tally Prime, Advanced Excel, and MKCL KLiC career skill courses.'}
           </p>
 
           {/* Search & Filter Bar */}
-          <div className="w-full max-w-3xl bg-white p-sm rounded-xl border border-surface-variant/50 shadow-md flex flex-col md:flex-row gap-sm">
+          <div className="w-full max-w-3xl bg-white p-2 md:p-3 rounded-2xl border border-slate-200/90 shadow-md flex flex-col md:flex-row gap-2">
             <div className="relative flex-grow">
-              <span className="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-secondary text-[20px]">
+              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">
                 search
               </span>
               <input
@@ -163,34 +173,34 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={isMarathi ? 'कोर्स शोधा (उदा. Tally, MS-CIT, KLiC)...' : 'Search courses (e.g. Tally, MS-CIT, KLiC)...'}
-                className="w-full pl-xl pr-sm py-md bg-surface-container-lowest border-none rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-body-md text-body-md text-text-primary placeholder:text-on-secondary-container"
+                className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200/70 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary font-semibold text-sm text-slate-900 placeholder:text-slate-400"
               />
             </div>
-            <div className="flex gap-sm">
+            <div className="flex gap-2">
               <button
                 type="button"
-                className="bg-surface-container-low text-text-primary px-md py-md rounded-lg font-label-bold text-label-bold flex items-center gap-xs hover:bg-surface-container-highest transition-colors flex-1 md:flex-none justify-center"
+                className="bg-slate-100 hover:bg-slate-200 text-slate-800 px-5 py-3.5 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 transition-colors flex-1 md:flex-none"
                 onClick={() => { setSearchTerm(''); setFilter('all'); }}
               >
-                <span className="material-symbols-outlined text-[20px]">filter_list</span>
-                Reset
+                <span className="material-symbols-outlined text-[18px]">restart_alt</span>
+                <span>{isMarathi ? 'पुन्हा शोधा' : 'Reset'}</span>
               </button>
             </div>
           </div>
         </section>
 
         {/* Category Chips */}
-        <section className="max-w-7xl mx-auto px-4 md:px-gutter mb-xl overflow-x-auto hide-scrollbar">
-          <div className="flex gap-sm pb-sm min-w-max">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2.5 pb-2 min-w-max">
             {COURSE_CHIPS.map((chip) => (
               <button
                 key={chip.id}
                 type="button"
                 onClick={() => setFilter(chip.id)}
-                className={`font-label-bold text-label-bold px-lg py-sm rounded-full border transition-colors btn-interactive ${
+                className={`font-black text-xs px-5 py-2.5 rounded-full border transition-all ${
                   filter === chip.id
                     ? 'bg-primary text-white border-primary shadow-sm'
-                    : 'bg-white text-secondary hover:bg-surface border border-surface-variant'
+                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
                 }`}
               >
                 {isMarathi ? chip.labelMr : chip.labelEn}
@@ -200,29 +210,29 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
         </section>
 
         {/* Course Grid */}
-        <section className="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
-          {displayCourses.length === 0 ? (
-            <div className="bg-white border border-surface-variant/50 rounded-xl p-xl text-center space-y-md">
-              <span className="material-symbols-outlined text-4xl text-secondary">search_off</span>
-              <h3 className="font-headline-md text-headline-md text-text-primary">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          {filtered.length === 0 ? (
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-10 text-center space-y-4 shadow-sm">
+              <span className="material-symbols-outlined text-5xl text-slate-400">search_off</span>
+              <h3 className="font-black text-xl text-slate-900">
                 {isMarathi ? 'कोणताही अभ्यासक्रम सापडला नाही' : 'No matching courses found'}
               </h3>
-              <p className="font-body-md text-body-md text-secondary">
+              <p className="text-slate-600 text-sm font-medium max-w-md mx-auto">
                 {isMarathi ? 'कृपया इतर कीवर्ड वापरून शोधा किंवा फिल्टर बदला.' : 'Try searching with another keyword or reset category filters.'}
               </p>
               <button
                 type="button"
                 onClick={() => { setFilter('all'); setSearchTerm(''); }}
-                className="bg-primary text-white px-lg py-sm rounded-lg font-label-bold text-label-bold inline-block mt-sm"
+                className="bg-primary hover:bg-stitch-red-dark text-white px-6 py-3 rounded-xl font-extrabold text-xs inline-block mt-2 shadow-sm"
               >
                 {isMarathi ? 'सर्व कोर्सेस दाखवा' : 'Show All Courses'}
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-              {displayCourses.map((course, idx) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {filtered.map((course, idx) => {
               const tag = course.tag || (course.isPrimary ? 'Primary' : course.category?.toUpperCase() || 'Course');
-              const tagColor = course.tagColor || (course.isPrimary ? 'bg-stitch-red-light text-primary border border-stitch-red-border' : 'bg-surface-container-highest text-on-surface');
+              const tagColor = course.tagColor || (course.isPrimary ? 'bg-primary text-white' : 'bg-slate-100 text-slate-800 border border-slate-200');
               const desc = (isMarathi
                 ? course.subtitleMr || course.subtitle_mr || course.overviewMr || course.overview_mr
                 : course.subtitleEn || course.subtitle_en || course.overviewEn || course.overview_en
@@ -234,25 +244,29 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
               return (
                 <div
                   key={course.id || course.slug || idx}
-                  className="bg-white rounded-xl border border-surface-variant/50 p-lg flex flex-col h-full stitch-card-hover shadow-sm hover:shadow-md transition-all justify-between"
+                  className="bg-white rounded-3xl border border-slate-200/90 p-6 md:p-7 flex flex-col justify-between group shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
                 >
                   <div>
-                    {/* Image */}
+                    {/* Course Image */}
                     {(course.image_url || course.imageUrl) && (
-                      <div className="w-full h-44 overflow-hidden rounded-lg mb-md relative bg-slate-100">
+                      <div className="w-full h-48 overflow-hidden rounded-2xl mb-5 relative bg-slate-100 border border-slate-100">
                         <img
                           src={course.image_url || course.imageUrl}
                           alt={course.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                         />
-                        <span className={`absolute top-2 left-2 font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
+                        <span className={`absolute top-3 left-3 font-black text-[11px] px-3 py-1 rounded-full shadow-sm ${tagColor}`}>
                           {tag}
                         </span>
                         {(course.logoUrl || course.logo_url) && (
-                          <div className="absolute top-2 right-2 bg-white p-1 rounded-lg shadow-md border border-slate-200/80 w-12 h-12 flex items-center justify-center shrink-0">
+                          <div className="absolute top-3 right-3 bg-white p-1.5 rounded-2xl shadow-md border border-slate-200/90 w-12 h-12 flex items-center justify-center shrink-0">
                             <img
                               src={course.logoUrl || course.logo_url}
                               alt={`${course.title} logo`}
+                              loading="lazy"
+                              decoding="async"
                               className="max-w-full max-h-full object-contain"
                             />
                           </div>
@@ -260,46 +274,50 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                       </div>
                     )}
 
-                    <div className="flex justify-between items-start mb-xs">
+                    <div className="flex justify-between items-start mb-2">
                       {!course.image_url && !course.imageUrl && (
-                        <span className={`font-label-caps text-label-caps px-md py-xs rounded-full ${tagColor}`}>
+                        <span className={`font-black text-[11px] px-3 py-1 rounded-full ${tagColor}`}>
                           {tag}
                         </span>
                       )}
                       {(course.logoUrl || course.logo_url) && (!course.image_url && !course.imageUrl) && (
-                        <div className="bg-white p-1 rounded-lg shadow-md border border-slate-200/80 w-12 h-12 flex items-center justify-center shrink-0">
+                        <div className="bg-white p-1.5 rounded-2xl shadow-md border border-slate-200/90 w-12 h-12 flex items-center justify-center shrink-0">
                           <img
                             src={course.logoUrl || course.logo_url}
                             alt={`${course.title} logo`}
+                            loading="lazy"
+                            decoding="async"
                             className="max-w-full max-h-full object-contain"
                           />
                         </div>
                       )}
                     </div>
 
-                    <h3 className="font-headline-md text-headline-md text-text-primary mb-xs">{course.title}</h3>
+                    <h3 className="text-xl font-extrabold text-slate-900 mb-2 group-hover:text-primary transition-colors">
+                      {course.title}
+                    </h3>
                     
                     {duration && (
-                      <div className="flex items-center gap-xs text-xs font-label-bold text-secondary mb-xs">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 mb-3">
                         <span className="material-symbols-outlined text-[16px] text-primary">schedule</span>
                         <span>{duration}</span>
                       </div>
                     )}
 
-                    <p className="font-body-md text-body-md text-secondary mb-md line-clamp-3 leading-relaxed">{desc}</p>
+                    <p className="text-slate-600 text-xs sm:text-sm font-medium mb-4 line-clamp-3 leading-relaxed">{desc}</p>
 
                     {/* Key Topics */}
                     {keyTopics.length > 0 && (
-                      <div className="mb-md pt-xs border-t border-surface-variant/40">
-                        <h4 className="text-xs font-label-bold text-text-primary uppercase tracking-wider mb-xs">
+                      <div className="mb-5 pt-3.5 border-t border-slate-100">
+                        <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2">
                           {isMarathi ? 'मुख्य विषय (Key Topics):' : 'Key Topics:'}
                         </h4>
-                        <ul className="space-y-1">
+                        <ul className="space-y-1.5">
                           {keyTopics.map((topic, tidx) => {
                             const topicName = typeof topic === 'string' ? topic : (topic.name || topic.title || '');
                             return (
-                              <li key={tidx} className="text-xs text-secondary flex items-start gap-1.5">
-                                <span className="material-symbols-outlined text-[14px] text-stitch-emerald mt-0.5 shrink-0">check_circle</span>
+                              <li key={tidx} className="text-xs text-slate-700 font-medium flex items-start gap-1.5">
+                                <span className="material-symbols-outlined text-[15px] text-emerald-500 mt-0.5 shrink-0">check_circle</span>
                                 <span className="line-clamp-1">{topicName}</span>
                               </li>
                             );
@@ -310,7 +328,15 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-sm mt-auto pt-md border-t border-surface-variant/40 w-full">
+                  <div className="flex items-center gap-2 pt-4 border-t border-slate-100 mt-auto w-full">
+                    <a
+                      href="tel:+919552345061"
+                      className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs py-3 px-3 rounded-xl transition-all flex items-center justify-center gap-1 shadow-xs shrink-0"
+                      title="Call Now: +91 95523 45061"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-emerald-600">call</span>
+                      <span>{isMarathi ? 'कॉल' : 'Call'}</span>
+                    </a>
                     <button
                       type="button"
                       onClick={() => {
@@ -318,16 +344,16 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
                           onNavigate('details', course.slug || course.id);
                         }
                       }}
-                      className="flex-1 bg-white text-text-primary border border-surface-variant font-label-bold text-xs py-2.5 rounded-lg btn-interactive hover:bg-slate-50 text-center"
+                      className="flex-1 bg-white text-slate-800 border border-slate-300 font-extrabold text-xs py-3 px-3 rounded-xl hover:bg-slate-50 transition-colors text-center"
                     >
-                      {isMarathi ? 'तपशील पहा' : 'View Details'}
+                      {isMarathi ? 'तपशील' : 'Details'}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setAdmissionCourse(course.id || course.slug || ''); setIsCourseEnquiryOpen(true); }}
-                      className="flex-1 bg-primary text-white font-label-bold text-xs py-2.5 rounded-lg btn-interactive hover:bg-stitch-red-dark shadow-sm text-center"
+                      className="flex-1 bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-3 px-3 rounded-xl transition-all shadow-sm text-center"
                     >
-                      {isMarathi ? 'प्रवेश घ्या' : 'Enroll Now'}
+                      {isMarathi ? 'प्रवेश' : 'Enroll'}
                     </button>
                   </div>
                 </div>
@@ -337,28 +363,27 @@ export default function CoursesPage({ lang = 'mr', onNavigate }) {
           )}
         </section>
 
-        {/* CTA Section */}
-        <section className="max-w-7xl mx-auto px-4 md:px-gutter pb-2xl">
-          <div className="bg-stitch-slate-card rounded-xl p-xl flex flex-col md:flex-row items-center justify-between gap-xl relative overflow-hidden">
-            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
-            <div className="relative z-10 max-w-2xl text-center md:text-left">
-              <h2 className="font-headline-lg text-headline-lg text-on-secondary mb-md">
+        {/* Counseling CTA Banner */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="bg-slate-900 text-white rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
+            <div className="max-w-2xl text-center md:text-left space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                 {isMarathi ? 'कोणता कोर्स योग्य आहे हे ठरवत नाही?' : "Not sure which course is right for you?"}
               </h2>
-              <p className="font-body-md text-body-md text-secondary-fixed-dim">
+              <p className="text-slate-300 text-xs sm:text-sm font-medium leading-relaxed">
                 {isMarathi
                   ? 'आमचे तज्ञ समुपदेशक तुम्हाला तुमच्या कौशल्यांनुसार योग्य करिअर मार्ग शोधण्यात मदत करतील.'
                   : 'Our expert counselors can help you chart a career path based on your current skills and future goals. Book a free consultation today.'}
               </p>
             </div>
-            <div className="relative z-10 flex-shrink-0">
+            <div className="shrink-0">
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate('contact')}
-                className="bg-primary text-on-primary font-label-bold text-label-bold px-xl py-md rounded-lg btn-interactive shadow-lg flex items-center gap-sm"
+                className="bg-primary hover:bg-stitch-red-dark text-white font-black text-xs sm:text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center gap-2 hover:scale-105"
               >
                 <span className="material-symbols-outlined text-[20px]">support_agent</span>
-                {isMarathi ? 'मोफत समुपदेशन बुक करा' : 'Book Counseling'}
+                <span>{isMarathi ? 'मोफत समुपदेशन बुक करा' : 'Book Counseling'}</span>
               </button>
             </div>
           </div>

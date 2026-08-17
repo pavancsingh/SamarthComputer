@@ -1,177 +1,361 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import {
+  Rocket, Eye, Award, ShieldCheck, Lightbulb, Users,
+  CheckCircle2, Building2, Sparkles, Clock, ArrowRight,
+  Phone, GraduationCap, Star, Shield, HeartHandshake,
+  Target, MapPin
+} from 'lucide-react';
+import { sharedStore } from '../../repositories/sharedStore';
 
 /**
- * AboutPage — Stitch Design System (11_about_us.html)
- * Hero 12-col grid + Mission/Vision bento + Core Values 4-col + History Timeline
+ * AboutPage — Samarth Computers Khandala
+ * Premium Institute Overview with fixed timeline alignment, Lucide icons, stats, mission/vision bento, and CTA.
  */
 
 const CORE_VALUES = [
-  { icon: 'school',      titleEn: 'Excellence',  titleMr: 'उत्कृष्टता',  descEn: 'Commitment to the highest standards of education.', descMr: 'शिक्षणाच्या सर्वोच्च मानदंडांप्रती वचनबद्धता.' },
-  { icon: 'handshake',   titleEn: 'Integrity',   titleMr: 'प्रामाणिकता', descEn: 'Honesty and transparency in all operations.', descMr: 'सर्व कार्यात प्रामाणिकता आणि पारदर्शकता.' },
-  { icon: 'lightbulb',   titleEn: 'Innovation',  titleMr: 'नावीन्यता',   descEn: 'Continuously evolving our teaching methods.', descMr: 'आमच्या अध्यापन पद्धतींचे सतत उत्क्रांती.' },
-  { icon: 'diversity_3', titleEn: 'Inclusivity', titleMr: 'समावेशकता',  descEn: 'Education accessible to all backgrounds.', descMr: 'सर्व पार्श्वभूमीतील विद्यार्थ्यांसाठी शिक्षण.' },
+  {
+    icon: Award,
+    titleEn: 'Excellence in Training',
+    titleMr: 'उत्कृष्ट शिक्षण',
+    descEn: 'Commitment to high-quality practical computer education with updated course syllabus.',
+    descMr: 'अद्ययावत अभ्यासक्रमासह उच्च-दर्जाच्या प्रात्यक्षिक संगणक शिक्षणाची हमी.'
+  },
+  {
+    icon: ShieldCheck,
+    titleEn: '100% Transparency',
+    titleMr: 'पूर्ण प्रामाणिकता',
+    descEn: 'Honest guidance, clear fee structure, and government recognized certification.',
+    descMr: 'प्रामाणिक मार्गदर्शन, स्पष्ट फी रचना आणि शासकीय मान्यताप्राप्त प्रमाणपत्रे.'
+  },
+  {
+    icon: Lightbulb,
+    titleEn: 'Modern Innovation',
+    titleMr: 'नावीन्यपूर्ण पद्धती',
+    descEn: 'Incorporating AI tools, real-world accounting software, and practical work.',
+    descMr: 'AI टूल, प्रत्यक्ष टॅली व कॉम्प्युटर सॉफ्टवेअरचा सराव.'
+  },
+  {
+    icon: HeartHandshake,
+    titleEn: 'Student First Policy',
+    titleMr: 'विद्यार्थी-केंद्रित धोरण',
+    descEn: '1-on-1 personal guidance, flexible batch timings, and career counseling.',
+    descMr: 'वैयक्तिक मार्गदर्शन, लवचिक बॅच वेळ आणि करिअर समुपदेशन.'
+  }
 ];
 
 const TIMELINE = [
-  { year: '2010', titleEn: 'Foundation', titleMr: 'स्थापना', descEn: 'Samarth Computers was established with a small batch of students, focusing on basic computer literacy programs.', descMr: 'समर्थ कॉम्प्युटर्सची स्थापना विद्यार्थ्यांच्या छोट्या गटासह, पायाभूत संगणक साक्षरता कार्यक्रमांवर लक्ष केंद्रित करून.', primary: true, right: false },
-  { year: '2015', titleEn: 'Government Recognition', titleMr: 'शासकीय मान्यता', descEn: 'Achieved MKCL & CSC authorization, allowing us to offer certified diploma courses and government services.', descMr: 'MKCL आणि CSC अधिकृतता प्राप्त केली, ज्यामुळे प्रमाणपत्र अभ्यासक्रम आणि शासकीय सेवा उपलब्ध करण्यास सक्षम झालो.', primary: false, right: true },
-  { year: '2020', titleEn: 'Digital Transformation', titleMr: 'डिजिटल रूपांतरण', descEn: 'Launched comprehensive online learning resources and advanced AI & programming workshops.', descMr: 'ऑनलाइन शिक्षण संसाधने आणि प्रगत AI व प्रोग्रामिंग कार्यशाळा सुरू केल्या.', primary: false, right: false },
-  { year: 'TODAY', titleEn: 'Expanding Horizons', titleMr: 'विस्तारती क्षितिजे', descEn: 'Serving thousands of students annually with 20+ specialized courses and strong industry placement partnerships.', descMr: 'वार्षिक हजारो विद्यार्थ्यांना 20+ विशेष अभ्यासक्रमांसह आणि मजबूत उद्योग प्लेसमेंट भागीदारीसह सेवा.', primary: true, right: true },
+  {
+    year: '2010',
+    titleEn: 'Institute Foundation',
+    titleMr: 'संस्थेची स्थापना',
+    descEn: 'Samarth Computers was established in Khandala with a mission to spread digital literacy and basic computer education.',
+    descMr: 'ग्रामीण भागातील विद्यार्थ्यांना संगणक साक्षर बनवण्याच्या ध्येयाने खंडाळा येथे समर्थ कॉम्प्युटर्सची स्थापना.'
+  },
+  {
+    year: '2015',
+    titleEn: 'MKCL & CSC Authorization',
+    titleMr: 'MKCL व CSC अधिकृतता',
+    descEn: 'Achieved official MKCL ALC status for MS-CIT courses and launched online government service operations.',
+    descMr: 'MS-CIT साठी अधिकृत MKCL केंद्र व शासकीय सेतू/CSC केंद्र म्हणून मान्यता प्राप्त केली.'
+  },
+  {
+    year: '2020',
+    titleEn: 'Advanced Course Expansion',
+    titleMr: 'प्रगत अभ्यासक्रम विस्तार',
+    descEn: 'Introduced Tally Prime GST, Advanced Excel, DTP Graphic Design, and MKCL KLiC career diploma programs.',
+    descMr: 'टॅली प्राइम GST, ॲडव्हान्स एक्सल, DTP डिझायनिंग व KLiC करिअर कोर्सेसचा समावेश.'
+  },
+  {
+    year: 'PRESENT',
+    titleEn: 'Leading IT Education Center',
+    titleMr: 'अग्रगण्य डिजिटल संस्था',
+    descEn: 'Empowered over 10,000+ students and citizens with 20+ courses and instant online government services.',
+    descMr: '१०,००० हून अधिक विद्यार्थ्यांना संगणक प्रशिक्षित करून आत्मनिर्भर बनवले.'
+  }
 ];
 
-import { sharedStore } from '../../repositories/sharedStore';
+const STATS = [
+  { value: '15+', labelEn: 'Years Experience', labelMr: 'वर्षे अनुभव', icon: Clock },
+  { value: '10,000+', labelEn: 'Students Trained', labelMr: 'प्रशिक्षित विद्यार्थी', icon: GraduationCap },
+  { value: '20+', labelEn: 'Certified Courses', labelMr: 'प्रमाणित अभ्यासक्रम', icon: Award },
+  { value: '100%', labelEn: 'Govt & MKCL Recognized', labelMr: 'शासकीय मान्यता', icon: ShieldCheck }
+];
 
 export default function AboutPage({ lang = 'mr', onNavigate }) {
   const isMarathi = lang === 'mr';
-  const [settings, setSettings] = React.useState(sharedStore.getSiteSettings());
+  const [settings, setSettings] = useState(sharedStore.getSiteSettings());
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsub = sharedStore.subscribe(() => setSettings(sharedStore.getSiteSettings()));
     return () => unsub();
   }, []);
 
   return (
-    <div className="bg-background min-h-screen pb-20 md:pb-0">
-      <main className="flex-grow pt-lg pb-2xl">
+    <div className="bg-slate-50/70 min-h-screen relative overflow-x-hidden pb-20 md:pb-12">
+      {/* Background Orbs */}
+      <div className="ambient-glow glow-orb-red w-[500px] h-[500px] top-[-150px] left-[-150px]" />
+      <div className="ambient-glow glow-orb-slate w-[400px] h-[400px] top-[40%] right-[-100px]" style={{ opacity: 0.08 }} />
 
-        {/* ── Hero Section ── */}
-        <section className="max-w-7xl mx-auto px-md lg:px-lg mb-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
-            {/* Left */}
-            <motion.div
-              className="lg:col-span-7 space-y-md"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="inline-block bg-stitch-red-light px-sm py-xs rounded-full">
-                <span className="font-label-caps text-label-caps text-primary tracking-widest">
-                  {isMarathi ? 'आमच्याबद्दल' : 'ABOUT US'}
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-14 space-y-16 md:space-y-24">
+
+        {/* ── 1. Hero Section ── */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <motion.div
+            className="lg:col-span-7 space-y-5 text-center lg:text-left"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200/80 text-primary text-xs font-black shadow-xs">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span>{isMarathi ? 'समर्थ कॉम्प्युटर्स खंडाळा' : 'Samarth Computers Khandala'}</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
+              {isMarathi ? (
+                <>{settings.aboutHeadingMr || '२०१० पासून खंडाळ्यात संगणक शिक्षणाची गुणवत्ता आणि विश्वास'}</>
+              ) : (
+                <>{settings.aboutHeadingEn || '15+ Years of Educational Excellence in Khandala'}</>
+              )}
+            </h1>
+
+            <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              {isMarathi
+                ? (settings.aboutDescMr || 'समर्थ कॉम्प्युटर्स खंडाळा हे MKCL मान्यताप्राप्त अग्रगण्य संगणक प्रशिक्षण आणि सीएससी शासकीय सेवा केंद्र आहे. २०१० पासून आम्ही १०,००० हून अधिक विद्यार्थ्यांना व्यावहारिक संगणक कौशल्ये आणि प्रात्यक्षिक ज्ञान देवून सक्षम केले आहे.')
+                : (settings.aboutDescEn || 'Samarth Computers is Khandala’s trusted MKCL-authorized training institute and CSC center. Since 2010, we have empowered over 10,000+ students with practical computer skills, industry certifications, and fast-track digital government services.')}
+            </p>
+
+            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('courses')}
+                className="bg-primary hover:bg-stitch-red-dark text-white font-black text-sm px-6 py-3.5 rounded-2xl shadow-md transition-all flex items-center gap-2 hover:scale-105"
+              >
+                <span>{isMarathi ? 'कोर्सेस पहा' : 'Explore Courses'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('contact')}
+                className="bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-black text-sm px-6 py-3.5 rounded-2xl shadow-xs transition-all flex items-center gap-2"
+              >
+                <MapPin className="w-4 h-4 text-slate-500" />
+                <span>{isMarathi ? 'केंद्राला भेट द्या' : 'Visit Center'}</span>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Hero Image */}
+          <motion.div
+            className="lg:col-span-5 relative"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/90 aspect-4/3 bg-slate-100 group">
+              <img
+                src={settings.aboutImageUrl || 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80'}
+                alt="Samarth Computers Institute"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <span className="bg-primary/90 text-white font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider mb-1.5 inline-block">
+                  {isMarathi ? 'अधिकृत संस्था' : 'MKCL Authorized'}
                 </span>
+                <p className="font-extrabold text-sm sm:text-base leading-snug">
+                  {isMarathi ? 'राजेंद्र विद्यालयाजवळ, खंडाळा' : 'Near Rajendra Vidhalya, Khandala'}
+                </p>
               </div>
-              <h1 className="font-display-hero-mobile text-display-hero-mobile lg:font-display-hero lg:text-display-hero text-on-background">
-                {isMarathi ? (
-                  <>{settings.aboutHeadingMr || 'मनांना सक्षम करत आहोत २०१० पासून'}</>
-                ) : (
-                  <>{settings.aboutHeadingEn || 'Empowering Minds Since 2010'}</>
-                )}
-              </h1>
-              <p className="font-body-lg text-body-lg text-secondary">
-                {isMarathi
-                  ? (settings.aboutDescMr || 'समर्थ कॉम्प्युटर्स हे खंडाळ्यातील अग्रगण्य संगणक प्रशिक्षण केंद्र आहे. आम्ही २०१० पासून विद्यार्थ्यांना उच्च दर्जाचे संगणक शिक्षण आणि शासकीय डिजिटल सेवा पुरवत आहोत.')
-                  : (settings.aboutDescEn || 'Samarth Computers is a premier computer training institute in Khandala. Since 2010, we have been providing high-quality IT education and government digital services to students and citizens.')}
-              </p>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ── 2. Institute Highlights / Stats Bar ── */}
+        <section className="bg-white rounded-3xl border border-slate-200/90 p-6 md:p-8 shadow-sm">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-x-0 md:divide-x divide-slate-100">
+            {STATS.map((stat, idx) => {
+              const IconComp = stat.icon;
+              return (
+                <div key={idx} className="p-3 flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 rounded-2xl bg-rose-50 text-primary flex items-center justify-center shadow-xs">
+                    <IconComp className="w-6 h-6" />
+                  </div>
+                  <span className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">{stat.value}</span>
+                  <span className="text-xs sm:text-sm font-bold text-slate-600">
+                    {isMarathi ? stat.labelMr : stat.labelEn}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── 3. Mission & Vision Bento Grid ── */}
+        <section className="space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-primary font-black text-xs tracking-widest uppercase block">
+              {isMarathi ? 'उद्दिष्ट व दृष्टी' : 'Our Purpose'}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              {isMarathi ? 'ध्येय आणि दृष्टी' : 'Mission & Vision'}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            {/* Mission Card */}
+            <motion.div
+              className="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between"
+              whileHover={{ y: -4 }}
+            >
+              <div className="absolute top-0 right-0 w-36 h-36 bg-rose-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110 duration-500 pointer-events-none" />
+              <div className="space-y-4 relative z-10">
+                <div className="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-md">
+                  <Rocket className="w-7 h-7" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900">
+                  {isMarathi ? 'आमचे ध्येय (Mission)' : 'Our Mission'}
+                </h3>
+                <p className="text-slate-600 text-sm sm:text-base font-medium leading-relaxed">
+                  {isMarathi
+                    ? (settings.aboutMissionMr || 'ग्रामीण भागातील विद्यार्थ्यांना परवडणारे, उच्च-दर्जाचे तांत्रिक व व्यावसायिक संगणक शिक्षण देवून त्यांना रोजगारक्षम व आत्मनिर्भर बनवणे.')
+                    : (settings.aboutMissionEn || 'To deliver practical, high-quality IT education that empowers rural youth with industry-relevant digital skills, confidence, and career growth.')}
+                </p>
+              </div>
             </motion.div>
 
-            {/* Right: Institute Image */}
-            <div className="lg:col-span-5 relative h-64 lg:h-96 rounded-xl overflow-hidden shadow-lg border border-slate-200">
-              <div
-                className="absolute inset-0 bg-cover bg-center w-full h-full"
-                style={{
-                  backgroundImage: `url('${settings.aboutImageUrl || 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80'}')`,
-                }}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* ── Mission & Vision Bento ── */}
-        <section className="max-w-7xl mx-auto px-md lg:px-lg mb-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            {/* Mission */}
-            <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] border border-surface-variant relative overflow-hidden group hover:shadow-[0_15px_35px_-5px_rgba(183,0,14,0.15)] transition-all duration-300">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-stitch-red-light rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500" />
-              <div className="w-12 h-12 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center mb-md relative z-10">
-                <span className="material-symbols-outlined fill">rocket_launch</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg text-on-background mb-sm relative z-10">
-                {isMarathi ? 'आमचे ध्येय' : 'Our Mission'}
-              </h2>
-              <p className="font-body-md text-body-md text-secondary relative z-10">
-                {isMarathi
-                  ? 'सुलभ, उच्च-दर्जाचे व्यावसायिक आणि तांत्रिक शिक्षण प्रदान करणे जे व्यक्तींना आधुनिक कार्यबळात उत्कृष्टतेसाठी आवश्यक कौशल्ये सक्षम करते.'
-                  : 'To provide accessible, high-quality vocational and technical education that equips individuals with the skills necessary to excel in the modern workforce, fostering economic growth and personal development.'}
-              </p>
-            </div>
-
-            {/* Vision */}
-            <div className="bg-stitch-slate-card rounded-xl p-lg shadow-[0_10px_25px_-5px_rgba(0,0,0,0.2)] border border-slate-700 relative overflow-hidden group">
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-slate-800 rounded-tr-full -ml-24 -mb-24 transition-transform group-hover:scale-110 duration-500" />
-              <div className="w-12 h-12 bg-slate-700 text-on-secondary rounded-lg flex items-center justify-center mb-md relative z-10">
-                <span className="material-symbols-outlined fill">visibility</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg text-on-secondary mb-sm relative z-10">
-                {isMarathi ? 'आमची दृष्टी' : 'Our Vision'}
-              </h2>
-              <p className="font-body-md text-body-md text-slate-300 relative z-10">
-                {isMarathi
-                  ? 'प्रशिक्षण पद्धतींमधील नवकल्पनासाठी ओळखले जाणारे आणि उद्योग-तयार व्यावसायिक निर्माण करणारे अग्रणी शासकीय-मान्यताप्राप्त शैक्षणिक संस्था बनणे.'
-                  : 'To be the leading government-recognized educational institute, recognized for innovation in training methodologies and generating industry-ready professionals.'}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Core Values ── */}
-        <section className="max-w-7xl mx-auto px-md lg:px-lg mb-2xl">
-          <h2 className="font-headline-lg text-headline-lg text-center mb-lg">
-            {isMarathi ? 'मूलभूत मूल्ये' : 'Core Values'}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
-            {CORE_VALUES.map((v, idx) => (
-              <motion.div
-                key={idx}
-                className="bg-surface-container-lowest p-md rounded-lg border border-surface-variant text-center hover:shadow-[0_0_15px_rgba(183,0,14,0.1)] transition-shadow"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <span className="material-symbols-outlined fill text-primary text-4xl mb-sm block">
-                  {v.icon}
-                </span>
-                <h3 className="font-headline-md text-headline-md text-on-background mb-xs">
-                  {isMarathi ? v.titleMr : v.titleEn}
+            {/* Vision Card */}
+            <motion.div
+              className="bg-slate-900 text-white rounded-3xl p-8 border border-slate-800 shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between"
+              whileHover={{ y: -4 }}
+            >
+              <div className="absolute bottom-0 right-0 w-44 h-44 bg-slate-800/60 rounded-tl-full -mr-10 -mb-10 transition-transform group-hover:scale-110 duration-500 pointer-events-none" />
+              <div className="space-y-4 relative z-10">
+                <div className="w-14 h-14 bg-white/10 text-rose-400 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-md">
+                  <Eye className="w-7 h-7" />
+                </div>
+                <h3 className="text-2xl font-black text-white">
+                  {isMarathi ? 'आमची दृष्टी (Vision)' : 'Our Vision'}
                 </h3>
-                <p className="font-body-md text-body-md text-secondary text-sm">
-                  {isMarathi ? v.descMr : v.descEn}
+                <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
+                  {isMarathi
+                    ? (settings.aboutVisionMr || 'डिजिटल तंत्रज्ञान, टॅली व कॉम्प्युटर शिक्षणातील नावीन्यपूर्ण प्रात्यक्षिक प्रशिक्षण पद्धतींनी खंडाळा तालुक्यातील सर्वात विश्वासू संस्था बनणे.')
+                    : (settings.aboutVisionEn || 'To remain Khandala’s most trusted center for technical education and online government services, empowering every student with career-ready IT capabilities.')}
                 </p>
-              </motion.div>
-            ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ── History Timeline ── */}
-        <section className="max-w-7xl mx-auto px-md lg:px-lg">
-          <h2 className="font-headline-lg text-headline-lg text-center mb-xl">
-            {isMarathi ? 'आमचा प्रवास' : 'Our Journey'}
-          </h2>
-          <div className="relative border-l-2 border-surface-variant ml-4 md:ml-[50%]">
-            {TIMELINE.map((item, idx) => {
-              const rightClass = item.right ? 'md:w-1/2 md:pr-8 md:pl-0 md:-ml-[2px] md:text-right' : 'md:w-1/2 md:ml-auto md:pl-8';
-              const dotPos = item.right ? 'md:left-auto md:-right-[9px]' : 'md:-left-[9px]';
-              const cardBg = item.primary && item.right
-                ? 'bg-primary-container border border-primary-fixed-dim text-on-primary-container'
-                : 'bg-surface-container-lowest border border-surface-variant';
+        {/* ── 4. Core Values ── */}
+        <section className="space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-primary font-black text-xs tracking-widest uppercase block">
+              {isMarathi ? 'नैतिकता व तत्त्वे' : 'Our Principles'}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              {isMarathi ? 'मूलभूत मूल्ये (Core Values)' : 'Core Values'}
+            </h2>
+          </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {CORE_VALUES.map((val, idx) => {
+              const IconComponent = val.icon;
               return (
-                <div key={idx} className={`mb-lg pl-8 relative ${rightClass}`}>
-                  <div className={`absolute w-4 h-4 ${item.primary ? 'bg-primary' : 'bg-surface-variant'} rounded-full -left-[9px] ${dotPos} top-1 border-4 border-surface-container-lowest`} />
-                  <div className={`p-md rounded-lg shadow-sm ${cardBg}`}>
-                    <span className={`font-label-caps text-label-caps ${item.primary && item.right ? 'text-on-primary-container' : 'text-primary'}`}>
-                      {item.year}
-                    </span>
-                    <h3 className={`font-headline-md text-headline-md mt-xs ${item.primary && item.right ? 'text-on-primary-container' : ''}`}>
-                      {isMarathi ? item.titleMr : item.titleEn}
+                <div
+                  key={idx}
+                  className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-primary flex items-center justify-center">
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <h3 className="font-extrabold text-lg text-slate-900">
+                      {isMarathi ? val.titleMr : val.titleEn}
                     </h3>
-                    <p className={`font-body-md text-body-md mt-sm ${item.primary && item.right ? 'text-on-primary-container/90' : 'text-secondary'}`}>
-                      {isMarathi ? item.descMr : item.descEn}
+                    <p className="text-slate-600 text-xs sm:text-sm font-medium leading-relaxed">
+                      {isMarathi ? val.descMr : val.descEn}
                     </p>
                   </div>
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* ── 5. History Timeline ("Our Journey") — FIXED PERFECT ALTERNATING LAYOUT ── */}
+        <section className="space-y-10">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-primary font-black text-xs tracking-widest uppercase block">
+              {isMarathi ? 'प्रगतीचा प्रवास' : 'Milestones'}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              {isMarathi ? 'आमचा प्रवास (Our Journey)' : 'Our Journey'}
+            </h2>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto px-4">
+            {/* Central Vertical Line */}
+            <div className="absolute left-6 md:left-1/2 top-2 bottom-2 w-0.5 bg-slate-200 md:-translate-x-1/2" />
+
+            <div className="space-y-8 md:space-y-12">
+              {TIMELINE.map((item, idx) => {
+                const isEven = idx % 2 === 0;
+                return (
+                  <div
+                    key={idx}
+                    className={`relative flex flex-col md:flex-row items-start ${
+                      isEven ? 'md:flex-row-reverse' : ''
+                    }`}
+                  >
+                    {/* Center Node Dot */}
+                    <div className="absolute left-6 md:left-1/2 top-5 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-md z-10 -translate-x-1/2" />
+
+                    {/* Content Card */}
+                    <div className={`w-full md:w-1/2 pl-12 md:pl-0 ${isEven ? 'md:pr-10 md:text-right' : 'md:pl-10 md:text-left'}`}>
+                      <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-2">
+                        <span className="bg-rose-50 text-primary border border-rose-200/80 font-black text-xs px-3 py-1 rounded-full inline-block">
+                          {item.year}
+                        </span>
+                        <h3 className="text-xl font-extrabold text-slate-900">
+                          {isMarathi ? item.titleMr : item.titleEn}
+                        </h3>
+                        <p className="text-slate-600 text-xs sm:text-sm font-medium leading-relaxed">
+                          {isMarathi ? item.descMr : item.descEn}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── 6. High-Converting CTA Banner ── */}
+        <section className="pb-8">
+          <div className="bg-slate-900 text-white rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl border border-slate-800">
+            <div className="max-w-2xl text-center md:text-left space-y-3">
+              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                {isMarathi ? 'करिअरला उंचावण्यासाठी आजच प्रवेश घ्या!' : 'Transform Your Future Today'}
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm font-medium leading-relaxed">
+                {isMarathi
+                  ? 'MS-CIT, टॅली प्राइम, ॲडव्हान्स एक्सल आणि करिअर कोर्सेसमध्ये प्रवेश घेऊन तुमचे भवितव्य उज्ज्वल करा.'
+                  : 'Join 10,000+ successful alumni. Book a free career counseling session or visit our institute today.'}
+              </p>
+            </div>
+            <div className="shrink-0 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('contact')}
+                className="bg-primary hover:bg-stitch-red-dark text-white font-black text-xs sm:text-sm px-6 py-4 rounded-2xl shadow-md transition-all flex items-center gap-2 hover:scale-105"
+              >
+                <Phone className="w-4 h-4" />
+                <span>{isMarathi ? 'संपर्क साधा' : 'Contact Center'}</span>
+              </button>
+            </div>
           </div>
         </section>
 

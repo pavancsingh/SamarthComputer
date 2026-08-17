@@ -77,7 +77,7 @@ export default function AdminLoginPage({ lang = 'en', onSuccess, onNavigate }) {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email..."
+                placeholder="Enter email address or username"
                 required
                 autoComplete="off"
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 shadow-sm"

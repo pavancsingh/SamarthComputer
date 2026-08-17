@@ -65,7 +65,7 @@ export default function StudentVerificationPage({ lang = 'mr' }) {
       <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-sm max-w-2xl mx-auto mb-10">
         <form onSubmit={handleVerify} className="space-y-4">
           <label className="block text-xs font-black uppercase text-slate-500 tracking-wider">
-            {isMarathi ? 'नोंदणी क्रमांक / विद्यार्थी नाव दर्ज करा:' : 'Registration No. / Student Name:'}
+            {isMarathi ? 'नोंदणी क्रमांक किंवा विद्यार्थ्याचे नाव प्रविष्ट करा:' : 'Registration No. / Student Name:'}
           </label>
 
           <div className="relative flex flex-col sm:flex-row gap-3">
@@ -100,7 +100,7 @@ export default function StudentVerificationPage({ lang = 'mr' }) {
         {/* Helper Note */}
         <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-500 font-semibold">
           <Award className="w-4 h-4 text-amber-500 shrink-0" />
-          <span>{isMarathi ? 'टीप: प्रमाणपत्रावरील अधिकृत रजिस्ट्रेशन नंबर टाकून पडताळणी करा.' : 'Enter the Registration Number printed on your physical certificate.'}</span>
+          <span>{isMarathi ? 'टीप: तुमच्या प्रमाणपत्रावर मुद्रित केलेला अधिकृत नोंदणी क्रमांक टाकून पडताळणी करा.' : 'Enter the Registration Number printed on your physical certificate.'}</span>
         </div>
       </div>
 

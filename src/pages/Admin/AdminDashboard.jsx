@@ -4,7 +4,7 @@ import {
   BookOpen, FileText, Users, RefreshCw, Sparkles, Filter, Building2,
   Camera, Upload, Image, Loader2, GraduationCap, KeyRound, Database, DatabaseBackup,
   Clock, Megaphone, Search, Bell, Menu, ChevronRight, Phone, MessageSquare,
-  LayoutDashboard, ArrowUpRight, CheckCircle, AlertCircle, Eye, SlidersHorizontal, Info
+  LayoutDashboard, ArrowUpRight, CheckCircle, AlertCircle, Eye, SlidersHorizontal, Info, Globe, Layers, Award, Milestone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminRepository } from '../../repositories/AdminRepository';
@@ -13,20 +13,12 @@ import { StorageService, toVersionedUrl } from '../../services/StorageService';
 
 /**
  * AdminDashboard Component — Stitch Design System (Admin Suite)
- * Covers all 9 Stitch Admin screens:
- * 1. Overview Dashboard (KPI stats, quick actions, recent lead feed)
- * 2. Inbox Leads & Inquiries
- * 3. Courses Management
- * 4. Course Details Side Drawer (slide-over panel)
- * 5. CSC Services Management
- * 6. Government Services Management
- * 7. Batch Timetable & Schedule
- * 8. Campus Gallery & Photos
- * 9. Branding & Site Settings
+ * Covers all Stitch Admin screens and preserves 100% existing functionality
  */
 export default function AdminDashboard({ lang = 'en', onLogout }) {
   const { logoutAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [adminLang, setAdminLang] = useState(lang);
 
   const handleLogout = async () => {
     await logoutAdmin();
@@ -70,12 +62,32 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
   const [pendingHero, setPendingHero] = useState(null); // { file: File, previewUrl: string }
 
   useEffect(() => {
-    loadAllData();
+    let isMounted = true;
+    async function init() {
+      try {
+        const dbSettings = await AdminRepository.getSiteSettings();
+        if (isMounted && dbSettings) {
+          setSiteSettings(dbSettings);
+        }
+      } catch (e) {
+        console.warn('[AdminDashboard] Settings load notice:', e.message);
+      }
+      if (isMounted) {
+        await loadAllData();
+      }
+    }
+    init();
+
     const unsubscribe = sharedStore.subscribe(() => {
-      loadAllData();
-      setSiteSettings(sharedStore.getSiteSettings());
+      if (isMounted) {
+        loadAllData();
+      }
     });
-    return unsubscribe;
+
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, []);
 
   async function loadAllData() {
@@ -554,7 +566,8 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     { id: 'inquiries', label: 'Inbox Leads', icon: Users, badge: inquiries.length },
     { id: 'courses', label: 'Courses', icon: BookOpen, badge: courses.length },
     { id: 'csc', label: 'Online CSC & Services', icon: FileText, badge: cscServices.length },
-    { id: 'faculty', label: 'Faculty', icon: GraduationCap, badge: facultyList.length },
+    { id: 'govt', label: 'Govt Schemes Catalog', icon: Building2, badge: govtServices.length },
+    { id: 'faculty', label: 'Faculty & Staff', icon: GraduationCap, badge: facultyList.length },
     { id: 'news', label: 'News & Updates', icon: Megaphone, badge: newsList.length },
     { id: 'timetable', label: 'Batch Timetable', icon: Clock, badge: batchesList.length },
     { id: 'gallery', label: 'Campus Photos', icon: Camera, badge: siteGallery.length },
@@ -615,13 +628,32 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search leads, courses, services, faculty..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all placeholder:text-slate-400 shadow-sm"
+              className="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-10 pr-9 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all placeholder:text-slate-400 shadow-sm"
             />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded-full"
+                title="Clear Search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 
         {/* Actions & Profile */}
         <div className="flex items-center gap-2">
+          {/* Admin UI Language Switcher */}
+          <button 
+            onClick={() => setAdminLang(adminLang === 'en' ? 'mr' : 'en')}
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-200"
+            title="Toggle Admin View Language (English / मराठी)"
+          >
+            <Globe className="w-3.5 h-3.5 text-primary" />
+            <span>{adminLang === 'en' ? 'मराठी' : 'EN'}</span>
+          </button>
+
           <button 
             onClick={loadAllData}
             className="p-2 text-slate-600 hover:bg-slate-100 rounded-full transition-colors active:scale-95 relative"
@@ -1055,17 +1087,23 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                               </td>
                               <td className="p-4 text-slate-500">{inq.batch_timing || '-'}</td>
                               <td className="p-4">
-                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${
-                                  inq.status === 'Completed' 
-                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                                    : inq.status === 'In Process'
-                                    ? 'bg-amber-50 text-amber-700 border-amber-200'
-                                    : 'bg-rose-50 text-rose-700 border-rose-200'
-                                }`}>
-                                  {inq.status || 'New Lead'}
-                                </span>
+                                <select
+                                  value={inq.status || 'New Lead'}
+                                  onChange={(e) => handleInquiryStatus(inq.id, e.target.value)}
+                                  className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border focus:outline-none cursor-pointer ${
+                                    inq.status === 'Completed' 
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                                      : inq.status === 'In Process'
+                                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                                      : 'bg-rose-50 text-rose-700 border-rose-200'
+                                  }`}
+                                >
+                                  <option value="New Lead">🔴 New Lead</option>
+                                  <option value="In Process">🟡 In Process</option>
+                                  <option value="Completed">🟢 Completed</option>
+                                </select>
                               </td>
-                              <td className="p-4 text-right space-x-2">
+                              <td className="p-4 text-right space-x-2 flex items-center justify-end">
                                 <a
                                   href={`https://wa.me/91${inq.mobile}?text=${encodeURIComponent(`Hello ${inq.name}, regards from Samarth Computers Khandala regarding your inquiry.`)}`}
                                   target="_blank"
@@ -1078,10 +1116,11 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                                 </a>
 
                                 <button
-                                  onClick={() => handleInquiryStatus(inq.id, 'Completed')}
-                                  className="bg-primary hover:bg-stitch-red-dark text-white px-2.5 py-1 rounded-lg text-[11px] font-bold shadow-sm transition-all"
+                                  onClick={() => { setEditingItem(inq); setFormType('inquiry'); }}
+                                  className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 p-1.5 rounded-lg transition-all"
+                                  title="Edit Lead Details"
                                 >
-                                  Done
+                                  <Edit3 className="w-3.5 h-3.5" />
                                 </button>
                                 
                                 <button
@@ -2172,7 +2211,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                         <label className="block text-xs font-bold text-slate-700 mb-1">Call CTA Phone Number:</label>
                         <input
                           type="text"
-                          value={siteSettings.callCtaPhone || siteSettings.contactPhone || '+919552345061'}
+                          value={siteSettings.callCtaPhone ?? ''}
                           onChange={(e) => setSiteSettings({ ...siteSettings, callCtaPhone: e.target.value })}
                           placeholder="+919552345061"
                           className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900"
@@ -2300,7 +2339,19 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Facebook Page URL:</label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-slate-700">Facebook Page URL:</label>
+                          {siteSettings.socialFacebook && (
+                            <a 
+                              href={siteSettings.socialFacebook} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-blue-600 hover:underline font-bold flex items-center gap-1"
+                            >
+                              <ArrowUpRight className="w-3 h-3" /> Open Link
+                            </a>
+                          )}
+                        </div>
                         <input
                           type="url"
                           value={siteSettings.socialFacebook || ''}
@@ -2310,7 +2361,19 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Instagram Profile URL:</label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-slate-700">Instagram Profile URL:</label>
+                          {siteSettings.socialInstagram && (
+                            <a 
+                              href={siteSettings.socialInstagram} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-pink-600 hover:underline font-bold flex items-center gap-1"
+                            >
+                              <ArrowUpRight className="w-3 h-3" /> Open Link
+                            </a>
+                          )}
+                        </div>
                         <input
                           type="url"
                           value={siteSettings.socialInstagram || ''}
@@ -2323,7 +2386,19 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">YouTube Channel URL:</label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-slate-700">YouTube Channel URL:</label>
+                          {siteSettings.socialYoutube && (
+                            <a 
+                              href={siteSettings.socialYoutube} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-red-600 hover:underline font-bold flex items-center gap-1"
+                            >
+                              <ArrowUpRight className="w-3 h-3" /> Open Link
+                            </a>
+                          )}
+                        </div>
                         <input
                           type="url"
                           value={siteSettings.socialYoutube || ''}
@@ -2333,7 +2408,19 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Direct Chat Number:</label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-slate-700">WhatsApp Direct Chat Number:</label>
+                          {siteSettings.contactWhatsapp && (
+                            <a 
+                              href={`https://wa.me/${siteSettings.contactWhatsapp}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-emerald-600 hover:underline font-bold flex items-center gap-1"
+                            >
+                              <ArrowUpRight className="w-3 h-3" /> Open Chat
+                            </a>
+                          )}
+                        </div>
                         <input
                           type="text"
                           value={siteSettings.contactWhatsapp || '919552345061'}
@@ -2412,13 +2499,83 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     </div>
                   </div>
 
+                  {/* SEO & Meta Tag Settings */}
+                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+                    <h3 className="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2">
+                      Google SEO &amp; Meta Search Optimization
+                    </h3>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">SEO Title (Browser Tab &amp; Google Result):</label>
+                      <input
+                        type="text"
+                        value={siteSettings.seoTitle || ''}
+                        onChange={(e) => setSiteSettings({ ...siteSettings, seoTitle: e.target.value })}
+                        placeholder="Samarth Computers Khandala — Computer Institute & CSC Center"
+                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">SEO Meta Description:</label>
+                      <textarea
+                        rows={2}
+                        value={siteSettings.seoDescription || ''}
+                        onChange={(e) => setSiteSettings({ ...siteSettings, seoDescription: e.target.value })}
+                        placeholder="Best computer institute in Khandala offering MS-CIT, Tally Prime GST, Advanced Excel, KLiC, DTP and government online CSC services."
+                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">SEO Keywords (Comma Separated):</label>
+                      <input
+                        type="text"
+                        value={siteSettings.seoKeywords || ''}
+                        onChange={(e) => setSiteSettings({ ...siteSettings, seoKeywords: e.target.value })}
+                        placeholder="MS-CIT Khandala, Tally Prime, Computer Class Khandala, CSC Center, Aaple Sarkar"
+                        className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Footer & Copyright Settings */}
+                  <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+                    <h3 className="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2">
+                      Footer Tagline &amp; Copyright Notice
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Footer Tagline:</label>
+                        <input
+                          type="text"
+                          value={siteSettings.footerTagline || ''}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, footerTagline: e.target.value })}
+                          placeholder="Empowering Khandala youth with digital skills since 2012."
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Copyright Notice Text:</label>
+                        <input
+                          type="text"
+                          value={siteSettings.copyrightText || ''}
+                          onChange={(e) => setSiteSettings({ ...siteSettings, copyrightText: e.target.value })}
+                          placeholder="© 2026 Samarth Computers Khandala. All Rights Reserved."
+                          className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Save className="w-4 h-4 text-white" />
-                    <span>Save Institute Information</span>
+                    <span>Save Institute Information &amp; SEO</span>
                   </button>
                 </form>
               </div>
@@ -2507,7 +2664,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
             {/* Course Form */}
             {formType === 'course' && (
-              <form onSubmit={handleSaveCourse} className="space-y-3">
+              <form onSubmit={handleSaveCourse} className="space-y-3 max-h-[75vh] overflow-y-auto pr-1">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Course Title:</label>
                   <input
@@ -2535,7 +2692,7 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Display Order:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Display Order Position:</label>
                     <input
                       type="number"
                       value={editingItem.displayOrder !== undefined ? editingItem.displayOrder : (editingItem.display_order || 0)}
@@ -2545,54 +2702,133 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800">
+                <div className="grid grid-cols-3 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={editingItem.isActive !== undefined ? editingItem.isActive : (editingItem.is_active !== undefined ? editingItem.is_active : true)}
+                      onChange={(e) => setEditingItem({ ...editingItem, isActive: e.target.checked, is_active: e.target.checked })}
+                      className="w-4 h-4 rounded text-stitch-emerald focus:ring-stitch-emerald"
+                    />
+                    <span>Active Status</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-800">
                     <input
                       type="checkbox"
                       checked={!!(editingItem.isPrimary || editingItem.is_primary)}
                       onChange={(e) => setEditingItem({ ...editingItem, isPrimary: e.target.checked, is_primary: e.target.checked })}
                       className="w-4 h-4 rounded text-primary focus:ring-primary"
                     />
-                    <span>Show on Home Page (Primary Course)</span>
+                    <span>Primary Home</span>
                   </label>
 
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800">
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-800">
                     <input
                       type="checkbox"
                       checked={!!(editingItem.isFeatured || editingItem.is_featured)}
                       onChange={(e) => setEditingItem({ ...editingItem, isFeatured: e.target.checked, is_featured: e.target.checked })}
                       className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500"
                     />
-                    <span>Featured Status Badge</span>
+                    <span>Featured Badge</span>
                   </label>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Duration:</label>
-                  <input
-                    type="text"
-                    value={editingItem.durationEn || editingItem.duration_en || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, durationEn: e.target.value, durationMr: e.target.value })}
-                    placeholder="e.g. 2 Months (2 hrs/day)"
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Duration (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.durationEn || editingItem.duration_en || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, durationEn: e.target.value, duration_en: e.target.value })}
+                      placeholder="e.g. 2 Months (2 hrs/day)"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Duration (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.durationMr || editingItem.duration_mr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, durationMr: e.target.value, duration_mr: e.target.value })}
+                      placeholder="उदा. २ महिने (रोज २ तास)"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course Fee (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.feeEn || editingItem.fee_en || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, feeEn: e.target.value, fee_en: e.target.value })}
+                      placeholder="e.g. ₹4,500 Complete Fee"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course Fee (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.feeMr || editingItem.fee_mr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, feeMr: e.target.value, fee_mr: e.target.value })}
+                      placeholder="उदा. ₹४,५०० संपूर्ण फी"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Certification Authority (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.certificationEn || editingItem.certification_en || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, certificationEn: e.target.value, certification_en: e.target.value })}
+                      placeholder="e.g. MKCL & MSBTE Authorized Certificate"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Certification Authority (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.certificationMr || editingItem.certification_mr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, certificationMr: e.target.value, certification_mr: e.target.value })}
+                      placeholder="उदा. एमकेसीएल अधिकृत प्रमाणपत्र"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Short Description / Overview:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Short Description / Overview (English):</label>
                   <textarea
                     rows={2}
                     value={editingItem.overviewEn || editingItem.overview_en || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overviewMr: e.target.value })}
+                    onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overview_en: e.target.value })}
                     placeholder="Course summary description..."
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Key Topics (One per line):</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Overview (Marathi):</label>
                   <textarea
-                    rows={3}
+                    rows={2}
+                    value={editingItem.overviewMr || editingItem.overview_mr || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, overviewMr: e.target.value, overview_mr: e.target.value })}
+                    placeholder="कोर्स संक्षिप्त माहिती (मराठी)..."
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Curriculum Modules (One per line):</label>
+                  <textarea
+                    rows={4}
                     value={
                       Array.isArray(editingItem.modulesEn)
                         ? editingItem.modulesEn.map((m) => typeof m === 'string' ? m : (m.name || m.title || '')).join('\n')
@@ -2601,9 +2837,56 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     onChange={(e) => {
                       const lines = e.target.value.split('\n');
                       const modulesList = lines.map((line) => ({ name: line }));
-                      setEditingItem({ ...editingItem, modulesEn: modulesList, modulesMr: modulesList });
+                      setEditingItem({ ...editingItem, modulesEn: modulesList, modules_en: modulesList, modulesMr: modulesList, modules_mr: modulesList });
                     }}
-                    placeholder="Computer Operating & Windows 11&#10;MS Word & Excel 2021&#10;AI & Digital Tools"
+                    placeholder="Computer Fundamentals&#10;Windows 11 & File Management&#10;MS Word 2021 Documentation"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Practical Skills & Exercises (One per line):</label>
+                  <textarea
+                    rows={3}
+                    value={
+                      Array.isArray(editingItem.practicalSkillsEn)
+                        ? editingItem.practicalSkillsEn.join('\n')
+                        : (editingItem.practicalSkillsEn || '')
+                    }
+                    onChange={(e) => {
+                      const lines = e.target.value.split('\n');
+                      setEditingItem({ ...editingItem, practicalSkillsEn: lines, practical_skills_en: lines, practicalSkillsMr: lines, practical_skills_mr: lines });
+                    }}
+                    placeholder="Daily 1-on-1 lab practice&#10;GST Invoice creation&#10;Bank Reconciliation (BRS)"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Career Opportunities (One per line):</label>
+                  <textarea
+                    rows={2}
+                    value={
+                      Array.isArray(editingItem.careersEn)
+                        ? editingItem.careersEn.join('\n')
+                        : (editingItem.careersEn || '')
+                    }
+                    onChange={(e) => {
+                      const lines = e.target.value.split('\n');
+                      setEditingItem({ ...editingItem, careersEn: lines, careers_en: lines, careersMr: lines, careers_mr: lines });
+                    }}
+                    placeholder="Computer Operator&#10;GST Accountant&#10;Office Assistant"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Who It's For / Eligibility:</label>
+                  <input
+                    type="text"
+                    value={editingItem.eligibilityEn || editingItem.eligibility_en || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, eligibilityEn: e.target.value, eligibility_en: e.target.value, eligibilityMr: e.target.value, eligibility_mr: e.target.value })}
+                    placeholder="e.g. Commerce Students, Job Seekers, Shopkeepers & Accountants"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
@@ -2795,26 +3078,142 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
             {/* Govt Form */}
             {formType === 'govt' && (
-              <form onSubmit={handleSaveGovt} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Government Service Title:</label>
-                  <input
-                    type="text"
-                    value={editingItem.titleEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value, titleMr: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+              <form onSubmit={handleSaveGovt} className="space-y-3 max-h-[75vh] overflow-y-auto pr-1">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Service Category:</label>
+                    <select
+                      value={editingItem.category || 'schemes'}
+                      onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
+                    >
+                      <option value="revenue">📜 Revenue Certificates (उत्पन्न/दाखले)</option>
+                      <option value="certificates">🎓 Student Certificates (प्रमाणपत्रे)</option>
+                      <option value="schemes">🏛️ Government Schemes (शासकीय योजना)</option>
+                      <option value="pension">👴 Pension & Welfare (पेंशन योजना)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Badge Tag:</label>
+                    <input
+                      type="text"
+                      value={editingItem.badge || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, badge: e.target.value })}
+                      placeholder="e.g. शासकीय योजना / Aaple Sarkar"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value })}
+                      placeholder="e.g. Income Certificate (उत्पन्न दाखला)"
+                      required
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleMr: e.target.value })}
+                      placeholder="उदा. उत्पन्नाचा दाखला"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Processing Timeline (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.timelineEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, timelineEn: e.target.value, timelineMr: e.target.value })}
+                      placeholder="e.g. 3-5 Days"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Government/Portal Fee:</label>
+                    <input
+                      type="text"
+                      value={editingItem.govtFeeEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, govtFeeEn: e.target.value, govtFeeMr: e.target.value })}
+                      placeholder="e.g. ₹56 Portal Fee"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Overview Description:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Overview Description (English):</label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={editingItem.overviewEn || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, overviewEn: e.target.value, overviewMr: e.target.value })}
+                    placeholder="Details about the government service..."
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Required Documents (One per line):</label>
+                  <textarea
+                    rows={3}
+                    value={Array.isArray(editingItem.requiredDocsEn) ? editingItem.requiredDocsEn.join('\n') : (editingItem.requiredDocsEn || '')}
+                    onChange={(e) => {
+                      const list = e.target.value.split('\n');
+                      setEditingItem({ ...editingItem, requiredDocsEn: list, requiredDocsMr: list });
+                    }}
+                    placeholder="Aadhaar Card&#10;Ration Card&#10;Talathi Dakhla"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Application Steps (One per line):</label>
+                  <textarea
+                    rows={3}
+                    value={Array.isArray(editingItem.stepsEn) ? editingItem.stepsEn.join('\n') : (editingItem.stepsEn || '')}
+                    onChange={(e) => {
+                      const list = e.target.value.split('\n');
+                      setEditingItem({ ...editingItem, stepsEn: list, stepsMr: list });
+                    }}
+                    placeholder="1. Bring original documents to Samarth Computers&#10;2. Online form entry & biometric verification&#10;3. Receive token and certificate"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div className="space-y-2 border-t border-slate-100 pt-3">
+                  <label className="block text-xs font-bold text-slate-700">Service Icon/Banner Photo:</label>
+                  <div className="flex items-center gap-3">
+                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
+                      <span>{uploadingImage ? 'Uploading...' : 'Choose File'}</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={(e) => handleFileUpload(e, 'govt')} 
+                        className="hidden" 
+                      />
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Image URL"
+                      value={editingItem.imageUrl || editingItem.image_url || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value, image_url: e.target.value })}
+                      className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-700"
+                    />
+                  </div>
+                </div>
+
                 <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
                   Save &amp; Sync Supabase DB
                 </button>
@@ -2824,47 +3223,103 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             {/* Batch Timetable Form */}
             {formType === 'batch' && (
               <form onSubmit={handleSaveBatch} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Batch Time Slot:</label>
-                  <input
-                    type="text"
-                    value={editingItem.time || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, time: e.target.value })}
-                    placeholder="e.g. 08:00 AM - 09:30 AM"
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Course Title (English):</label>
-                  <input
-                    type="text"
-                    value={editingItem.courseEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, courseEn: e.target.value, courseMr: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
-                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Status:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Batch Category:</label>
+                    <select
+                      value={editingItem.category || 'morning'}
+                      onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
+                    >
+                      <option value="morning">🌅 Morning Batch (सकाळची बॅच)</option>
+                      <option value="afternoon">☀️ Afternoon Batch (दुपारची बॅच)</option>
+                      <option value="evening">🌆 Evening Batch (संध्याकाळची बॅच)</option>
+                      <option value="weekend">📅 Weekend Batch (शनिवार/रविवार)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Batch Time Slot:</label>
+                    <input
+                      type="text"
+                      value={editingItem.time || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, time: e.target.value })}
+                      placeholder="e.g. 08:00 AM - 09:30 AM"
+                      required
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.courseEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, courseEn: e.target.value })}
+                      placeholder="e.g. MS-CIT Batch A"
+                      required
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course Title (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.courseMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, courseMr: e.target.value })}
+                      placeholder="उदा. एमएस-सीआयटी बॅच अ"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Status (English):</label>
                     <input
                       type="text"
                       value={editingItem.statusEn || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, statusEn: e.target.value, statusMr: e.target.value })}
+                      onChange={(e) => setEditingItem({ ...editingItem, statusEn: e.target.value })}
+                      placeholder="e.g. Admissions Open / Almost Full"
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Seats Left:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Status (Marathi):</label>
                     <input
                       type="text"
-                      value={editingItem.seatsEn || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, seatsEn: e.target.value, seatsMr: e.target.value })}
+                      value={editingItem.statusMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, statusMr: e.target.value })}
+                      placeholder="उदा. प्रवेश सुरू / जागा शिल्लक"
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                     />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Seats Left (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.seatsEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, seatsEn: e.target.value })}
+                      placeholder="e.g. 5 Seats Left"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Seats Left (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.seatsMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, seatsMr: e.target.value })}
+                      placeholder="उदा. ५ जागा शिल्लक"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
                 <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
                   Save Batch Schedule Slot
                 </button>
@@ -2874,22 +3329,36 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             {/* News Form */}
             {formType === 'news' && (
               <form onSubmit={handleSaveNews} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Announcement Title (English &amp; Marathi):</label>
-                  <input
-                    type="text"
-                    value={editingItem.titleEn || editingItem.title_en || ''}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem,
-                      titleEn: e.target.value,
-                      titleMr: e.target.value,
-                      title_en: e.target.value,
-                      title_mr: e.target.value
-                    })}
-                    placeholder="e.g. MS-CIT New Batch Admissions Open 2026"
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleEn || editingItem.title_en || ''}
+                      onChange={(e) => setEditingItem({
+                        ...editingItem,
+                        titleEn: e.target.value,
+                        title_en: e.target.value
+                      })}
+                      placeholder="e.g. MS-CIT New Batch Admissions Open 2026"
+                      required
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Title (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleMr || editingItem.title_mr || ''}
+                      onChange={(e) => setEditingItem({
+                        ...editingItem,
+                        titleMr: e.target.value,
+                        title_mr: e.target.value
+                      })}
+                      placeholder="उदा. एमएस-सीआयटी नवीन बॅच प्रवेश सुरू"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -2934,21 +3403,35 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Description / Details:</label>
-                  <textarea
-                    rows={3}
-                    value={editingItem.descEn || editingItem.desc_en || ''}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem,
-                      descEn: e.target.value,
-                      descMr: e.target.value,
-                      desc_en: e.target.value,
-                      desc_mr: e.target.value
-                    })}
-                    placeholder="Enter announcement details..."
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Details (English):</label>
+                    <textarea
+                      rows={3}
+                      value={editingItem.descEn || editingItem.desc_en || ''}
+                      onChange={(e) => setEditingItem({
+                        ...editingItem,
+                        descEn: e.target.value,
+                        desc_en: e.target.value
+                      })}
+                      placeholder="Enter announcement details in English..."
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Details (Marathi):</label>
+                    <textarea
+                      rows={3}
+                      value={editingItem.descMr || editingItem.desc_mr || ''}
+                      onChange={(e) => setEditingItem({
+                        ...editingItem,
+                        descMr: e.target.value,
+                        desc_mr: e.target.value
+                      })}
+                      placeholder="सूचना तपशील (मराठीत)..."
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
 
                 <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
@@ -2960,32 +3443,84 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             {/* Faculty Form */}
             {formType === 'faculty' && (
               <form onSubmit={handleSaveFaculty} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Faculty Name:</label>
-                  <input
-                    type="text"
-                    value={editingItem.name || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Faculty Name:</label>
+                    <input
+                      type="text"
+                      value={editingItem.name || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                      required
+                      placeholder="e.g. Sagar Bhosale"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Badge Tag:</label>
+                    <input
+                      type="text"
+                      value={editingItem.badge || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, badge: e.target.value })}
+                      placeholder="e.g. Founder & Center Head"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Designation / Role (English):</label>
-                  <input
-                    type="text"
-                    value={editingItem.roleEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, roleEn: e.target.value, roleMr: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Role (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.roleEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, roleEn: e.target.value })}
+                      required
+                      placeholder="e.g. Master Instructor & MKCL Coordinator"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Role (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.roleMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, roleMr: e.target.value })}
+                      placeholder="उदा. मुख्य शिक्षक व संचालक"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Experience (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.expEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, expEn: e.target.value })}
+                      placeholder="e.g. 12+ Years Teaching Experience"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Experience (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.expMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, expMr: e.target.value })}
+                      placeholder="उदा. १२+ वर्षे अध्यापन अनुभव"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Experience:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Specialization &amp; Key Subjects:</label>
                   <input
                     type="text"
-                    value={editingItem.expEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, expEn: e.target.value, expMr: e.target.value })}
+                    value={editingItem.specEn || editingItem.spec_en || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, specEn: e.target.value, specMr: e.target.value })}
+                    placeholder="e.g. Tally Prime, GST filing, Advanced Excel"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
                   />
                 </div>
@@ -3022,37 +3557,87 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
             {/* Gallery Form */}
             {formType === 'gallery' && (
               <form onSubmit={handleSaveGalleryItem} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Photo Title (English):</label>
-                  <input
-                    type="text"
-                    value={editingItem.titleEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value, titleMr: e.target.value })}
-                    required
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Photo Title (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleEn: e.target.value })}
+                      required
+                      placeholder="e.g. Computer Lab Infrastructure"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Photo Title (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.titleMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, titleMr: e.target.value })}
+                      placeholder="उदा. कॉम्प्युटर लॅब व लॅपटॉप"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Category:</label>
-                  <select
-                    value={editingItem.category || 'Campus'}
-                    onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  >
-                    <option value="Campus">Campus Infrastructure</option>
-                    <option value="Events">Certificate Events</option>
-                    <option value="Classroom">Practical Classroom</option>
-                    <option value="Facilities">Facilities &amp; Counters</option>
-                  </select>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Category:</label>
+                    <select
+                      value={editingItem.category || 'Campus'}
+                      onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    >
+                      <option value="Campus">Campus Infrastructure</option>
+                      <option value="Events">Certificate Events</option>
+                      <option value="Classroom">Practical Classroom</option>
+                      <option value="Facilities">Facilities &amp; Counters</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Display Order:</label>
+                    <input
+                      type="number"
+                      value={editingItem.display_order !== undefined ? editingItem.display_order : 0}
+                      onChange={(e) => setEditingItem({ ...editingItem, display_order: parseInt(e.target.value, 10) || 0 })}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div className="flex items-end pb-2">
+                    <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={editingItem.is_active !== false}
+                        onChange={(e) => setEditingItem({ ...editingItem, is_active: e.target.checked })}
+                        className="w-4 h-4 rounded text-stitch-emerald focus:ring-stitch-emerald"
+                      />
+                      <span>Active</span>
+                    </label>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Description:</label>
-                  <input
-                    type="text"
-                    value={editingItem.descEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, descEn: e.target.value, descMr: e.target.value })}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
-                  />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Description (English):</label>
+                    <input
+                      type="text"
+                      value={editingItem.descEn || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, descEn: e.target.value })}
+                      placeholder="e.g. High-speed AC Computer Lab with 30 Systems"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Description (Marathi):</label>
+                    <input
+                      type="text"
+                      value={editingItem.descMr || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, descMr: e.target.value })}
+                      placeholder="उदा. ३० संगणक असलेली सुसज्ज लॅब"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2 border-t border-slate-100 pt-3">

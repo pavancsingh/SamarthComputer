@@ -62,17 +62,17 @@ const DEFAULT_FACULTY = [
 const DEFAULT_SETTINGS = {
   logoUrl: getMediaUrl('logos/samarth-main-logo.png'),
   heroBgUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
-  heroTitleMr: 'संगणक कौशल्यांमध्ये प्रभुत्व मिळवा.',
-  heroTitleEn: 'Master IT Skills. Build Your Future.',
-  heroSubtitleMr: 'समर्थ कॉम्प्युटर्स मध्ये आपले स्वागत आहे. तंत्रज्ञानाच्या जगात तुमचे करिअर घडवा.',
-  heroSubtitleEn: 'Join thousands of successful students who have transformed their careers with our industry-aligned computer courses.',
+  heroTitleMr: 'संगणक कौशल्ये शिका. आत्मविश्वासाने पुढे जा.',
+  heroTitleEn: 'Learn Computer Skills. Move Forward with Confidence.',
+  heroSubtitleMr: 'समर्थ कॉम्प्युटर्स खंडाळा येथे MKCL मान्यताप्राप्त कोर्सेस व महाऑनलाईन शासकीय सेवांचे विश्वसनीय केंद्र. आजच प्रवेश घ्या!',
+  heroSubtitleEn: 'Khandala’s premier MKCL-authorized institute for MS-CIT, Tally Prime GST, Advanced Excel & online government services.',
   heroBadgeMr: 'महाराष्ट्र शासन व MKCL अधिकृत केंद्र',
-  heroBadgeEn: 'Govt. Recognized Institute',
-  heroCtaTextMr: 'कोर्सेसची यादी पहा',
+  heroBadgeEn: 'Govt. Recognized & MKCL Authorized Institute',
+  heroCtaTextMr: 'सर्व कोर्सेस पहा',
   heroCtaTextEn: 'Explore Courses',
   heroCtaDest: 'courses',
 
-  contactPhone: '+919552345061',
+  contactPhone: '+91 95523 45061 / +91 98502 83664',
   contactWhatsapp: '919552345061',
   contactEmail: 'admin@samarthcomputers.in',
   contactAddressMr: 'राजेंद्र विद्यालयाजवळ, खंडाळा, ता. खंडाळा, जि. सातारा - ४१२८०२',
@@ -82,29 +82,29 @@ const DEFAULT_SETTINGS = {
   contactMapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3789.0946052295697!2d74.06488181504043!3d18.04649018799785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2f7bf9d34c6f1%3A0xadf7d5d7d5e8e8e8!2sKhandala%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin',
 
   callCtaPhone: '+919552345061',
-  callCtaTextMr: '📞 कॉल करा',
+  callCtaTextMr: '📞 थेट कॉल करा',
   callCtaTextEn: 'Call Now (+91 95523 45061)',
 
-  aboutHeadingMr: 'मनांना सक्षम करत आहोत २०१० पासून',
-  aboutHeadingEn: 'Empowering Minds Since 2010',
-  aboutDescMr: 'समर्थ कॉम्प्युटर्स हे एक प्रमुख MKCL अधिकृत शैक्षणिक केंद्र आहे जे शैक्षणिक सिद्धांत आणि व्यावहारिक उद्योग कौशल्यांमधील अंतर भरून काढण्यासाठी समर्पित आहे.',
-  aboutDescEn: 'Samarth Computers is a premier MKCL-authorized educational center dedicated to bridging the gap between academic theory and practical industry skills.',
+  aboutHeadingMr: 'खंडाळ्यात संगणक शिक्षण आणि डिजिटल सेवांसाठी आपले केंद्र',
+  aboutHeadingEn: 'Your Centre for Computer Education and Digital Services in Khandala',
+  aboutDescMr: 'समर्थ कॉम्प्युटर्स खंडाळा येथे MS-CIT, टॅली प्राइम, ॲडव्हान्स एक्सेल आणि इतर संगणक अभ्यासक्रमांसह CSC व ऑनलाइन शासकीय सेवा उपलब्ध आहेत. विद्यार्थ्यांना प्रात्यक्षिक सराव आणि मार्गदर्शन दिले जाते.',
+  aboutDescEn: 'Samarth Computers, Khandala offers MS-CIT, Tally Prime, Advanced Excel, and other computer courses alongside CSC and online government services, with practical lab work and guidance for learners.',
   aboutImageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80',
-  aboutMissionMr: 'सुलभ, उच्च-दर्जाचे व्यावसायिक आणि तांत्रिक शिक्षण प्रदान करणे जे व्यक्तींना आधुनिक कार्यबळात उत्कृष्टतेसाठी आवश्यक कौशल्ये सक्षम करते.',
-  aboutMissionEn: 'To provide accessible, high-quality vocational and technical education that equips individuals with the skills necessary to excel in the modern workforce.',
-  aboutVisionMr: 'प्रशिक्षण पद्धतींमधील नवकल्पनासाठी ओळखले जाणारे आणि उद्योग-तयार व्यावसायिक निर्माण करणारे अग्रणी शासकीय-मान्यताप्राप्त शैक्षणिक संस्था बनणे.',
-  aboutVisionEn: 'To be the leading government-recognized educational institute, recognized for innovation in training methodologies.',
+  aboutMissionMr: 'ग्रामीण भागातील विद्यार्थ्यांना परवडणारे, उच्च-दर्जाचे तांत्रिक व व्यावसायिक संगणक शिक्षण देवून त्यांना रोजगारक्षम व आत्मनिर्भर बनवणे.',
+  aboutMissionEn: 'To deliver practical, high-quality IT education that empowers rural youth with industry-relevant digital skills, confidence, and career growth.',
+  aboutVisionMr: 'डिजिटल तंत्रज्ञान, टॅली व कॉम्प्युटर शिक्षणातील नावीन्यपूर्ण प्रात्यक्षिक प्रशिक्षण पद्धतींनी खंडाळा तालुक्यातील सर्वात विश्वासू संस्था बनणे.',
+  aboutVisionEn: 'To remain Khandala’s most trusted center for technical education and online government services, empowering every student with career-ready IT capabilities.',
 
   homeSections: {
     hero: { visible: true, order: 1, titleMr: 'मुख्य', titleEn: 'Hero' },
     trust: { visible: true, order: 2, titleMr: 'मान्यता', titleEn: 'Trust Strip' },
     stats: { visible: true, order: 3, titleMr: 'संख्याशास्त्र', titleEn: 'Statistics' },
     courses: { visible: true, order: 4, titleMr: 'संगणक कोर्सेस', titleEn: 'Computer Courses' },
-    whyChooseUs: { visible: true, order: 5, titleMr: 'आमची वैशिष्ठ्ये', titleEn: 'Why Choose Us' },
+    whyChooseUs: { visible: true, order: 5, titleMr: 'आमची वैशिष्ट्ये', titleEn: 'Why Choose Us' },
     services: { visible: true, order: 6, titleMr: 'ऑनलाइन शासकीय सेवा', titleEn: 'Online Govt Services' },
     timetable: { visible: true, order: 7, titleMr: 'बॅच वेळापत्रक', titleEn: 'Batch Schedule' },
     workshops: { visible: true, order: 8, titleMr: 'कार्यशाळा व बातम्या', titleEn: 'Workshops & News' },
-    counseling: { visible: true, order: 9, titleMr: 'मोफत मार्गदर्शन banner', titleEn: 'Career Counseling Banner' },
+    counseling: { visible: true, order: 9, titleMr: 'मोफत मार्गदर्शन', titleEn: 'Career Counseling Banner' },
     stories: { visible: true, order: 10, titleMr: 'यशस्वी विद्यार्थी', titleEn: 'Success Stories' },
     reviews: { visible: true, order: 11, titleMr: 'विद्यार्थी अभिप्राय', titleEn: 'Reviews' },
     gallery: { visible: true, order: 12, titleMr: 'फोटो गॅलरी', titleEn: 'Photo Gallery' },
@@ -133,7 +133,7 @@ const DEFAULT_SETTINGS = {
   socialFacebook: 'https://facebook.com/samarthcomputers',
   socialInstagram: 'https://instagram.com/samarthcomputers',
   socialYoutube: 'https://youtube.com/@samarthcomputers',
-  footerTagline: 'Empowering the next generation of digital leaders through quality computer education and government services.',
+  footerTagline: 'Empowering students and citizens with quality computer education and fast-track digital government services.',
   copyrightText: '© 2026 Samarth Computers Khandala. All rights reserved.'
 };
 
@@ -180,7 +180,14 @@ const DEFAULT_GALLERY = [
 function loadStorage(key, fallback) {
   try {
     const saved = localStorage.getItem(key);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Prevent poisoned empty array from overriding static fallbacks if fallback exists
+      if (Array.isArray(parsed) && parsed.length === 0 && Array.isArray(fallback) && fallback.length > 0) {
+        return fallback;
+      }
+      return parsed;
+    }
   } catch (e) {
     console.warn('Storage read error:', e);
   }
@@ -222,80 +229,85 @@ class SharedStore {
   }
 
   // --- Sync with Remote (Supabase) ---
-  syncCoursesFromRemote(remoteCourses) {
-    if (Array.isArray(remoteCourses) && remoteCourses.length > 0) {
-      this.courses = remoteCourses.map((c) => ({
-        ...c,
-        title: c.title,
-        isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
-        isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
-        displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
-        subtitleMr: c.subtitle_mr || c.subtitleMr,
-        subtitleEn: c.subtitle_en || c.subtitleEn,
-        durationMr: c.duration_mr || c.durationMr,
-        durationEn: c.duration_en || c.durationEn,
-        certificationMr: c.certification_mr || c.certificationMr,
-        certificationEn: c.certification_en || c.certificationEn,
-        eligibilityMr: c.eligibility_mr || c.eligibilityMr,
-        eligibilityEn: c.eligibility_en || c.eligibilityEn,
-        overviewMr: c.overview_mr || c.overviewMr,
-        overviewEn: c.overview_en || c.overviewEn,
-        modulesMr: c.modules_mr || c.modulesMr || [],
-        modulesEn: c.modules_en || c.modulesEn || [],
-        careersMr: c.careers_mr || c.careersMr || [],
-        careersEn: c.careers_en || c.careersEn || []
-      }));
-      saveStorage(STORAGE_KEY_COURSES, this.courses);
-      this.notify();
+  syncCoursesFromRemote(remoteCourses, isError = false) {
+    if (isError || !Array.isArray(remoteCourses)) {
+      return; // Never overwrite on failed/error Supabase requests
     }
+    this.courses = remoteCourses.map((c) => ({
+      ...c,
+      title: c.title,
+      isPrimary: c.is_primary !== undefined ? c.is_primary : (c.isPrimary || false),
+      isFeatured: c.is_featured !== undefined ? c.is_featured : (c.isFeatured || false),
+      displayOrder: c.display_order !== undefined ? c.display_order : (c.displayOrder || 0),
+      subtitleMr: c.subtitle_mr || c.subtitleMr,
+      subtitleEn: c.subtitle_en || c.subtitleEn,
+      durationMr: c.duration_mr || c.durationMr,
+      durationEn: c.duration_en || c.durationEn,
+      certificationMr: c.certification_mr || c.certificationMr,
+      certificationEn: c.certification_en || c.certificationEn,
+      eligibilityMr: c.eligibility_mr || c.eligibilityMr,
+      eligibilityEn: c.eligibility_en || c.eligibilityEn,
+      overviewMr: c.overview_mr || c.overviewMr,
+      overviewEn: c.overview_en || c.overviewEn,
+      modulesMr: c.modules_mr || c.modulesMr || [],
+      modulesEn: c.modules_en || c.modulesEn || [],
+      practicalSkillsMr: c.practical_skills_mr || c.practicalSkillsMr || [],
+      practicalSkillsEn: c.practical_skills_en || c.practicalSkillsEn || [],
+      careersMr: c.careers_mr || c.careersMr || [],
+      careersEn: c.careers_en || c.careersEn || []
+    }));
+    saveStorage(STORAGE_KEY_COURSES, this.courses);
+    this.notify();
   }
 
-  syncCSCServicesFromRemote(remoteCSC) {
-    if (Array.isArray(remoteCSC) && remoteCSC.length > 0) {
-      this.cscServices = remoteCSC.map((s) => ({
-        ...s,
-        titleMr: s.title_mr || s.titleMr,
-        titleEn: s.title_en || s.titleEn,
-        timelineMr: s.timeline_mr || s.timelineMr,
-        timelineEn: s.timeline_en || s.timelineEn,
-        govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
-        govtFeeEn: s.govt_fee_en || s.govtFeeEn,
-        overviewMr: s.overview_mr || s.overviewMr,
-        overviewEn: s.overview_en || s.overviewEn,
-        requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
-        requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
-        stepsMr: s.steps_mr || s.stepsMr || [],
-        stepsEn: s.steps_en || s.stepsEn || []
-      }));
-      saveStorage(STORAGE_KEY_CSC, this.cscServices);
-      this.notify();
+  syncCSCServicesFromRemote(remoteCSC, isError = false) {
+    if (isError || !Array.isArray(remoteCSC)) {
+      return; // Never overwrite on failed/error Supabase requests
     }
+    this.cscServices = remoteCSC.map((s) => ({
+      ...s,
+      titleMr: s.title_mr || s.titleMr,
+      titleEn: s.title_en || s.titleEn,
+      timelineMr: s.timeline_mr || s.timelineMr,
+      timelineEn: s.timeline_en || s.timelineEn,
+      govtFeeMr: s.govt_fee_mr || s.govtFeeMr,
+      govtFeeEn: s.govt_fee_en || s.govtFeeEn,
+      overviewMr: s.overview_mr || s.overviewMr,
+      overviewEn: s.overview_en || s.overviewEn,
+      requiredDocsMr: s.required_docs_mr || s.requiredDocsMr || [],
+      requiredDocsEn: s.required_docs_en || s.requiredDocsEn || [],
+      stepsMr: s.steps_mr || s.stepsMr || [],
+      stepsEn: s.steps_en || s.stepsEn || []
+    }));
+    saveStorage(STORAGE_KEY_CSC, this.cscServices);
+    this.notify();
   }
 
-  syncGovtServicesFromRemote(remoteGovt) {
-    if (Array.isArray(remoteGovt) && remoteGovt.length > 0) {
-      this.govtServices = remoteGovt.map((g) => ({
-        ...g,
-        titleMr: g.title_mr || g.titleMr,
-        titleEn: g.title_en || g.titleEn,
-        timelineMr: g.timeline_mr || g.timelineMr,
-        timelineEn: g.timeline_en || g.timelineEn,
-        govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
-        govtFeeEn: g.govt_fee_en || g.govtFeeEn,
-        overviewMr: g.overview_mr || g.overviewMr,
-        overviewEn: g.overview_en || g.overviewEn,
-        requirementsMr: g.requirements_mr || g.requirementsMr || [],
-        requirementsEn: g.requirements_en || g.requirementsEn || [],
-        stepsMr: g.steps_mr || g.stepsMr || [],
-        stepsEn: g.steps_en || g.stepsEn || []
-      }));
-      saveStorage(STORAGE_KEY_GOVT, this.govtServices);
-      this.notify();
+  syncGovtServicesFromRemote(remoteGovt, isError = false) {
+    if (isError || !Array.isArray(remoteGovt)) {
+      return; // Never overwrite on failed/error Supabase requests
     }
+    this.govtServices = remoteGovt.map((g) => ({
+      ...g,
+      titleMr: g.title_mr || g.titleMr,
+      titleEn: g.title_en || g.titleEn,
+      timelineMr: g.timeline_mr || g.timelineMr,
+      timelineEn: g.timeline_en || g.timelineEn,
+      govtFeeMr: g.govt_fee_mr || g.govtFeeMr,
+      govtFeeEn: g.govt_fee_en || g.govtFeeEn,
+      overviewMr: g.overview_mr || g.overviewMr,
+      overviewEn: g.overview_en || g.overviewEn,
+      requiredDocsMr: g.required_docs_mr || g.requiredDocsMr || [],
+      requiredDocsEn: g.required_docs_en || g.requiredDocsEn || [],
+      stepsMr: g.steps_mr || g.stepsMr || [],
+      stepsEn: g.steps_en || g.stepsEn || []
+    }));
+    saveStorage(STORAGE_KEY_GOVT, this.govtServices);
+    this.notify();
   }
 
   syncGalleryFromRemote(remoteGallery) {
-    if (Array.isArray(remoteGallery) && remoteGallery.length > 0) {
+    if (Array.isArray(remoteGallery)) {
       this.siteGallery = remoteGallery.map((item) => ({
         id: item.id,
         title_mr: item.title_mr || item.titleMr,
@@ -311,7 +323,7 @@ class SharedStore {
   }
 
   syncInquiriesFromRemote(remoteInquiries) {
-    if (Array.isArray(remoteInquiries) && remoteInquiries.length > 0) {
+    if (Array.isArray(remoteInquiries)) {
       this.inquiries = remoteInquiries;
       saveStorage(STORAGE_KEY_INQUIRIES, this.inquiries);
       this.notify();
@@ -319,7 +331,7 @@ class SharedStore {
   }
 
   syncFacultyFromRemote(remoteFaculty) {
-    if (Array.isArray(remoteFaculty) && remoteFaculty.length > 0) {
+    if (Array.isArray(remoteFaculty)) {
       const seenNames = new Set();
       const unique = [];
       for (const item of remoteFaculty) {
@@ -347,7 +359,7 @@ class SharedStore {
   }
 
   syncBatchesFromRemote(remoteBatches) {
-    if (Array.isArray(remoteBatches) && remoteBatches.length > 0) {
+    if (Array.isArray(remoteBatches)) {
       this.batches = remoteBatches.map((item) => ({
         id: item.id,
         category: item.category || 'morning',
@@ -365,7 +377,7 @@ class SharedStore {
   }
 
   syncNewsFromRemote(remoteNews) {
-    if (Array.isArray(remoteNews) && remoteNews.length > 0) {
+    if (Array.isArray(remoteNews)) {
       this.news = remoteNews.map((item) => ({
         id: item.id,
         titleMr: item.title_mr || item.titleMr,
