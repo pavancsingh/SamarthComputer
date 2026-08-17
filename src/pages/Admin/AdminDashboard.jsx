@@ -50,19 +50,11 @@ function ImageUploadPreviewField({
           </div>
         )}
 
-        {/* Centered Uploading Progress/Loading Overlay */}
+        {/* Small Floating "Uploading..." Pill Overlay */}
         {uploading && (
-          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center gap-2.5 z-20 text-white animate-in fade-in duration-200">
-            <div className="relative flex items-center justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 absolute" />
-            </div>
-            <div className="text-center space-y-1">
-              <span className="text-xs font-extrabold tracking-wide text-white block">Uploading Image...</span>
-              <div className="w-24 h-1 bg-slate-700 rounded-full overflow-hidden mx-auto">
-                <div className="h-full bg-rose-500 animate-pulse w-full rounded-full" />
-              </div>
-            </div>
+          <div className="absolute top-2.5 right-2.5 bg-slate-900/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 z-20 animate-in fade-in zoom-in-95 duration-150">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-400" />
+            <span className="tracking-wide text-white">Uploading...</span>
           </div>
         )}
       </div>
