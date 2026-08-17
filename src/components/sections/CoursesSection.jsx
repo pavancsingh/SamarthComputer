@@ -79,26 +79,26 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
     <section className="py-16 md:py-24 relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="courses">
       {/* Section Header */}
       <div className="text-center mb-12 md:mb-16">
-        <span className="text-primary font-black text-xs tracking-widest uppercase mb-2 block">
+        <span className={`text-primary font-bold text-xs uppercase mb-2 block ${isMarathi ? 'marathi-text' : 'tracking-widest'}`}>
           {isMarathi ? 'मुख्य अभ्यासक्रम' : 'Primary Programs'}
         </span>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-4">
+        <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight'}`}>
           {isMarathi ? 'प्रमुख संगणक अभ्यासक्रम' : 'Featured Computer Courses'}
         </h2>
-        <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className={`text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
           {isMarathi
-            ? 'उद्योगासाठी तयार अभ्यासक्रम, अनुभवी शिक्षक आणि प्रत्यक्ष प्रात्यक्षिक प्रशिक्षण.'
+            ? 'उद्योगाभिमुख संगणक कोर्सेस, अनुभवी शिक्षक आणि १००% प्रात्यक्षिक प्रशिक्षण.'
             : 'Industry-oriented training programs designed for students, job seekers, and working professionals.'}
         </p>
       </div>
 
       {/* Course Cards Grid */}
       {loading ? (
-        <div className="text-center py-12 text-slate-500 font-medium">
+        <div className={`text-center py-12 text-slate-500 font-medium ${isMarathi ? 'marathi-text' : ''}`}>
           {isMarathi ? 'कोर्सेस लोड होत आहेत...' : 'Loading courses...'}
         </div>
       ) : displayCourses.length === 0 ? (
-        <div className="text-center py-12 text-slate-500 font-medium">
+        <div className={`text-center py-12 text-slate-500 font-medium ${isMarathi ? 'marathi-text' : ''}`}>
           {isMarathi ? 'सध्या कोणतेही कोर्सेस उपलब्ध नाहीत.' : 'No courses available right now.'}
         </div>
       ) : (
@@ -124,7 +124,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
             return (
               <div
                 key={course.slug || course.id || `course-${idx}`}
-                className="bg-white rounded-3xl border border-slate-200/90 p-6 md:p-7 group relative overflow-hidden cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
+                className="bg-white rounded-3xl border border-slate-200/90 p-6 md:p-7 group relative overflow-hidden cursor-pointer flex flex-col justify-between shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
                 onClick={(e) => handleViewDetailsClick(e, course)}
               >
                 <div>
@@ -141,7 +141,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                         decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
-                      <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-[11px] font-black tracking-wide rounded-full shadow-sm">
+                      <span className={`absolute top-3 left-3 px-3 py-1 bg-primary text-white text-[11px] font-bold rounded-full shadow-xs ${isMarathi ? 'marathi-text' : 'tracking-wide'}`}>
                         {tag}
                       </span>
                       {(course.logoUrl || course.logo_url) && (
@@ -158,7 +158,7 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                     </div>
                   ) : (
                     <div className="flex items-center justify-between mb-6">
-                      <div className={`w-12 h-12 rounded-2xl ${iconBg} flex items-center justify-center group-hover:scale-105 group-hover:bg-primary transition-all duration-300 shadow-sm`}>
+                      <div className={`w-12 h-12 rounded-2xl ${iconBg} flex items-center justify-center group-hover:scale-105 group-hover:bg-primary transition-all duration-300 shadow-xs`}>
                         <span className={`material-symbols-outlined ${iconColor} group-hover:text-white transition-colors duration-300`}>
                           {icon}
                         </span>
@@ -178,32 +178,32 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                   )}
 
                   {/* Title */}
-                  <h3 className="text-xl font-extrabold text-slate-900 mb-2 group-hover:text-primary transition-colors">
+                  <h3 className={`text-xl font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors ${isMarathi ? 'marathi-heading leading-[1.3]' : ''}`}>
                     {course.title}
                   </h3>
 
                   {/* Duration */}
                   {duration && (
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 mb-3">
+                    <div className={`flex items-center gap-1.5 text-xs font-bold text-slate-500 mb-3 ${isMarathi ? 'marathi-text' : ''}`}>
                       <span className="material-symbols-outlined text-[16px] text-primary">schedule</span>
                       <span>{duration}</span>
                     </div>
                   )}
 
                   {/* Short Description */}
-                  <p className="text-slate-600 text-xs sm:text-sm mb-4 line-clamp-2 leading-relaxed font-medium">{desc}</p>
+                  <p className={`text-slate-600 text-xs sm:text-sm mb-4 line-clamp-2 font-medium ${isMarathi ? 'marathi-text leading-[1.7]' : 'leading-relaxed'}`}>{desc}</p>
 
                   {/* Key Topics */}
                   {keyTopics.length > 0 && (
                     <div className="mb-6 pt-3.5 border-t border-slate-100">
-                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2">
-                        {isMarathi ? 'मुख्य विषय (Key Topics):' : 'Key Topics:'}
+                      <h4 className={`text-[11px] font-bold text-slate-400 uppercase mb-2 ${isMarathi ? 'marathi-text' : 'tracking-wider'}`}>
+                        {isMarathi ? 'मुख्य विषय:' : 'Key Topics:'}
                       </h4>
                       <ul className="space-y-1.5">
                         {keyTopics.map((topic, tidx) => {
                           const topicName = typeof topic === 'string' ? topic : (topic.name || topic.title || '');
                           return (
-                            <li key={`topic-${tidx}-${topicName}`} className="text-xs text-slate-700 font-medium flex items-start gap-1.5">
+                            <li key={`topic-${tidx}-${topicName}`} className={`text-xs text-slate-700 font-medium flex items-start gap-1.5 ${isMarathi ? 'marathi-text' : ''}`}>
                               <span className="material-symbols-outlined text-[15px] text-emerald-500 mt-0.5 shrink-0">check_circle</span>
                               <span className="line-clamp-1">{topicName}</span>
                             </li>
@@ -219,25 +219,25 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
                   <a
                     href="tel:+919552345061"
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-black text-xs py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1 shadow-xs shrink-0"
+                    className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-bold text-xs py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1 shadow-xs shrink-0"
                     title="Call Now: +91 95523 45061"
                   >
                     <span className="material-symbols-outlined text-[16px] text-emerald-600">call</span>
-                    <span>{isMarathi ? 'कॉल' : 'Call'}</span>
+                    <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'कॉल' : 'Call'}</span>
                   </a>
                   <button
                     type="button"
                     onClick={(e) => handleViewDetailsClick(e, course)}
-                    className="flex-1 bg-white text-slate-800 border border-slate-300 font-extrabold text-xs py-2.5 px-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-1"
+                    className="flex-1 bg-white text-slate-800 border border-slate-300 font-bold text-xs py-2.5 px-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-1"
                   >
-                    <span>{isMarathi ? 'तपशील' : 'Details'}</span>
+                    <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'तपशील' : 'Details'}</span>
                   </button>
                   <button
                     type="button"
                     onClick={(e) => handleEnrollClick(e, course)}
-                    className="flex-1 bg-primary hover:bg-stitch-red-dark text-white font-extrabold text-xs py-2.5 px-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-sm"
+                    className="flex-1 bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-2.5 px-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-xs"
                   >
-                    <span>{isMarathi ? 'प्रवेश' : 'Enroll'}</span>
+                    <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'प्रवेश घ्या' : 'Enroll'}</span>
                     <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                   </button>
                 </div>
@@ -252,9 +252,9 @@ export default function CoursesSection({ lang = 'mr', onNavigate }) {
         <button
           type="button"
           onClick={() => onNavigate && onNavigate('courses')}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-stitch-red-dark text-white px-8 py-3.5 rounded-2xl font-black text-sm shadow-md transition-all hover:scale-105 active:scale-95 group"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-stitch-red-dark text-white px-8 py-3.5 rounded-2xl font-bold text-sm shadow-md transition-all hover:scale-105 active:scale-95 group"
         >
-          <span>{isMarathi ? 'अधिक कोर्सेस पहा (View More Courses)' : 'View More Courses'}</span>
+          <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'सर्व कोर्सेस पहा' : 'View All Courses'}</span>
           <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
             arrow_forward
           </span>

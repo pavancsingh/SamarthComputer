@@ -13,13 +13,13 @@ export default function FAQ({ lang = 'mr' }) {
     {
       qMr: "MS-CIT आणि टॅली कोर्सची प्रवेश प्रक्रिया कशी आहे? हप्त्याने फी भरता येते का?",
       qEn: "How to enroll in MS-CIT & Tally Prime? Is instalment facility available?",
-      aMr: "होय! आमच्या केंद्रामध्ये सर्व कोर्सेससाठी विद्यार्थ्या सोयीनुसार २ ते ३ सुलभ हप्त्यांमध्ये फी भरण्याची सवलत उपलब्ध आहे.",
+      aMr: "होय! आमच्या केंद्रामध्ये सर्व कोर्सेससाठी विद्यार्थ्यांच्या सोयीनुसार २ ते ३ सुलभ हप्त्यांमध्ये फी भरण्याची सवलत उपलब्ध आहे.",
       aEn: "Yes! Flexible 2 to 3 instalment payment options are available for all computer courses at our center."
     },
     {
       qMr: "उत्पन्नाचा दाखला काढण्यासाठी कोणती कागदपत्रे लागतात?",
       qEn: "What documents are required for an Income Certificate?",
-      aMr: "उत्पन्नाच्या दाखल्यासाठी रेशन कार्ड, तलाठी उत्पन्नाचा दाखला, आधार कार्ड आणि पासपोर्ट फोटो आवश्यक असतात. अर्ज भरल्यापासून ३-५ दिवसात दाखला मिळतो.",
+      aMr: "उत्पन्नाच्या दाखल्यासाठी रेशन कार्ड, तलाठी उत्पन्नाचा दाखला, आधार कार्ड आणि पासपोर्ट फोटो आवश्यक असतात. अर्ज भरल्यापासून ३ ते ५ दिवसांत दाखला मिळतो.",
       aEn: "Ration Card, Talathi Income Proof, Aadhaar Card, and Passport Photo are required. Issued within 3-5 working days."
     },
     {
@@ -37,7 +37,7 @@ export default function FAQ({ lang = 'mr' }) {
     {
       qMr: "कॉम्प्युटर कोर्स पूर्ण केल्यानंतर शासनमान्य प्रमाणपत्र मिळते का?",
       qEn: "Is the course completion certificate government recognized?",
-      aMr: "होय! MS-CIT प्रमाणपत्र महाराष्ट्र शासन (MKCL) कडून मिळते. टॅली प्रमाणपत्र टॅली एज्युकेशन कडून अधिकृत दिले जाते जे शासकीय व खाजगी नोकरीसाठी वैध आहे.",
+      aMr: "होय! MS-CIT प्रमाणपत्र महाराष्ट्र शासन (MKCL) कडून मिळते. टॅली प्रमाणपत्र टॅली एज्युकेशन कडून अधिकृत दिले जाते जे शासकीय व खाजगी नोकरीसाठी पूर्णपणे वैध आहे.",
       aEn: "Yes! MS-CIT certificates are issued directly by Govt of Maharashtra (MKCL). Tally certificates are officially authorized by Tally Education for jobs."
     }
   ];
@@ -48,13 +48,13 @@ export default function FAQ({ lang = 'mr' }) {
         
         {/* Header */}
         <div className="text-center space-y-3 mb-12">
-          <div className="inline-flex items-center gap-1.5 bg-amber-50 text-stitch-amber font-extrabold text-xs px-4 py-1.5 rounded-full border border-amber-200 shadow-stitch-sm">
+          <div className="inline-flex items-center gap-1.5 bg-amber-50 text-stitch-amber font-bold text-xs px-4 py-1.5 rounded-full border border-amber-200 shadow-xs">
             <HelpCircle className="w-4 h-4 text-stitch-amber" />
-            <span>{isMarathi ? 'सतत विचारले जाणारे प्रश्न (FAQ)' : 'Frequently Asked Questions'}</span>
+            <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'सतत विचारले जाणारे प्रश्न (FAQ)' : 'Frequently Asked Questions'}</span>
           </div>
 
-          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'तुमच्या प्रश्नांची उत्तरे' : 'Got Questions? We Have Answers'}
+          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stitch-slate-dark ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight'}`}>
+            {isMarathi ? 'तुमच्या प्रश्नांची सोपी उत्तरे' : 'Got Questions? We Have Answers'}
           </h2>
         </div>
 
@@ -66,22 +66,22 @@ export default function FAQ({ lang = 'mr' }) {
             return (
               <div 
                 key={idx}
-                className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden transition-all shadow-stitch-sm hover:shadow-stitch-md"
+                className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden transition-all shadow-xs hover:shadow-md"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-black text-stitch-slate-dark text-sm sm:text-base hover:bg-slate-50 transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-slate-900 text-sm sm:text-base hover:bg-slate-50 transition-colors"
                 >
-                  <span className={isMarathi ? 'marathi-text' : ''}>
+                  <span className={isMarathi ? 'marathi-heading leading-[1.4]' : ''}>
                     {isMarathi ? item.qMr : item.qEn}
                   </span>
-                  <ChevronDown className={`w-5 h-5 text-stitch-red shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 text-xs sm:text-sm text-slate-500 font-medium border-t border-slate-100 pt-4 leading-relaxed">
-                    <p className={isMarathi ? 'marathi-text' : ''}>
+                  <div className="px-6 pb-6 text-xs sm:text-sm text-slate-500 font-medium border-t border-slate-100 pt-4">
+                    <p className={isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}>
                       {isMarathi ? item.aMr : item.aEn}
                     </p>
                   </div>
@@ -92,19 +92,23 @@ export default function FAQ({ lang = 'mr' }) {
         </div>
 
         {/* WhatsApp Help Desk Banner */}
-        <div className="mt-12 p-6 sm:p-8 bg-stitch-slate-dark text-white rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left border border-slate-700/80 shadow-stitch-lg">
+        <div className="mt-12 p-6 sm:p-8 bg-slate-900 text-white rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left border border-slate-700/80 shadow-md">
           <div>
-            <div className="font-black text-base text-white">प्रश्न सापडला नाही?</div>
-            <div className="text-xs text-slate-400 font-medium">आमच्या हेल्पलाईन नंबरवर थेट व्हाट्सॲप संदेश पाठवा.</div>
+            <div className={`font-extrabold text-base text-white ${isMarathi ? 'marathi-heading' : ''}`}>
+              {isMarathi ? 'काही प्रश्न राहिला आहे का?' : 'Still Have Questions?'}
+            </div>
+            <div className={`text-xs text-slate-400 font-medium ${isMarathi ? 'marathi-text' : ''}`}>
+              {isMarathi ? 'आमच्या हेल्पलाईन नंबरवर थेट व्हाट्सॲपवर संपर्क साधा.' : 'Send us a direct WhatsApp message on our official helpline.'}
+            </div>
           </div>
           <a
-            href="https://wa.me/919552345061?text=I%20have%20a%20question%20about%20Samarth%20Computers"
+            href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers,%20I%20have%20a%20question"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-stitch-whatsapp hover:bg-emerald-400 text-slate-950 font-black text-xs px-5 py-3 rounded-2xl shadow-stitch-sm transition-all hover:scale-105"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-5 py-3 rounded-2xl shadow-xs transition-all hover:scale-105 shrink-0"
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>व्हाट्सॲपवर विचारा</span>
+            <MessageSquare className="w-4 h-4 shrink-0" />
+            <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'व्हाट्सॲपवर विचारणा करा' : 'Ask on WhatsApp'}</span>
           </a>
         </div>
 

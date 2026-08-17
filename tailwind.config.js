@@ -157,7 +157,7 @@ export default {
         headline: ['Inter', 'sans-serif'],
         display: ['Inter', 'sans-serif'],
         label: ['Inter', 'sans-serif'],
-        marathi: ['Noto Sans Devanagari', 'Mukta', 'sans-serif'],
+        marathi: ['Noto Sans Devanagari', 'sans-serif'],
         'marathi-body': ['Noto Sans Devanagari', 'sans-serif'],
       },
 
@@ -171,7 +171,7 @@ export default {
         'body-md': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
         'label-bold': ['14px', { lineHeight: '20px', letterSpacing: '0.01em', fontWeight: '600' }],
         'label-caps': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '700' }],
-        'marathi-body': ['16px', { lineHeight: '1.85', fontWeight: '400' }],
+        'marathi-body': ['16px', { lineHeight: '1.8', fontWeight: '400' }],
       },
 
       // ─── Border Radius ───

@@ -54,30 +54,30 @@ export default function HomeAboutSection({ lang = 'mr', onNavigate, embedded = f
 
           {/* Right Content */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-1.5 bg-rose-50 text-primary font-black text-xs px-4 py-1.5 rounded-full border border-rose-200">
+            <div className="inline-flex items-center gap-1.5 bg-rose-50 text-primary font-bold text-xs px-4 py-1.5 rounded-full border border-rose-200">
               <Award className="w-4 h-4 text-primary" />
-              <span>{isMarathi ? 'संस्थेविषयी परिचय' : 'About Samarth Computers'}</span>
+              <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'संस्थेविषयी परिचय' : 'About Samarth Computers'}</span>
             </div>
 
-            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMarathi ? 'marathi-heading' : ''}`}>
+            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight leading-tight'}`}>
               {heading}
             </h2>
 
-            <p className={`text-slate-600 text-sm sm:text-base font-medium leading-relaxed ${isMarathi ? 'marathi-text' : ''}`}>
+            <p className={`text-slate-600 text-sm sm:text-base font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
               {desc}
             </p>
 
             <div className="grid grid-cols-2 gap-4 pt-2">
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span className="text-xs font-extrabold text-slate-800">
+                <span className="text-xs font-bold text-slate-800">
                   {isMarathi ? 'MKCL ALC: 13210399 / 13210273' : 'MKCL ALC: 13210399 / 13210273'}
                 </span>
               </div>
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span className="text-xs font-extrabold text-slate-800">
-                  {isMarathi ? 'CSC डिजिटल सेवा केंद्र' : 'CSC Digital Seva'}
+                <span className={`text-xs font-bold text-slate-800 ${isMarathi ? 'marathi-text' : ''}`}>
+                  {isMarathi ? 'सीएससी डिजिटल सेवा केंद्र' : 'CSC Digital Seva Center'}
                 </span>
               </div>
             </div>
@@ -86,9 +86,9 @@ export default function HomeAboutSection({ lang = 'mr', onNavigate, embedded = f
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate('about')}
-                className="inline-flex items-center gap-2 bg-primary hover:bg-stitch-red-dark text-white px-7 py-3.5 rounded-2xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-105 group"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-stitch-red-dark text-white px-7 py-3.5 rounded-2xl font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 group"
               >
-                <span>{isMarathi ? 'संस्थेविषयी अधिक जाणून घ्या' : 'Learn More About Samarth Computers'}</span>
+                <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'संस्थेविषयी अधिक माहिती' : 'Learn More About Us'}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>

@@ -63,31 +63,31 @@ export default function Reviews({ lang = 'mr', embedded = false }) {
         </div>
 
         {/* Reviews Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {reviews.map((rev, idx) => (
             <div 
               key={idx}
-              className="bg-slate-50/80 border border-slate-200/90 p-6 rounded-3xl space-y-4 flex flex-col justify-between hover:bg-white hover:shadow-stitch-md transition-all"
+              className="bg-slate-50/80 border border-slate-200/90 p-6 rounded-3xl space-y-4 h-full flex flex-col justify-between hover:bg-white hover:shadow-md transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 text-amber-400">
                     {[...Array(rev.rating)].map((_, r) => (
-                      <Star key={r} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <Star key={r} className="w-4 h-4 fill-amber-400 text-amber-400 shrink-0" />
                     ))}
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400">{rev.date}</span>
+                  <span className={`text-[10px] font-bold text-slate-400 ${isMarathi ? 'marathi-text' : ''}`}>{rev.date}</span>
                 </div>
 
-                <p className={`text-xs text-slate-600 leading-relaxed font-medium ${isMarathi ? 'marathi-text' : ''}`}>
+                <p className={`text-xs text-slate-600 font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
                   "{isMarathi ? rev.commentMr : rev.commentEn}"
                 </p>
               </div>
 
               <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                <div className="font-extrabold text-xs text-stitch-slate-dark">{rev.author}</div>
-                <span className="flex items-center gap-1 text-[10px] text-stitch-emerald font-extrabold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  <CheckCircle2 className="w-3 h-3 text-stitch-emerald" /> Verified
+                <div className={`font-bold text-xs text-slate-900 ${isMarathi ? 'marathi-text' : ''}`}>{rev.author}</div>
+                <span className="flex items-center gap-1 text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" /> Verified
                 </span>
               </div>
             </div>

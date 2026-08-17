@@ -139,23 +139,23 @@ export default function GallerySection({ lang = 'mr' }) {
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             
             <div className="space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 bg-stitch-red-light text-stitch-red font-black text-xs px-4 py-1.5 rounded-full border border-stitch-red-border shadow-stitch-sm">
-                <Camera className="w-4 h-4 text-stitch-red" />
+              <div className="inline-flex items-center gap-2 bg-stitch-red-light text-stitch-red font-bold text-xs px-4 py-1.5 rounded-full border border-stitch-red-border shadow-xs">
+                <Camera className="w-4 h-4 text-stitch-red shrink-0" />
                 <span className={isMarathi ? 'marathi-text font-bold' : ''}>
-                  {isMarathi ? '📸 गॅलरी व रील्स' : '📸 Gallery & Reels'}
+                  {isMarathi ? 'गॅलरी व रील्स' : 'Gallery & Reels'}
                 </span>
               </div>
 
-              <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight leading-tight ${isMarathi ? 'marathi-text' : ''}`}>
+              <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stitch-slate-dark ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight'}`}>
                 {isMarathi
-                  ? 'समर्थ कॉम्प्युटर्स खंडाळा — 📸 गॅलरी व रील्स'
-                  : 'Samarth Computers Khandala — 📸 Gallery & Reels'}
+                  ? 'कॅम्पस फोटो आणि सोशल मीडिया रील्स'
+                  : 'Campus Life & Social Media Reels'}
               </h2>
 
-              <p className={`text-slate-500 text-sm sm:text-base font-medium leading-relaxed ${isMarathi ? 'marathi-text' : ''}`}>
+              <p className={`text-slate-500 text-sm sm:text-base font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
                 {isMarathi
-                  ? 'Watch Daily Campus Life & Student Reels — अद्ययावत आयटी कॉम्प्युटर लॅब, प्रॅक्टिकल क्लासरुम, प्रमाणपत्र सोहळा आणि दैनिक सोशियल मीडिया रील्स एकाच फ्रेममध्ये पाहा.'
-                  : 'Watch Daily Campus Life & Student Reels — Explore state-of-the-art computer lab facilities, 1-on-1 practical training, student achievers, and trending campus reels in one frame.'}
+                  ? 'अद्ययावत संगणक लॅब, प्रात्यक्षिक वर्ग, प्रमाणपत्र वाटप सोहळा आणि विद्यार्थ्यांच्या दैनिक सोशियल मीडिया रील्स पाहा.'
+                  : 'Explore state-of-the-art computer lab facilities, 1-on-1 practical training sessions, student achievers, and trending campus reels.'}
               </p>
             </div>
 
@@ -165,18 +165,18 @@ export default function GallerySection({ lang = 'mr' }) {
                 href={sharedStore.getSiteSettings()?.socialInstagram || 'https://instagram.com/samarthcomputers'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-stitch-red hover:bg-stitch-red-dark text-white font-extrabold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-stitch-sm hover:scale-105"
+                className="inline-flex items-center gap-2 bg-stitch-red hover:bg-stitch-red-dark text-white font-bold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-xs hover:scale-105"
               >
-                <Share2 className="w-4 h-4 text-red-200" />
-                <span>Instagram Follow</span>
+                <Share2 className="w-4 h-4 text-red-200 shrink-0" />
+                <span>Instagram Profile</span>
               </a>
               <a
                 href={sharedStore.getSiteSettings()?.socialYoutube || 'https://youtube.com/@samarthcomputers'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-stitch-slate-dark hover:bg-slate-900 text-white font-extrabold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-stitch-sm hover:scale-105"
+                className="inline-flex items-center gap-2 bg-stitch-slate-dark hover:bg-slate-900 text-white font-bold text-xs px-4.5 py-3.5 rounded-2xl transition-all shadow-xs hover:scale-105"
               >
-                <Video className="w-4 h-4 text-stitch-amber" />
+                <Video className="w-4 h-4 text-stitch-amber shrink-0" />
                 <span>YouTube Channel</span>
               </a>
             </div>
@@ -187,20 +187,20 @@ export default function GallerySection({ lang = 'mr' }) {
           <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-start gap-2">
             {[
               { id: 'all', labelMr: 'सर्व फोटो व रील्स', labelEn: 'All Photos & Reels' },
-              { id: 'campus', labelMr: 'कॅम्पस & कॉम्प्युटर लॅब', labelEn: 'Campus & Lab' },
+              { id: 'campus', labelMr: 'कॅम्पस व कॉम्प्युटर लॅब', labelEn: 'Campus & Lab' },
               { id: 'events', labelMr: 'विद्यार्थी उपक्रम', labelEn: 'Student Events' },
-              { id: 'reels', labelMr: 'सोशल मीडिया रील्स & व्हिडियो', labelEn: 'Social Reels & Videos' }
+              { id: 'reels', labelMr: 'सोशल मीडिया रील्स व व्हिडियो', labelEn: 'Social Reels & Videos' }
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveFilter(tab.id)}
-                className={`px-4 py-2.5 rounded-full text-xs font-black transition-all shadow-stitch-sm border ${
+                className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all border ${
                   activeFilter === tab.id
-                    ? 'bg-stitch-red text-white border-stitch-red shadow-stitch-glow'
+                    ? 'bg-stitch-red text-white border-stitch-red shadow-xs'
                     : 'bg-white text-stitch-slate-dark hover:bg-slate-50 border-slate-200'
                 }`}
               >
-                <span className={isMarathi ? 'marathi-text' : ''}>
+                <span className={isMarathi ? 'marathi-text font-bold' : ''}>
                   {isMarathi ? tab.labelMr : tab.labelEn}
                 </span>
               </button>
@@ -210,7 +210,7 @@ export default function GallerySection({ lang = 'mr' }) {
 
         {/* Media Grid */}
         <div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
         >
           {filteredItems.map((item, idx) => {
             const isVideo = item.type === 'video' || item.category === 'Reels';

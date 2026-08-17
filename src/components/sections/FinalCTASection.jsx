@@ -30,15 +30,15 @@ export default function FinalCTASection({ lang = 'mr', onNavigate }) {
           
           {/* Text Content */}
           <div className="max-w-2xl text-center lg:text-left space-y-3">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight leading-tight'}`}>
               {isMarathi
-                ? 'माहिती तंत्रज्ञानात कुशल व्हा आणि करिअर घडवा!'
+                ? 'माहिती तंत्रज्ञानात कुशल व्हा आणि उज्ज्वल करिअर घडवा!'
                 : 'Build Your IT Career with Industry Certified Training'}
             </h2>
 
-            <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
+            <p className={`text-slate-300 text-sm sm:text-base font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
               {isMarathi
-                ? 'MS-CIT, टॅली प्राइम GST, ॲडव्हान्स एक्सल आणि सर्व ऑनलाइन शासकीय सेवांसाठी आजच समर्थ कॉम्प्युटर्स खंडाळा येथे संपर्क साधा.'
+                ? 'MS-CIT, टॅली प्राइम GST, ॲडव्हान्स एक्सेल आणि सर्व ऑनलाईन शासकीय सेतू सेवांसाठी आजच समर्थ कॉम्प्युटर्स खंडाळा येथे संपर्क साधा.'
                 : 'Contact Samarth Computers, Khandala today for course admissions, free counseling, or fast online government setu services.'}
             </p>
           </div>
@@ -48,10 +48,10 @@ export default function FinalCTASection({ lang = 'mr', onNavigate }) {
             {/* Call Now Button */}
             <a
               href={`tel:+${cleanPhone}`}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm px-7 py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2.5 hover:scale-105"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 hover:scale-105"
             >
-              <Phone className="w-5 h-5 fill-white/20" />
-              <span>{isMarathi ? '📞 थेट बोलण्यासाठी कॉल करा' : `Call Counselor (${phone})`}</span>
+              <Phone className="w-5 h-5 fill-white/20 shrink-0" />
+              <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'थेट कॉल करा' : `Call Counselor (${phone})`}</span>
             </a>
 
             {/* WhatsApp Button */}
@@ -59,10 +59,10 @@ export default function FinalCTASection({ lang = 'mr', onNavigate }) {
               href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hello Samarth Computers, I would like to inquire about course admissions and batch timings.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-slate-700 hover:bg-emerald-600 text-white font-black text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 hover:scale-105 border border-slate-600"
+              className="bg-slate-700 hover:bg-emerald-600 text-white font-bold text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 hover:scale-105 border border-slate-600"
             >
               <MessageCircle className="w-5 h-5 text-emerald-400" />
-              <span>{isMarathi ? 'व्हाट्सॲपवर चॅट करा' : 'Chat on WhatsApp'}</span>
+              <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'व्हाट्सॲपवर चॅट करा' : 'Chat on WhatsApp'}</span>
             </a>
 
             {/* Online Enquiry Trigger */}
@@ -73,10 +73,10 @@ export default function FinalCTASection({ lang = 'mr', onNavigate }) {
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
                 else if (onNavigate) onNavigate('contact');
               }}
-              className="bg-primary hover:bg-stitch-red-dark text-white font-black text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 hover:scale-105"
+              className="bg-primary hover:bg-stitch-red-dark text-white font-bold text-sm px-7 py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 hover:scale-105"
             >
               <Send className="w-5 h-5" />
-              <span>{isMarathi ? 'ऑनलाइन चौकशी संदेश पाठवा' : 'Send Online Enquiry'}</span>
+              <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'ऑनलाईन चौकशी अर्ज करा' : 'Send Online Enquiry'}</span>
             </button>
           </div>
 

@@ -56,9 +56,9 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Official Badge Tag */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200/80 text-primary font-black text-xs shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200/80 text-primary font-bold text-xs shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span>
+            <span className={isMarathi ? 'marathi-text' : ''}>
               {isMarathi
                 ? (settings.heroBadgeMr || 'महाराष्ट्र शासन व MKCL अधिकृत केंद्र')
                 : (settings.heroBadgeEn || 'Govt. Recognized Institute')}
@@ -66,7 +66,7 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           </div>
 
           {/* Headline */}
-          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] ${isMarathi ? 'marathi-heading' : ''}`}>
+          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25] tracking-normal' : 'tracking-tight leading-[1.12]'}`}>
             {isMarathi ? (
               <>{settings.heroTitleMr || 'संगणक कौशल्ये शिका. आत्मविश्वासाने पुढे जा.'}</>
             ) : (
@@ -75,10 +75,10 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           </h1>
 
           {/* Subtitle Body */}
-          <p className={`text-base sm:text-lg text-slate-600 font-medium max-w-xl leading-relaxed ${isMarathi ? 'marathi-text' : ''}`}>
+          <p className={`text-base sm:text-lg text-slate-600 font-medium max-w-xl ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
             {isMarathi
-              ? (settings.heroSubtitleMr || 'MS-CIT, टॅली प्राइम, ॲडव्हान्स एक्सेल आणि प्रात्यक्षिक संगणक प्रशिक्षणासाठी खंडाळ्यातील आपले केंद्र.')
-              : (settings.heroSubtitleEn || 'Your Khandala centre for MS-CIT, Tally Prime, Advanced Excel, and practical computer training.')}
+              ? (settings.heroSubtitleMr || 'MS-CIT, टॅली प्राइम, ॲडव्हान्स एक्सेल आणि प्रात्यक्षिक संगणक प्रशिक्षणासाठी खंडाळ्यातील आपले अधिकृत केंद्र.')
+              : (settings.heroSubtitleEn || 'Your Khandala center for MS-CIT, Tally Prime, Advanced Excel, and practical computer training.')}
           </p>
 
           {/* Address Highlight */}
@@ -90,19 +90,19 @@ export default function HeroSection({ lang = 'mr', onNavigate }) {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <a
               href={`tel:${settings.callCtaPhone || settings.contactPhone || '+919552345061'}`}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm sm:text-base px-7 py-4 rounded-2xl shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02] flex items-center justify-center gap-2.5 group"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base px-7 py-4 rounded-2xl shadow-xs transition-all hover:scale-[1.02] flex items-center justify-center gap-2.5 group"
               title={`Call Samarth Computers: ${settings.callCtaPhone || settings.contactPhone || '+91 95523 45061'}`}
             >
-              <span className="material-symbols-outlined text-[22px] group-hover:rotate-12 transition-transform">call</span>
-              <span>{isMarathi ? (settings.callCtaTextMr || '📞 थेट कॉल करा (Call Now)') : (settings.callCtaTextEn || `Call Now (${settings.callCtaPhone || '+91 95523 45061'})`)}</span>
+              <span className="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">call</span>
+              <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'थेट कॉल करा' : 'Call Counselor'}</span>
             </a>
 
             <button
               type="button"
               onClick={() => onNavigate && onNavigate(settings.heroCtaDest || 'courses')}
-              className="bg-primary hover:bg-stitch-red-dark text-white font-black text-sm sm:text-base px-7 py-4 rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 group border border-primary/20 hover:scale-[1.02]"
+              className="bg-primary hover:bg-stitch-red-dark text-white font-bold text-sm sm:text-base px-7 py-4 rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2 group hover:scale-[1.02]"
             >
-              <span>{isMarathi ? (settings.heroCtaTextMr || 'कोर्सेसची यादी पहा') : (settings.heroCtaTextEn || 'Explore Courses')}</span>
+              <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? (settings.heroCtaTextMr || 'सर्व कोर्सेस पहा') : (settings.heroCtaTextEn || 'Explore Courses')}</span>
               <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
                 arrow_forward
               </span>

@@ -48,37 +48,37 @@ export default function SuccessStories({ lang = 'mr' }) {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-stitch-emerald font-extrabold text-xs px-4 py-1.5 rounded-full border border-emerald-200 shadow-stitch-sm">
+          <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-stitch-emerald font-bold text-xs px-4 py-1.5 rounded-full border border-emerald-200 shadow-xs">
             <Award className="w-4 h-4 text-stitch-emerald" />
-            <span>{isMarathi ? 'विद्यार्थी यशोगाथा व अभिप्राय' : 'Student Success Stories & Reviews'}</span>
+            <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'विद्यार्थी यशोगाथा व अभिप्राय' : 'Student Success Stories & Reviews'}</span>
           </div>
 
-          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
-            {isMarathi ? 'आमच्या विद्यार्थ्यांचे यश हेच आमचे प्रमाणपत्र' : 'Real Transformations & Local Career Success'}
+          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stitch-slate-dark ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight'}`}>
+            {isMarathi ? 'विद्यार्थ्यांचे यश हीच आमची खरी ओळख' : 'Real Transformations & Local Career Success'}
           </h2>
         </div>
 
         {/* Stories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {stories.map((item, idx) => (
             <div 
               key={idx}
-              className="bg-white rounded-3xl border border-slate-200/90 p-7 shadow-stitch-md hover:shadow-stitch-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 relative"
+              className="bg-white rounded-3xl border border-slate-200/90 p-7 shadow-xs hover:shadow-md transition-all duration-300 h-full flex flex-col justify-between group hover:-translate-y-0.5 relative"
             >
               <Quote className="w-10 h-10 text-slate-100 absolute top-5 right-5 pointer-events-none" />
 
               <div className="space-y-4 relative z-10">
-                <span className="inline-block bg-stitch-red-light text-stitch-red border border-stitch-red-border text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">
+                <span className={`inline-block bg-stitch-red-light text-stitch-red border border-stitch-red-border text-[10px] font-bold px-3 py-1 rounded-full uppercase ${isMarathi ? 'marathi-text' : ''}`}>
                   {item.badge}
                 </span>
 
-                <p className={`text-xs text-slate-600 italic leading-relaxed font-medium ${isMarathi ? 'marathi-text' : ''}`}>
+                <p className={`text-xs text-slate-600 italic font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
                   "{isMarathi ? item.quoteMr : item.quoteEn}"
                 </p>
 
-                <div className="bg-emerald-50/80 border border-emerald-200/80 p-3.5 rounded-2xl flex items-start gap-2.5 shadow-stitch-sm">
+                <div className="bg-emerald-50/80 border border-emerald-200/80 p-3.5 rounded-2xl flex items-start gap-2.5 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-stitch-emerald shrink-0 mt-0.5" />
-                  <span className={`text-[11px] font-bold text-emerald-950 ${isMarathi ? 'marathi-text' : ''}`}>
+                  <span className={`text-[11px] font-bold text-emerald-950 ${isMarathi ? 'marathi-text leading-[1.6]' : ''}`}>
                     {isMarathi ? item.outcomeMr : item.outcomeEn}
                   </span>
                 </div>
@@ -86,11 +86,11 @@ export default function SuccessStories({ lang = 'mr' }) {
 
               <div className="pt-4 border-t border-slate-100 mt-6 flex items-center justify-between">
                 <div>
-                  <div className="font-extrabold text-sm text-stitch-slate-dark">{item.name}</div>
-                  <div className="text-[11px] text-slate-500 font-semibold">{isMarathi ? item.courseMr : item.courseEn}</div>
+                  <div className={`font-bold text-sm text-stitch-slate-dark ${isMarathi ? 'marathi-text' : ''}`}>{item.name}</div>
+                  <div className={`text-[11px] text-slate-500 font-semibold ${isMarathi ? 'marathi-text' : ''}`}>{isMarathi ? item.courseMr : item.courseEn}</div>
                 </div>
 
-                <div className="w-9 h-9 rounded-2xl bg-stitch-red-light border border-stitch-red-border flex items-center justify-center text-stitch-red shadow-stitch-sm">
+                <div className="w-9 h-9 rounded-2xl bg-stitch-red-light border border-stitch-red-border flex items-center justify-center text-stitch-red shadow-xs shrink-0">
                   <Award className="w-4 h-4" />
                 </div>
               </div>

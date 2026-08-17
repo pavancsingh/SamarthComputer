@@ -96,12 +96,12 @@ export default function ContactForm({ lang = 'mr' }) {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-1.5 bg-stitch-red-light text-stitch-red font-extrabold text-xs px-4 py-1.5 rounded-full border border-stitch-red-border shadow-stitch-sm">
+          <div className="inline-flex items-center gap-1.5 bg-stitch-red-light text-stitch-red font-bold text-xs px-4 py-1.5 rounded-full border border-stitch-red-border shadow-xs">
             <Sparkles className="w-4 h-4 text-stitch-red" />
-            <span>{isMarathi ? 'प्रवेश व चौकशी केंद्र' : 'Inquiry & Admission Desk'}</span>
+            <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'प्रवेश व चौकशी केंद्र' : 'Inquiry & Admission Desk'}</span>
           </div>
 
-          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-stitch-slate-dark tracking-tight ${isMarathi ? 'marathi-text' : ''}`}>
+          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stitch-slate-dark ${isMarathi ? 'marathi-heading leading-[1.3] md:leading-[1.25]' : 'tracking-tight'}`}>
             {isMarathi ? 'आजच संपर्क साधा किंवा आमच्या दोन्ही शाखांना भेट द्या' : 'Get in Touch or Visit Our 2 Official Branches'}
           </h2>
         </div>
@@ -116,12 +116,12 @@ export default function ContactForm({ lang = 'mr' }) {
             <div className="bg-stitch-slate-dark text-white p-6 rounded-3xl space-y-4 shadow-stitch-md border border-slate-700/80 relative overflow-hidden">
               <div className="flex items-center justify-between border-b border-slate-700/80 pb-3.5">
                 <div>
-                  <h3 className="font-black text-base text-white">
+                  <h3 className={`font-extrabold text-base text-white ${isMarathi ? 'marathi-heading' : ''}`}>
                     {isMarathi ? 'समर्थ कॉम्प्युटर्स (मुख्य शाखा)' : 'Samarth Computers (Main Branch)'}
                   </h3>
-                  <div className="text-[11px] text-slate-400 font-semibold">{isMarathi ? 'मुख्य शाखा • खंडाळा' : 'Main Branch • Khandala'}</div>
+                  <div className={`text-[11px] text-slate-400 font-semibold ${isMarathi ? 'marathi-text' : ''}`}>{isMarathi ? 'मुख्य शाखा • खंडाळा' : 'Main Branch • Khandala'}</div>
                 </div>
-                <span className="bg-stitch-amber/20 text-stitch-amber text-[10px] font-black px-3 py-1 rounded-full border border-stitch-amber/40 uppercase">
+                <span className="bg-stitch-amber/20 text-stitch-amber text-[10px] font-bold px-3 py-1 rounded-full border border-stitch-amber/40 uppercase">
                   ALC: 13210399
                 </span>
               </div>
@@ -129,7 +129,7 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="space-y-2.5 text-xs text-slate-300 font-medium">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-stitch-amber shrink-0 mt-0.5" />
-                  <span>{isMarathi ? 'Civil Court समोर, खंडाळा, जि. सातारा - ४१२८०२' : 'Opp. Civil Court, Khandala, Dist. Satara - 412802'}</span>
+                  <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'सिव्हिल कोर्टासमोर, खंडाळा, जि. सातारा - ४१२८०२' : 'Opp. Civil Court, Khandala, Dist. Satara - 412802'}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2 pt-1">
                   <div className="flex items-center gap-2">
@@ -138,24 +138,24 @@ export default function ContactForm({ lang = 'mr' }) {
                   </div>
                   <a
                     href="tel:+919552345061"
-                    className="px-3 py-1 bg-stitch-amber text-slate-950 font-black text-[11px] rounded-lg shadow-sm hover:scale-105 transition-all"
+                    className="px-3 py-1 bg-stitch-amber text-slate-950 font-bold text-[11px] rounded-lg shadow-xs hover:scale-105 transition-all"
                   >
-                    📞 {isMarathi ? 'कॉल करा' : 'Call Now'}
+                    <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'कॉल करा' : 'Call Now'}</span>
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Branch 2 Card */}
-            <div className="bg-stitch-red text-white p-6 rounded-3xl space-y-4 shadow-stitch-md border border-red-700/80 relative overflow-hidden">
+            <div className="bg-stitch-red text-white p-6 rounded-3xl space-y-4 shadow-md border border-red-700/80 relative overflow-hidden">
               <div className="flex items-center justify-between border-b border-red-400/30 pb-3.5">
                 <div>
-                  <h3 className="font-black text-base text-white">
+                  <h3 className={`font-extrabold text-base text-white ${isMarathi ? 'marathi-heading' : ''}`}>
                     {isMarathi ? 'समर्थ कॉम्प्युटर्स (शाखा क्र. २)' : 'Samarth Computers (Branch 2)'}
                   </h3>
-                  <div className="text-[11px] text-red-200 font-semibold">{isMarathi ? 'शाखा क्र. २ • खंडाळा' : 'Branch 2 • Khandala'}</div>
+                  <div className={`text-[11px] text-red-200 font-semibold ${isMarathi ? 'marathi-text' : ''}`}>{isMarathi ? 'शाखा क्र. २ • खंडाळा' : 'Branch 2 • Khandala'}</div>
                 </div>
-                <span className="bg-white/20 text-white text-[10px] font-black px-3 py-1 rounded-full border border-white/30 uppercase">
+                <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full border border-white/30 uppercase">
                   ALC: 13210273
                 </span>
               </div>
@@ -163,7 +163,7 @@ export default function ContactForm({ lang = 'mr' }) {
               <div className="space-y-2.5 text-xs text-red-100 font-medium">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
-                  <span>{isMarathi ? 'राजेंद्र विद्यालयाजवळ, खंडाळा, जि. सातारा - ४१२८०२' : 'Near Rajendra Vidhalya, Khandala, Dist. Satara - 412802'}</span>
+                  <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'राजेंद्र विद्यालयाजवळ, खंडाळा, जि. सातारा - ४१२८०२' : 'Near Rajendra Vidhalya, Khandala, Dist. Satara - 412802'}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2 pt-1">
                   <div className="flex items-center gap-2">
@@ -172,9 +172,9 @@ export default function ContactForm({ lang = 'mr' }) {
                   </div>
                   <a
                     href="tel:+919850283664"
-                    className="px-3 py-1 bg-white text-stitch-red font-black text-[11px] rounded-lg shadow-sm hover:scale-105 transition-all"
+                    className="px-3 py-1 bg-white text-stitch-red font-bold text-[11px] rounded-lg shadow-xs hover:scale-105 transition-all"
                   >
-                    📞 Call Now
+                    <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'कॉल करा' : 'Call Now'}</span>
                   </a>
                 </div>
               </div>
@@ -184,39 +184,39 @@ export default function ContactForm({ lang = 'mr' }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <a
                 href="tel:+919552345061"
-                className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-3.5 rounded-2xl shadow-stitch-sm transition-all hover:scale-[1.01]"
+                className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3.5 rounded-2xl shadow-xs transition-all hover:scale-[1.01]"
               >
-                <Phone className="w-4 h-4 text-white fill-white/20" />
-                <span>{isMarathi ? '📞 थेट कॉल करा (Call Now)' : 'Call Now (+91 95523 45061)'}</span>
+                <Phone className="w-4 h-4 text-white fill-white/20 shrink-0" />
+                <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'थेट कॉल करा' : 'Call Now (+91 95523 45061)'}</span>
               </a>
 
               <a
                 href="https://wa.me/919552345061?text=Hello%20Samarth%20Computers"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-stitch-whatsapp hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 rounded-2xl shadow-stitch-sm transition-all hover:scale-[1.01]"
+                className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs py-3.5 rounded-2xl shadow-xs transition-all hover:scale-[1.01]"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Helpline</span>
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                <span className={isMarathi ? 'marathi-text font-bold' : ''}>{isMarathi ? 'व्हाट्सॲप हेल्पलाईन' : 'WhatsApp Helpline'}</span>
               </a>
             </div>
 
             {/* Compact Short Google Map */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-stitch-sm space-y-0 relative">
+            <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-xs space-y-0 relative">
               <div className="p-3.5 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-stitch-red shrink-0" />
-                  <span className="font-extrabold text-xs text-stitch-slate-dark">
-                    {isMarathi ? 'गूगल मॅप लोकेशन (खंडाळा सेंटर)' : 'Google Map Location'}
+                  <span className={`font-bold text-xs text-stitch-slate-dark ${isMarathi ? 'marathi-text' : ''}`}>
+                    {isMarathi ? 'गूगल मॅप लोकेशन (खंडाळा)' : 'Google Map Location'}
                   </span>
                 </div>
                 <a 
                   href="https://maps.google.com/maps?q=Khandala+Bus+Stand+Satara"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-extrabold text-stitch-red hover:underline flex items-center gap-1"
+                  className="text-[10px] font-bold text-stitch-red hover:underline flex items-center gap-1"
                 >
-                  <span>{isMarathi ? 'मॅप उघडा' : 'Open Map'}</span>
+                  <span className={isMarathi ? 'marathi-text' : ''}>{isMarathi ? 'मॅप उघडा' : 'Open Map'}</span>
                   <Navigation className="w-3 h-3 text-stitch-red" />
                 </a>
               </div>
@@ -249,11 +249,11 @@ export default function ContactForm({ lang = 'mr' }) {
                     if (t.id === 'course' && courses.length > 0) setSelectedItem(courses[0].title);
                     if (t.id === 'csc' && cscServices.length > 0) setSelectedItem(cscServices[0].titleMr || cscServices[0].title_mr);
                   }}
-                  className={`px-4 py-2.5 rounded-full text-xs font-black transition-all shadow-stitch-sm ${
+                  className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all shadow-xs ${
                     activeTab === t.id
                       ? 'bg-stitch-red text-white'
                       : 'bg-white text-stitch-slate-dark hover:bg-slate-50 border border-slate-200'
-                  }`}
+                  } ${isMarathi ? 'marathi-text' : ''}`}
                 >
                   {isMarathi ? t.labelMr : t.labelEn}
                 </button>
@@ -266,18 +266,18 @@ export default function ContactForm({ lang = 'mr' }) {
                 <div className="w-14 h-14 rounded-full bg-emerald-100 text-stitch-emerald flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="font-black text-xl text-stitch-slate-dark">
-                  {isMarathi ? 'चौकशी अर्ज प्राप्त झाला!' : 'Inquiry Submitted Successfully!'}
+                <h3 className={`font-extrabold text-xl text-stitch-slate-dark ${isMarathi ? 'marathi-heading' : ''}`}>
+                  {isMarathi ? 'चौकशी अर्ज सादर झाला!' : 'Inquiry Submitted Successfully!'}
                 </h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium">
+                <p className={`text-xs text-slate-500 max-w-sm mx-auto font-medium ${isMarathi ? 'marathi-text leading-[1.8]' : 'leading-relaxed'}`}>
                   {isMarathi
-                    ? 'आमचे प्रतिनिधी लवकरच तुमच्याशी संपर्क साधतील. धन्यवाद!'
+                    ? 'आमचे प्रतिनिधी लवकरच आपल्याशी संपर्क साधतील. धन्यवाद!'
                     : 'Our counselor will contact you shortly on your phone number. Thank you!'}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
-                  className="text-xs font-extrabold text-stitch-red underline pt-2"
+                  className={`text-xs font-bold text-stitch-red underline pt-2 ${isMarathi ? 'marathi-text' : ''}`}
                 >
                   {isMarathi ? 'दुसरा अर्ज करा' : 'Submit Another Form'}
                 </button>
@@ -290,43 +290,43 @@ export default function ContactForm({ lang = 'mr' }) {
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs font-extrabold text-stitch-slate-dark mb-1.5">
-                    {isMarathi ? 'विद्यार्थ्याचे नाव:' : 'Full Name:'}
+                  <label className={`block text-xs font-bold text-stitch-slate-dark mb-1.5 ${isMarathi ? 'marathi-text' : ''}`}>
+                    {isMarathi ? 'विद्यार्थ्याचे संपूर्ण नाव:' : 'Full Name:'}
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter your name..."
+                    placeholder={isMarathi ? 'तुमचे संपूर्ण नाव टाका...' : 'Enter your full name...'}
                     required
-                    className="w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm transition-all"
+                    className={`w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-xs transition-all ${isMarathi ? 'marathi-text' : ''}`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-stitch-slate-dark mb-1.5">
+                  <label className={`block text-xs font-bold text-stitch-slate-dark mb-1.5 ${isMarathi ? 'marathi-text' : ''}`}>
                     {isMarathi ? 'मोबाईल नंबर:' : 'Mobile Number:'}
                   </label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="e.g. 9552345061"
+                    placeholder="उदा. 9552345061"
                     required
                     maxLength={10}
-                    className="w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-mono text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm transition-all"
+                    className="w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-medium text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-xs transition-all"
                   />
                 </div>
 
                 {activeTab === 'course' && (
                   <div>
-                    <label className="block text-xs font-extrabold text-stitch-slate-dark mb-1.5">
-                      {isMarathi ? 'अभ्यासक्रम निवडा (Live Synced Courses):' : 'Select Course:'}
+                    <label className={`block text-xs font-bold text-stitch-slate-dark mb-1.5 ${isMarathi ? 'marathi-text' : ''}`}>
+                      {isMarathi ? 'अभ्यासक्रम निवडा:' : 'Select Course:'}
                     </label>
                     <select
                       value={selectedItem}
                       onChange={(e) => setSelectedItem(e.target.value)}
-                      className="w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-extrabold text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm transition-all"
+                      className={`w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-bold text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-xs transition-all ${isMarathi ? 'marathi-text' : ''}`}
                     >
                       {courses.map((c) => (
                         <option key={c.id || c.slug} value={c.title}>
@@ -339,13 +339,13 @@ export default function ContactForm({ lang = 'mr' }) {
 
                 {activeTab === 'csc' && (
                   <div>
-                    <label className="block text-xs font-extrabold text-stitch-slate-dark mb-1.5">
+                    <label className={`block text-xs font-bold text-stitch-slate-dark mb-1.5 ${isMarathi ? 'marathi-text' : ''}`}>
                       {isMarathi ? 'शासकीय सेवा निवडा:' : 'Select Govt Service:'}
                     </label>
                     <select
                       value={selectedItem}
                       onChange={(e) => setSelectedItem(e.target.value)}
-                      className="w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-extrabold text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-stitch-sm transition-all"
+                      className={`w-full p-3.5 bg-white border border-slate-300 rounded-2xl text-xs font-bold text-stitch-slate-dark focus:ring-2 focus:ring-stitch-red focus:border-stitch-red shadow-xs transition-all ${isMarathi ? 'marathi-text' : ''}`}
                     >
                       {cscServices.map((s) => (
                         <option key={s.id || s.slug} value={s.titleMr || s.title_mr || s.titleEn}>
@@ -361,14 +361,12 @@ export default function ContactForm({ lang = 'mr' }) {
                   </div>
                 )}
 
-
-
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-stitch-red to-stitch-red-dark hover:from-stitch-red-dark hover:to-red-800 text-white font-black text-xs py-4 rounded-2xl shadow-stitch-glow transition-all flex items-center justify-center gap-2 hover:scale-[1.01]"
+                  className="w-full bg-gradient-to-r from-stitch-red to-stitch-red-dark hover:from-stitch-red-dark hover:to-red-800 text-white font-bold text-xs py-4 rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2 hover:scale-[1.01]"
                 >
                   <Send className="w-4 h-4 text-white" />
-                  <span>{isMarathi ? 'अर्ज पाठवा (Submit Inquiry)' : 'Submit Inquiry & Connect'}</span>
+                  <span className={isMarathi ? 'marathi-text font-bold text-sm' : ''}>{isMarathi ? 'अर्ज सादर करा' : 'Submit Inquiry'}</span>
                 </button>
               </form>
             )}
