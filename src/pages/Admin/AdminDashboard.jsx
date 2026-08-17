@@ -342,12 +342,29 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
     }
   };
 
-  // Direct Image Upload Handler
+  // Direct Image Upload Handler with Instant Pre-Upload Preview State
   const handleFileUpload = async (e, folder = 'general', customCallback = null) => {
     if (uploadingImage) return; // Guard against duplicate concurrent uploads
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
+
+    // Validate image file format
+    if (!file.type || !file.type.startsWith('image/')) {
+      setActionNotice({ type: 'error', text: 'Invalid file format. Please select an image file (PNG, JPG, WebP).' });
+      return;
+    }
+
+    // 1. Create instant local Object URL for immediate pre-upload preview
+    const localPreviewUrl = URL.createObjectURL(file);
+    const previousUrl = editingItem?.imageUrl || editingItem?.image_url || '';
+
+    // 2. Set instant local preview immediately so admin sees selected image before upload completes
+    if (customCallback) {
+      customCallback(localPreviewUrl);
+    } else {
+      setEditingItem((prev) => ({ ...prev, imageUrl: localPreviewUrl, image_url: localPreviewUrl }));
+    }
 
     setUploadingImage(true);
     try {
@@ -355,17 +372,32 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
       setUploadingImage(false);
 
       if (publicUrl) {
+        // Replace local preview blob URL with permanent Supabase public URL
         if (customCallback) {
           customCallback(publicUrl);
         } else {
           setEditingItem((prev) => ({ ...prev, imageUrl: publicUrl, image_url: publicUrl }));
         }
+        URL.revokeObjectURL(localPreviewUrl);
         setActionNotice({ type: 'success', text: 'Image uploaded successfully!' });
       } else {
+        // Restore previous image URL on upload failure
+        if (customCallback) {
+          customCallback(previousUrl);
+        } else {
+          setEditingItem((prev) => ({ ...prev, imageUrl: previousUrl, image_url: previousUrl }));
+        }
+        URL.revokeObjectURL(localPreviewUrl);
         setActionNotice({ type: 'error', text: 'Failed to upload image to Storage.' });
       }
     } catch (err) {
       setUploadingImage(false);
+      if (customCallback) {
+        customCallback(previousUrl);
+      } else {
+        setEditingItem((prev) => ({ ...prev, imageUrl: previousUrl, image_url: previousUrl }));
+      }
+      URL.revokeObjectURL(localPreviewUrl);
       console.error('[AdminDashboard] handleFileUpload exception:', err);
       setActionNotice({ type: 'error', text: 'Failed to upload image to Storage.' });
     }
