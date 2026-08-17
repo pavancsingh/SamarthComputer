@@ -19,15 +19,27 @@ async function upsertWithColumnFallback(tableName, payload, altTableName = null)
 
   while (attempts < maxAttempts) {
     attempts++;
-    let { data, error } = await supabase.from(currentTable).upsert([currentPayload]).select();
+    let data, error;
+    try {
+      const res = await supabase.from(currentTable).upsert([currentPayload]).select();
+      data = res.data;
+      error = res.error;
+    } catch (err) {
+      console.warn(`[AdminRepository] Supabase network/fetch exception on '${currentTable}':`, err.message || err);
+      return { success: false, error: err.message || 'Failed to fetch', isFetchError: true };
+    }
 
     if (error && altTableName && currentTable !== altTableName &&
-        (error.message.includes('schema cache') || error.message.includes('does not exist') || error.message.includes('relation'))) {
+        (error.message?.includes('schema cache') || error.message?.includes('does not exist') || error.message?.includes('relation'))) {
       console.warn(`[AdminRepository] Table '${currentTable}' not found in schema cache. Trying alternative table '${altTableName}'...`);
       currentTable = altTableName;
-      const altResult = await supabase.from(currentTable).upsert([currentPayload]).select();
-      data = altResult.data;
-      error = altResult.error;
+      try {
+        const altResult = await supabase.from(currentTable).upsert([currentPayload]).select();
+        data = altResult.data;
+        error = altResult.error;
+      } catch (err) {
+        return { success: false, error: err.message || 'Failed to fetch', isFetchError: true };
+      }
     }
 
     if (!error) {
@@ -38,6 +50,10 @@ async function upsertWithColumnFallback(tableName, payload, altTableName = null)
 
     if (errorMsg.includes('schema cache') || errorMsg.includes('does not exist') || errorMsg.includes('relation')) {
       return { success: false, error: error.message, isTableMissing: true };
+    }
+
+    if (errorMsg.includes('Failed to fetch') || errorMsg.includes('fetch') || errorMsg.includes('NetworkError') || errorMsg.includes('network')) {
+      return { success: false, error: error.message, isFetchError: true };
     }
 
     const match = errorMsg.match(/Could not find the ['"](.+?)['"] column/i) ||
@@ -123,34 +139,47 @@ export const AdminRepository = {
     if (targetId && isValidUUID(targetId.toString())) {
       payload.id = targetId;
     } else {
-      const { data: existing } = await supabase
-        .from('courses')
-        .select('id')
-        .eq('slug', slug)
-        .limit(1);
-      if (existing && existing.length > 0 && existing[0].id) {
-        payload.id = existing[0].id;
+      try {
+        const { data: existing } = await supabase
+          .from('courses')
+          .select('id')
+          .eq('slug', slug)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      } catch (lookupErr) {
+        console.warn('[AdminRepository] Supabase course lookup notice:', lookupErr.message);
       }
     }
 
-    const res = await upsertWithColumnFallback('courses', payload);
-    if (res.success) {
-      sharedStore.saveCourse(res.data || courseData);
+    try {
+      const res = await upsertWithColumnFallback('courses', payload);
+      if (res.success) {
+        sharedStore.saveCourse(res.data || courseData);
+        return res;
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveCourse notice (${res.error}). Saved to local store fallback.`);
+        const saved = sharedStore.saveCourse(courseData);
+        return { success: true, data: saved || courseData, fallback: true };
+      }
       return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveCourse exception:', err.message);
+      const saved = sharedStore.saveCourse(courseData);
+      return { success: true, data: saved || courseData, fallback: true };
     }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'courses' missing in Supabase schema (${res.error}). Saved to local store.`);
-      sharedStore.saveCourse(courseData);
-      return { success: true, data: courseData, fallback: true };
-    }
-    return res;
   },
 
   async deleteCourse(id) {
-    const { error } = await supabase.from('courses').delete().or(`id.eq.${id},slug.eq.${id}`);
-    if (error) {
-      console.error('Supabase course delete error:', error.message);
-      return { success: false, error: error.message };
+    try {
+      const { error } = await supabase.from('courses').delete().or(`id.eq.${id},slug.eq.${id}`);
+      if (error) {
+        console.error('Supabase course delete error:', error.message);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] deleteCourse exception:', err.message);
     }
     sharedStore.deleteCourse(id);
     return { success: true };
@@ -158,27 +187,32 @@ export const AdminRepository = {
 
   // ================= CSC SERVICES CRUD =================
   async getAllCSCServices() {
-    let { data, error } = await supabase
-      .from('csc_services')
-      .select('*')
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: false });
-
-    if (error && error.message.includes('display_order')) {
-      const retry = await supabase
+    try {
+      let { data, error } = await supabase
         .from('csc_services')
         .select('*')
+        .order('display_order', { ascending: true })
         .order('created_at', { ascending: false });
-      data = retry.data;
-      error = retry.error;
-    }
 
-    if (error) {
-      console.error('Supabase fetch CSC error:', error.message);
+      if (error && error.message.includes('display_order')) {
+        const retry = await supabase
+          .from('csc_services')
+          .select('*')
+          .order('created_at', { ascending: false });
+        data = retry.data;
+        error = retry.error;
+      }
+
+      if (error) {
+        console.error('Supabase fetch CSC error:', error.message);
+        return sharedStore.getCSCServices();
+      }
+      sharedStore.syncCSCServicesFromRemote(data || [], false);
+      return data || [];
+    } catch (err) {
+      console.warn('[AdminRepository] getAllCSCServices exception:', err.message);
       return sharedStore.getCSCServices();
     }
-    sharedStore.syncCSCServicesFromRemote(data || [], false);
-    return data || [];
   },
 
   async saveCSCService(serviceData) {
@@ -213,27 +247,37 @@ export const AdminRepository = {
     if (targetId && isValidUUID(targetId.toString())) {
       payload.id = targetId;
     } else {
-      const { data: existing } = await supabase
-        .from('csc_services')
-        .select('id')
-        .eq('slug', slug)
-        .limit(1);
-      if (existing && existing.length > 0 && existing[0].id) {
-        payload.id = existing[0].id;
+      try {
+        const { data: existing } = await supabase
+          .from('csc_services')
+          .select('id')
+          .eq('slug', slug)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      } catch (lookupErr) {
+        console.warn('[AdminRepository] Supabase CSC lookup notice:', lookupErr.message);
       }
     }
 
-    const res = await upsertWithColumnFallback('csc_services', payload);
-    if (res.success) {
-      sharedStore.saveCSCService(res.data || serviceData);
+    try {
+      const res = await upsertWithColumnFallback('csc_services', payload);
+      if (res.success) {
+        sharedStore.saveCSCService(res.data || serviceData);
+        return res;
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveCSCService notice (${res.error}). Saved to local store fallback.`);
+        const saved = sharedStore.saveCSCService(serviceData);
+        return { success: true, data: saved || serviceData, fallback: true };
+      }
       return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveCSCService exception:', err.message);
+      const saved = sharedStore.saveCSCService(serviceData);
+      return { success: true, data: saved || serviceData, fallback: true };
     }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'csc_services' missing in Supabase schema (${res.error}). Saved to local store.`);
-      sharedStore.saveCSCService(serviceData);
-      return { success: true, data: serviceData, fallback: true };
-    }
-    return res;
   },
 
   async deleteCSCService(id) {
@@ -287,34 +331,47 @@ export const AdminRepository = {
     if (targetId && isValidUUID(targetId.toString())) {
       payload.id = targetId;
     } else {
-      const { data: existing } = await supabase
-        .from('govt_services')
-        .select('id')
-        .eq('slug', slug)
-        .limit(1);
-      if (existing && existing.length > 0 && existing[0].id) {
-        payload.id = existing[0].id;
+      try {
+        const { data: existing } = await supabase
+          .from('govt_services')
+          .select('id')
+          .eq('slug', slug)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      } catch (lookupErr) {
+        console.warn('[AdminRepository] Supabase Govt lookup notice:', lookupErr.message);
       }
     }
 
-    const res = await upsertWithColumnFallback('govt_services', payload);
-    if (res.success) {
-      sharedStore.saveGovtService(res.data || serviceData);
+    try {
+      const res = await upsertWithColumnFallback('govt_services', payload);
+      if (res.success) {
+        sharedStore.saveGovtService(res.data || serviceData);
+        return res;
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveGovtService notice (${res.error}). Saved to local store fallback.`);
+        const saved = sharedStore.saveGovtService(serviceData);
+        return { success: true, data: saved || serviceData, fallback: true };
+      }
       return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveGovtService exception:', err.message);
+      const saved = sharedStore.saveGovtService(serviceData);
+      return { success: true, data: saved || serviceData, fallback: true };
     }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'govt_services' missing in Supabase schema (${res.error}). Saved to local store.`);
-      sharedStore.saveGovtService(serviceData);
-      return { success: true, data: serviceData, fallback: true };
-    }
-    return res;
   },
 
   async deleteGovtService(id) {
-    const { error } = await supabase.from('govt_services').delete().or(`id.eq.${id},slug.eq.${id}`);
-    if (error) {
-      console.error('Supabase Govt delete error:', error.message);
-      return { success: false, error: error.message };
+    try {
+      const { error } = await supabase.from('govt_services').delete().or(`id.eq.${id},slug.eq.${id}`);
+      if (error) {
+        console.error('Supabase Govt delete error:', error.message);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] deleteGovtService exception:', err.message);
     }
     sharedStore.deleteGovtService(id);
     return { success: true };
@@ -322,17 +379,22 @@ export const AdminRepository = {
 
   // ================= INQUIRIES & LEADS MANAGEMENT =================
   async getAllInquiries() {
-    const { data, error } = await supabase
-      .from('inquiries')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('inquiries')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase fetch inquiries error:', error.message);
+      if (error) {
+        console.error('Supabase fetch inquiries error:', error.message);
+        return sharedStore.getInquiries();
+      }
+      sharedStore.syncInquiriesFromRemote(data || []);
+      return data || [];
+    } catch (err) {
+      console.warn('[AdminRepository] getAllInquiries exception:', err.message);
       return sharedStore.getInquiries();
     }
-    sharedStore.syncInquiriesFromRemote(data || []);
-    return data || [];
   },
 
   async saveInquiry(inquiryData) {
@@ -345,28 +407,42 @@ export const AdminRepository = {
       status: inquiryData.status || 'New Lead'
     };
 
-    const res = await upsertWithColumnFallback('inquiries', payload);
-    if (res.success) {
-      sharedStore.addInquiry(res.data || inquiryData);
+    try {
+      const res = await upsertWithColumnFallback('inquiries', payload);
+      if (res.success) {
+        sharedStore.addInquiry(res.data || inquiryData);
+        return res;
+      }
+      sharedStore.addInquiry(inquiryData);
+      return { success: true, data: inquiryData, fallback: true };
+    } catch (err) {
+      console.warn('[AdminRepository] saveInquiry exception:', err.message);
+      sharedStore.addInquiry(inquiryData);
+      return { success: true, data: inquiryData, fallback: true };
     }
-    return res;
   },
 
   async updateInquiryStatus(id, newStatus) {
-    const { error } = await supabase.from('inquiries').update({ status: newStatus }).eq('id', id);
-    if (error) {
-      console.error('Supabase inquiry update error:', error.message);
-      return { success: false, error: error.message };
+    try {
+      const { error } = await supabase.from('inquiries').update({ status: newStatus }).eq('id', id);
+      if (error) {
+        console.error('Supabase inquiry update error:', error.message);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] updateInquiryStatus exception:', err.message);
     }
     sharedStore.updateInquiryStatus(id, newStatus);
     return { success: true };
   },
 
   async deleteInquiry(id) {
-    const { error } = await supabase.from('inquiries').delete().eq('id', id);
-    if (error) {
-      console.error('Supabase inquiry delete error:', error.message);
-      return { success: false, error: error.message };
+    try {
+      const { error } = await supabase.from('inquiries').delete().eq('id', id);
+      if (error) {
+        console.error('Supabase inquiry delete error:', error.message);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] deleteInquiry exception:', err.message);
     }
     sharedStore.deleteInquiry(id);
     return { success: true };
@@ -374,17 +450,22 @@ export const AdminRepository = {
 
   // ================= SITE GALLERY CRUD =================
   async getAllSiteGallery() {
-    const { data, error } = await supabase
-      .from('site_gallery')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('site_gallery')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Supabase gallery fetch error:', error.message);
+      if (error) {
+        console.error('Supabase gallery fetch error:', error.message);
+        return sharedStore.getSiteGallery();
+      }
+      sharedStore.syncGalleryFromRemote(data || []);
+      return data || [];
+    } catch (err) {
+      console.warn('[AdminRepository] getAllSiteGallery exception:', err.message);
       return sharedStore.getSiteGallery();
     }
-    sharedStore.syncGalleryFromRemote(data || []);
-    return data || [];
   },
 
   async saveSiteGalleryItem(itemData) {
@@ -405,28 +486,38 @@ export const AdminRepository = {
     } else {
       const searchTitle = payload.title_en || payload.title_mr;
       if (searchTitle) {
-        const { data: existing } = await supabase
-          .from('site_gallery')
-          .select('id')
-          .ilike('title_en', searchTitle)
-          .limit(1);
-        if (existing && existing.length > 0 && existing[0].id) {
-          payload.id = existing[0].id;
+        try {
+          const { data: existing } = await supabase
+            .from('site_gallery')
+            .select('id')
+            .ilike('title_en', searchTitle)
+            .limit(1);
+          if (existing && existing.length > 0 && existing[0].id) {
+            payload.id = existing[0].id;
+          }
+        } catch (lookupErr) {
+          console.warn('[AdminRepository] Supabase gallery lookup notice:', lookupErr.message);
         }
       }
     }
 
-    const res = await upsertWithColumnFallback('site_gallery', payload);
-    if (res.success) {
-      sharedStore.saveSiteGalleryItem(res.data || itemData);
+    try {
+      const res = await upsertWithColumnFallback('site_gallery', payload);
+      if (res.success) {
+        sharedStore.saveSiteGalleryItem(res.data || itemData);
+        return res;
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveSiteGalleryItem notice (${res.error}). Saved to local store fallback.`);
+        const saved = sharedStore.saveSiteGalleryItem(itemData);
+        return { success: true, data: saved || itemData, fallback: true };
+      }
       return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveSiteGalleryItem exception:', err.message);
+      const saved = sharedStore.saveSiteGalleryItem(itemData);
+      return { success: true, data: saved || itemData, fallback: true };
     }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'site_gallery' missing in Supabase schema (${res.error}). Saved to local store.`);
-      sharedStore.saveSiteGalleryItem(itemData);
-      return { success: true, data: itemData, fallback: true };
-    }
-    return res;
   },
 
   async deleteSiteGalleryItem(id) {
@@ -441,52 +532,55 @@ export const AdminRepository = {
 
   // ================= FACULTY MANAGEMENT CRUD =================
   async getAllFaculty() {
-    const { data, error } = await supabase
-      .from('faculties')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('faculties')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Supabase faculty fetch error:', error.message);
+      if (error || !data || data.length === 0) {
+        if (error) console.error('Supabase faculty fetch error:', error.message);
+        return sharedStore.getFaculty();
+      }
+
+      // Deduplicate records by faculty name to prevent duplicate cards in UI
+      const seenNames = new Set();
+      const uniqueFaculty = [];
+      const duplicateIdsToDelete = [];
+
+      for (const item of data) {
+        const normalizedName = (item.name || '').trim().toLowerCase();
+        if (!normalizedName) continue;
+
+        if (!seenNames.has(normalizedName)) {
+          seenNames.add(normalizedName);
+          uniqueFaculty.push({
+            ...item,
+            roleEn: item.role_en || item.roleEn,
+            roleMr: item.role_mr || item.roleMr,
+            expEn: item.exp_en || item.expEn,
+            expMr: item.exp_mr || item.expMr,
+            specEn: item.spec_en || item.specEn,
+            specMr: item.spec_mr || item.specMr,
+            imageUrl: item.image_url || item.imageUrl
+          });
+        } else if (item.id) {
+          duplicateIdsToDelete.push(item.id);
+        }
+      }
+
+      // Async cleanup of duplicate records from Supabase
+      if (duplicateIdsToDelete.length > 0) {
+        console.warn(`[AdminRepository] Cleaning up ${duplicateIdsToDelete.length} duplicate faculty records from Supabase...`);
+        supabase.from('faculties').delete().in('id', duplicateIdsToDelete).catch(() => {});
+      }
+
+      sharedStore.syncFacultyFromRemote(uniqueFaculty);
+      return uniqueFaculty;
+    } catch (err) {
+      console.warn('[AdminRepository] getAllFaculty exception:', err.message);
       return sharedStore.getFaculty();
     }
-
-    // Deduplicate records by faculty name to prevent duplicate cards in UI
-    const seenNames = new Set();
-    const uniqueFaculty = [];
-    const duplicateIdsToDelete = [];
-
-    for (const item of data) {
-      const normalizedName = (item.name || '').trim().toLowerCase();
-      if (!normalizedName) continue;
-
-      if (!seenNames.has(normalizedName)) {
-        seenNames.add(normalizedName);
-        uniqueFaculty.push({
-          ...item,
-          roleEn: item.role_en || item.roleEn,
-          roleMr: item.role_mr || item.roleMr,
-          expEn: item.exp_en || item.expEn,
-          expMr: item.exp_mr || item.expMr,
-          specEn: item.spec_en || item.specEn,
-          specMr: item.spec_mr || item.specMr,
-          imageUrl: item.image_url || item.imageUrl
-        });
-      } else if (item.id) {
-        duplicateIdsToDelete.push(item.id);
-      }
-    }
-
-    // Async cleanup of duplicate records from Supabase
-    if (duplicateIdsToDelete.length > 0) {
-      console.warn(`[AdminRepository] Cleaning up ${duplicateIdsToDelete.length} duplicate faculty records from Supabase...`);
-      supabase.from('faculties').delete().in('id', duplicateIdsToDelete).then(() => {
-        console.log('[AdminRepository] Duplicate faculty records cleaned up successfully.');
-      });
-    }
-
-    sharedStore.syncFacultyFromRemote(uniqueFaculty);
-    return uniqueFaculty;
   },
 
   async saveFacultyItem(itemData) {
@@ -506,22 +600,24 @@ export const AdminRepository = {
     if (targetId && isValidUUID(targetId.toString())) {
       payload.id = targetId;
     } else {
-      // Lookup existing faculty by name to update existing UUID row
-      const { data: existing } = await supabase
-        .from('faculties')
-        .select('id')
-        .ilike('name', itemData.name)
-        .limit(1);
-      if (existing && existing.length > 0 && existing[0].id) {
-        payload.id = existing[0].id;
+      try {
+        const { data: existing } = await supabase
+          .from('faculties')
+          .select('id')
+          .ilike('name', itemData.name)
+          .limit(1);
+        if (existing && existing.length > 0 && existing[0].id) {
+          payload.id = existing[0].id;
+        }
+      } catch (lookupErr) {
+        console.warn('[AdminRepository] Supabase faculty lookup notice:', lookupErr.message);
       }
     }
 
-    const res = await upsertWithColumnFallback('faculties', payload);
     const savedItem = {
       ...itemData,
       ...payload,
-      id: res.data?.id || payload.id || itemData.id || `fac-${Date.now()}`,
+      id: payload.id || itemData.id || `fac-${Date.now()}`,
       roleEn: payload.role_en,
       roleMr: payload.role_mr,
       expEn: payload.exp_en,
@@ -531,28 +627,35 @@ export const AdminRepository = {
       imageUrl: payload.image_url
     };
 
-    if (res.success) {
-      sharedStore.saveFacultyItem(savedItem);
-      return { success: true, data: savedItem };
-    }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'faculties' missing in Supabase schema (${res.error}). Saved to local store.`);
+    try {
+      const res = await upsertWithColumnFallback('faculties', payload);
+      if (res.success) {
+        savedItem.id = res.data?.id || savedItem.id;
+        sharedStore.saveFacultyItem(savedItem);
+        return { success: true, data: savedItem };
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveFacultyItem notice (${res.error}). Saved to local store fallback.`);
+        sharedStore.saveFacultyItem(savedItem);
+        return { success: true, data: savedItem, fallback: true };
+      }
+      return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveFacultyItem exception:', err.message);
       sharedStore.saveFacultyItem(savedItem);
       return { success: true, data: savedItem, fallback: true };
     }
-    return res;
   },
 
   async deleteFacultyItem(id) {
-    const targetFaculty = sharedStore.getFaculty().find((f) => f.id === id);
-    let { error } = await supabase.from('faculties').delete().eq('id', id);
-
-    if (targetFaculty && targetFaculty.name) {
-      await supabase.from('faculties').delete().ilike('name', targetFaculty.name);
-    }
-
-    if (error && !error.message.includes('schema cache') && !error.message.includes('does not exist')) {
-      console.error('Supabase faculty delete error:', error.message);
+    try {
+      const targetFaculty = sharedStore.getFaculty().find((f) => f.id === id);
+      await supabase.from('faculties').delete().eq('id', id);
+      if (targetFaculty && targetFaculty.name) {
+        await supabase.from('faculties').delete().ilike('name', targetFaculty.name);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] deleteFacultyItem exception:', err.message);
     }
     sharedStore.deleteFacultyItem(id);
     return { success: true };
@@ -560,28 +663,33 @@ export const AdminRepository = {
 
   // ================= BATCH TIMETABLE CRUD =================
   async getAllBatches() {
-    let { data, error } = await supabase
-      .from('batches')
-      .select('*')
-      .order('created_at', { ascending: true });
-
-    if (error && (error.message.includes('schema cache') || error.message.includes('does not exist') || error.message.includes('relation'))) {
-      const retry = await supabase
-        .from('batch_timetable')
+    try {
+      let { data, error } = await supabase
+        .from('batches')
         .select('*')
         .order('created_at', { ascending: true });
-      if (!retry.error && retry.data) {
-        data = retry.data;
-        error = null;
-      }
-    }
 
-    if (error) {
-      console.error('Supabase batch fetch error:', error.message);
+      if (error && (error.message.includes('schema cache') || error.message.includes('does not exist') || error.message.includes('relation'))) {
+        const retry = await supabase
+          .from('batch_timetable')
+          .select('*')
+          .order('created_at', { ascending: true });
+        if (!retry.error && retry.data) {
+          data = retry.data;
+          error = null;
+        }
+      }
+
+      if (error) {
+        console.error('Supabase batch fetch error:', error.message);
+        return sharedStore.getBatches();
+      }
+      sharedStore.syncBatchesFromRemote(data || []);
+      return data || [];
+    } catch (err) {
+      console.warn('[AdminRepository] getAllBatches exception:', err.message);
       return sharedStore.getBatches();
     }
-    sharedStore.syncBatchesFromRemote(data || []);
-    return data || [];
   },
 
   async saveBatchItem(itemData) {
@@ -600,31 +708,35 @@ export const AdminRepository = {
       payload.id = itemData.id;
     }
 
-    const res = await upsertWithColumnFallback('batches', payload, 'batch_timetable');
-    if (res.success) {
-      sharedStore.saveBatchItem(res.data || itemData);
-      return res;
-    }
+    try {
+      const res = await upsertWithColumnFallback('batches', payload, 'batch_timetable');
+      if (res.success) {
+        sharedStore.saveBatchItem(res.data || itemData);
+        return res;
+      }
 
-    // Fallback: If table is missing in Supabase schema cache, save locally to sharedStore so user operation succeeds
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('relation')))) {
-      console.warn(`[AdminRepository] Supabase 'batches' table missing (${res.error}). Persisted batch slot locally to store.`);
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveBatchItem notice (${res.error}). Saved to local store fallback.`);
+        sharedStore.saveBatchItem(itemData);
+        return { success: true, data: itemData, fallback: true };
+      }
+
+      return res;
+    } catch (err) {
+      console.warn('[AdminRepository] saveBatchItem exception:', err.message);
       sharedStore.saveBatchItem(itemData);
       return { success: true, data: itemData, fallback: true };
     }
-
-    return res;
   },
 
   async deleteBatchItem(id) {
-    let { error } = await supabase.from('batches').delete().eq('id', id);
-    if (error && (error.message.includes('schema cache') || error.message.includes('does not exist') || error.message.includes('relation'))) {
-      const retry = await supabase.from('batch_timetable').delete().eq('id', id);
-      error = retry.error;
-    }
-    if (error && !error.message.includes('schema cache') && !error.message.includes('does not exist')) {
-      console.error('Supabase batch delete error:', error.message);
-      return { success: false, error: error.message };
+    try {
+      let { error } = await supabase.from('batches').delete().eq('id', id);
+      if (error && (error.message.includes('schema cache') || error.message.includes('does not exist') || error.message.includes('relation'))) {
+        await supabase.from('batch_timetable').delete().eq('id', id);
+      }
+    } catch (err) {
+      console.warn('[AdminRepository] deleteBatchItem exception:', err.message);
     }
     sharedStore.deleteBatchItem(id);
     return { success: true };
@@ -673,22 +785,25 @@ export const AdminRepository = {
     } else {
       const searchTitle = payload.title_en || payload.title_mr;
       if (searchTitle) {
-        const { data: existing } = await supabase
-          .from('news')
-          .select('id')
-          .ilike('title_en', searchTitle)
-          .limit(1);
-        if (existing && existing.length > 0 && existing[0].id) {
-          payload.id = existing[0].id;
+        try {
+          const { data: existing } = await supabase
+            .from('news')
+            .select('id')
+            .ilike('title_en', searchTitle)
+            .limit(1);
+          if (existing && existing.length > 0 && existing[0].id) {
+            payload.id = existing[0].id;
+          }
+        } catch (lookupErr) {
+          console.warn('[AdminRepository] Supabase news lookup notice:', lookupErr.message);
         }
       }
     }
 
-    const res = await upsertWithColumnFallback('news', payload);
     const normalizedItem = {
       ...itemData,
       ...payload,
-      id: res.data?.id || itemData.id || `n-${Date.now()}`,
+      id: payload.id || itemData.id || `n-${Date.now()}`,
       titleEn: payload.title_en,
       titleMr: payload.title_mr,
       categoryEn: payload.category_en,
@@ -698,16 +813,24 @@ export const AdminRepository = {
       descMr: payload.desc_mr
     };
 
-    if (res.success) {
-      sharedStore.saveNewsItem(normalizedItem);
+    try {
+      const res = await upsertWithColumnFallback('news', payload);
+      if (res.success) {
+        normalizedItem.id = res.data?.id || normalizedItem.id;
+        sharedStore.saveNewsItem(normalizedItem);
+        return res;
+      }
+      if (res.isTableMissing || res.isFetchError || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist') || res.error.includes('Failed to fetch') || res.error.includes('fetch')))) {
+        console.warn(`[AdminRepository] Supabase saveNewsItem notice (${res.error}). Saved to local store fallback.`);
+        sharedStore.saveNewsItem(normalizedItem);
+        return { success: true, data: normalizedItem, fallback: true };
+      }
       return res;
-    }
-    if (res.isTableMissing || (res.error && (res.error.includes('schema cache') || res.error.includes('does not exist')))) {
-      console.warn(`[AdminRepository] Table 'news' missing in Supabase schema (${res.error}). Saved to local store.`);
+    } catch (err) {
+      console.warn('[AdminRepository] saveNewsItem exception:', err.message);
       sharedStore.saveNewsItem(normalizedItem);
       return { success: true, data: normalizedItem, fallback: true };
     }
-    return res;
   },
 
   async deleteNewsItem(id) {

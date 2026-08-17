@@ -315,15 +315,30 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
       return;
     }
     setIsSubmitting(true);
-    const res = await AdminRepository.saveCourse(editingItem);
-    setIsSubmitting(false);
-    if (res.success) {
-      setActionNotice({ type: 'success', text: `Course "${editingItem.title}" saved successfully!` });
+    try {
+      const res = await AdminRepository.saveCourse(editingItem);
+      setIsSubmitting(false);
+      if (res.success) {
+        setActionNotice({
+          type: 'success',
+          text: res.fallback
+            ? `Course "${editingItem.title}" saved locally!`
+            : `Course "${editingItem.title}" saved successfully!`
+        });
+        setEditingItem(null);
+        setFormType(null);
+        loadAllData();
+      } else {
+        setActionNotice({ type: 'error', text: `Failed to save course: ${res.error}` });
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      console.warn('[AdminDashboard] handleSaveCourse exception:', err.message);
+      sharedStore.saveCourse(editingItem);
+      setActionNotice({ type: 'success', text: `Course "${editingItem.title}" saved locally!` });
       setEditingItem(null);
       setFormType(null);
       loadAllData();
-    } else {
-      setActionNotice({ type: 'error', text: `Failed to save course: ${res.error}` });
     }
   };
 
