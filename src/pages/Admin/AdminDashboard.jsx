@@ -12,6 +12,89 @@ import { sharedStore } from '../../repositories/sharedStore';
 import { StorageService, toVersionedUrl } from '../../services/StorageService';
 
 /**
+ * ImageUploadPreviewField Helper Component
+ * Renders an image preview container with a centered progress/loading overlay,
+ * spinning loader + "Uploading..." text, smooth transitions, file select button,
+ * and URL input field.
+ */
+function ImageUploadPreviewField({ 
+  label = "Image File:", 
+  imageUrl = "", 
+  onImageChange, 
+  uploading = false, 
+  folder = "general",
+  handleFileUpload,
+  heightClass = "h-36"
+}) {
+  return (
+    <div className="space-y-2 border-t border-slate-100 pt-3.5">
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-bold text-slate-700">{label}</label>
+        <span className="text-[10px] text-slate-400 font-semibold">PNG, JPG, WebP • Auto Storage Upload</span>
+      </div>
+
+      {/* Image Preview Box with Centered Upload Overlay */}
+      <div className={`relative w-full ${heightClass} bg-slate-100 border border-slate-200/90 rounded-2xl overflow-hidden flex items-center justify-center shadow-xs group transition-all duration-300`}>
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt="Upload Preview" 
+            className="w-full h-full object-cover transition-opacity duration-300 group-hover:scale-105"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 p-4 text-center">
+            <Image className="w-6 h-6 text-slate-300" />
+            <span className="font-bold text-[11px] text-slate-500">No image uploaded yet</span>
+            <span className="text-[10px] text-slate-400">Choose a file below to upload</span>
+          </div>
+        )}
+
+        {/* Centered Uploading Progress/Loading Overlay */}
+        {uploading && (
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center gap-2.5 z-20 text-white animate-in fade-in duration-200">
+            <div className="relative flex items-center justify-center">
+              <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 absolute" />
+            </div>
+            <div className="text-center space-y-1">
+              <span className="text-xs font-extrabold tracking-wide text-white block">Uploading Image...</span>
+              <div className="w-24 h-1 bg-slate-700 rounded-full overflow-hidden mx-auto">
+                <div className="h-full bg-rose-500 animate-pulse w-full rounded-full" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Upload Button & Direct URL Input */}
+      <div className="flex items-center gap-2">
+        <label className={`cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+          {uploading ? <Loader2 className="w-4 h-4 animate-spin text-rose-400" /> : <Upload className="w-4 h-4 text-rose-400" />}
+          <span>{uploading ? 'Uploading...' : 'Choose File'}</span>
+          <input 
+            type="file" 
+            accept="image/*" 
+            disabled={uploading}
+            onChange={(e) => handleFileUpload(e, folder, onImageChange)} 
+            className="hidden" 
+          />
+        </label>
+
+        <input
+          type="text"
+          placeholder="Or paste direct image URL..."
+          value={imageUrl || ''}
+          disabled={uploading}
+          onChange={(e) => onImageChange(e.target.value)}
+          className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
  * AdminDashboard Component — Stitch Design System (Admin Suite)
  * Covers all Stitch Admin screens and preserves 100% existing functionality
  */
@@ -261,22 +344,29 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
 
   // Direct Image Upload Handler
   const handleFileUpload = async (e, folder = 'general', customCallback = null) => {
+    if (uploadingImage) return; // Guard against duplicate concurrent uploads
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
 
     setUploadingImage(true);
-    const publicUrl = await StorageService.uploadImage(file, folder);
-    setUploadingImage(false);
+    try {
+      const publicUrl = await StorageService.uploadImage(file, folder);
+      setUploadingImage(false);
 
-    if (publicUrl) {
-      if (customCallback) {
-        customCallback(publicUrl);
+      if (publicUrl) {
+        if (customCallback) {
+          customCallback(publicUrl);
+        } else {
+          setEditingItem((prev) => ({ ...prev, imageUrl: publicUrl, image_url: publicUrl }));
+        }
+        setActionNotice({ type: 'success', text: 'Image uploaded successfully!' });
       } else {
-        setEditingItem((prev) => ({ ...prev, imageUrl: publicUrl, image_url: publicUrl }));
+        setActionNotice({ type: 'error', text: 'Failed to upload image to Storage.' });
       }
-      setActionNotice({ type: 'success', text: 'Image uploaded successfully!' });
-    } else {
+    } catch (err) {
+      setUploadingImage(false);
+      console.error('[AdminDashboard] handleFileUpload exception:', err);
       setActionNotice({ type: 'error', text: 'Failed to upload image to Storage.' });
     }
   };
@@ -1797,12 +1887,18 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                               <Trash2 className="w-3.5 h-3.5" /> Discard
                             </button>
                           </div>
-                          <div className="h-20 flex items-center justify-center bg-white border border-primary/20 rounded-lg p-2">
+                          <div className="h-20 flex items-center justify-center bg-white border border-primary/20 rounded-lg p-2 relative overflow-hidden">
                             <img 
                               src={pendingLogo.previewUrl} 
                               alt="New Logo Preview" 
                               className="max-h-full max-w-full object-contain" 
                             />
+                            {uploadingImage && (
+                              <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center gap-1 z-20 text-white animate-in fade-in duration-200">
+                                <Loader2 className="w-5 h-5 animate-spin text-rose-400" />
+                                <span className="text-[10px] font-extrabold tracking-wide text-white">Uploading Logo...</span>
+                              </div>
+                            )}
                           </div>
                           <p className="text-[10px] text-slate-500 font-semibold truncate">
                             File: {pendingLogo.file.name} ({(pendingLogo.file.size / 1024).toFixed(1)} KB)
@@ -1887,12 +1983,18 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                               <Trash2 className="w-3.5 h-3.5" /> Discard
                             </button>
                           </div>
-                          <div className="h-28 overflow-hidden bg-slate-200 border border-primary/30 rounded-lg">
+                          <div className="h-28 overflow-hidden bg-slate-200 border border-primary/30 rounded-lg relative">
                             <img 
                               src={pendingHero.previewUrl} 
                               alt="New Banner Preview" 
                               className="w-full h-full object-cover" 
                             />
+                            {uploadingImage && (
+                              <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center gap-1 z-20 text-white animate-in fade-in duration-200">
+                                <Loader2 className="w-6 h-6 animate-spin text-rose-400" />
+                                <span className="text-[10px] font-extrabold tracking-wide text-white">Uploading Banner...</span>
+                              </div>
+                            )}
                           </div>
                           <p className="text-[10px] text-slate-500 font-semibold truncate">
                             File: {pendingHero.file.name} ({(pendingHero.file.size / 1024).toFixed(1)} KB)
@@ -2131,27 +2233,15 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Institute Photo Image URL:</label>
-                    <div className="flex items-center gap-3">
-                      <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0">
-                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                        <span>Upload Photo</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleFileUpload(e, 'about', (url) => setSiteSettings({ ...siteSettings, aboutImageUrl: url }))}
-                          className="hidden"
-                        />
-                      </label>
-                      <input
-                        type="text"
-                        value={siteSettings.aboutImageUrl || ''}
-                        onChange={(e) => setSiteSettings({ ...siteSettings, aboutImageUrl: e.target.value })}
-                        className="flex-1 p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-900"
-                      />
-                    </div>
-                  </div>
+                  <ImageUploadPreviewField 
+                    label="Institute Photo Image:"
+                    imageUrl={siteSettings.aboutImageUrl || ''}
+                    onImageChange={(url) => setSiteSettings({ ...siteSettings, aboutImageUrl: url })}
+                    uploading={uploadingImage}
+                    folder="about"
+                    handleFileUpload={handleFileUpload}
+                    heightClass="h-36"
+                  />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
@@ -2906,31 +2996,34 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   />
                 </div>
 
-                <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <label className="block text-xs font-bold text-slate-700">Course Banner Photo:</label>
-                  <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                      <span>{uploadingImage ? 'Uploading...' : 'Choose File'}</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => handleFileUpload(e, 'courses')} 
-                        className="hidden" 
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Image URL"
-                      value={editingItem.imageUrl || editingItem.image_url || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value, image_url: e.target.value })}
-                      className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-700"
-                    />
-                  </div>
-                </div>
+                <ImageUploadPreviewField 
+                  label="Course Banner Photo:"
+                  imageUrl={editingItem.imageUrl || editingItem.image_url || ''}
+                  onImageChange={(url) => setEditingItem({ ...editingItem, imageUrl: url, image_url: url })}
+                  uploading={uploadingImage}
+                  folder="courses"
+                  handleFileUpload={handleFileUpload}
+                  heightClass="h-32"
+                />
 
-                <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
-                  Save &amp; Sync Supabase DB
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || uploadingImage} 
+                  className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Uploading Image... Please Wait</span>
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving Course...</span>
+                    </>
+                  ) : (
+                    <span>Save &amp; Sync Supabase DB</span>
+                  )}
                 </button>
               </form>
             )}
@@ -3085,8 +3178,24 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   />
                 </div>
 
-                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-sm transition-all mt-2">
-                  Save &amp; Sync Supabase DB
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || uploadingImage} 
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-sm transition-all mt-2 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Uploading Image... Please Wait</span>
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving Service...</span>
+                    </>
+                  ) : (
+                    <span>Save &amp; Sync Supabase DB</span>
+                  )}
                 </button>
               </form>
             )}
@@ -3206,31 +3315,34 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   />
                 </div>
 
-                <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <label className="block text-xs font-bold text-slate-700">Service Icon/Banner Photo:</label>
-                  <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                      <span>{uploadingImage ? 'Uploading...' : 'Choose File'}</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => handleFileUpload(e, 'govt')} 
-                        className="hidden" 
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Image URL"
-                      value={editingItem.imageUrl || editingItem.image_url || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value, image_url: e.target.value })}
-                      className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-700"
-                    />
-                  </div>
-                </div>
+                <ImageUploadPreviewField 
+                  label="Service Icon / Banner Photo:"
+                  imageUrl={editingItem.imageUrl || editingItem.image_url || ''}
+                  onImageChange={(url) => setEditingItem({ ...editingItem, imageUrl: url, image_url: url })}
+                  uploading={uploadingImage}
+                  folder="govt"
+                  handleFileUpload={handleFileUpload}
+                  heightClass="h-32"
+                />
 
-                <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
-                  Save &amp; Sync Supabase DB
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || uploadingImage} 
+                  className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Uploading Image... Please Wait</span>
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving Service...</span>
+                    </>
+                  ) : (
+                    <span>Save &amp; Sync Supabase DB</span>
+                  )}
                 </button>
               </form>
             )}
@@ -3540,31 +3652,34 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   />
                 </div>
 
-                <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <label className="block text-xs font-bold text-slate-700">Profile Headshot Photo:</label>
-                  <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                      <span>{uploadingImage ? 'Uploading...' : 'Choose File'}</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => handleFileUpload(e, 'faculty')} 
-                        className="hidden" 
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Image URL"
-                      value={editingItem.imageUrl || editingItem.image_url || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value, image_url: e.target.value })}
-                      className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-700"
-                    />
-                  </div>
-                </div>
+                <ImageUploadPreviewField 
+                  label="Profile Headshot Photo:"
+                  imageUrl={editingItem.imageUrl || editingItem.image_url || ''}
+                  onImageChange={(url) => setEditingItem({ ...editingItem, imageUrl: url, image_url: url })}
+                  uploading={uploadingImage}
+                  folder="faculty"
+                  handleFileUpload={handleFileUpload}
+                  heightClass="h-32"
+                />
 
-                <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
-                  Save Faculty Profile
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || uploadingImage} 
+                  className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Uploading Image... Please Wait</span>
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving Profile...</span>
+                    </>
+                  ) : (
+                    <span>Save Faculty Profile</span>
+                  )}
                 </button>
               </form>
             )}
@@ -3655,31 +3770,34 @@ export default function AdminDashboard({ lang = 'en', onLogout }) {
                   </div>
                 </div>
 
-                <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <label className="block text-xs font-bold text-slate-700">Photo File:</label>
-                  <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-                      {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <Upload className="w-4 h-4 text-primary" />}
-                      <span>{uploadingImage ? 'Uploading...' : 'Choose File'}</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => handleFileUpload(e, 'gallery')} 
-                        className="hidden" 
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Image URL"
-                      value={editingItem.imageUrl || editingItem.image_url || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value, image_url: e.target.value })}
-                      className="flex-1 p-2 bg-slate-50 border border-slate-300 rounded-xl text-[11px] font-mono text-slate-700"
-                    />
-                  </div>
-                </div>
+                <ImageUploadPreviewField 
+                  label="Photo File:"
+                  imageUrl={editingItem.imageUrl || editingItem.image_url || ''}
+                  onImageChange={(url) => setEditingItem({ ...editingItem, imageUrl: url, image_url: url })}
+                  uploading={uploadingImage}
+                  folder="gallery"
+                  handleFileUpload={handleFileUpload}
+                  heightClass="h-32"
+                />
 
-                <button type="submit" className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all">
-                  Save Gallery Photo
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || uploadingImage} 
+                  className="w-full bg-primary hover:bg-stitch-red-dark text-white font-bold text-xs py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Uploading Image... Please Wait</span>
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Saving Photo...</span>
+                    </>
+                  ) : (
+                    <span>Save Gallery Photo</span>
+                  )}
                 </button>
               </form>
             )}
